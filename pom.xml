@@ -1,0 +1,273 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.payneteasy</groupId>
+  <artifactId>srvlog</artifactId>
+  <version>1.0-1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>srvlog    ${version}</name>
+
+
+  <modules>
+     <module>srvlog-service</module>
+     <module>srvlog-web</module>
+  </modules>
+
+    <repositories>
+        <repository>
+            <id>spring.test-mvc</id>
+            <url>http://repo.springsource.org/libs-milestone</url>
+        </repository>
+    </repositories>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <wicket.version>6.4.0</wicket.version>
+    <jetty.version>8.1.8.v20121106</jetty.version>
+    <slf4j.version>1.7.2</slf4j.version>
+    <spring.security.version>3.1.3.RELEASE</spring.security.version>
+    <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
+  </properties>
+
+    <dependencyManagement>
+      <dependencies>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.8.1</version>
+          <scope>test</scope>
+        </dependency>
+
+         <!--WICKET CORE-->
+          <dependency>
+              <groupId>org.apache.wicket</groupId>
+              <artifactId>wicket-core</artifactId>
+              <version>${wicket.version}</version>
+          </dependency>
+
+          <!--  JETTY DEPENDENCIES FOR TESTING  -->
+          <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-server</artifactId>
+              <version>${jetty.version}</version>
+              <scope>provided</scope>
+          </dependency>
+          <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-util</artifactId>
+              <version>${jetty.version}</version>
+              <scope>provided</scope>
+          </dependency>
+          <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-jmx</artifactId>
+              <version>${jetty.version}</version>
+              <scope>provided</scope>
+          </dependency>
+          <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-plus</artifactId>
+              <scope>provided</scope>
+              <version>${jetty.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-jndi</artifactId>
+              <scope>provided</scope>
+              <version>${jetty.version}</version>
+          </dependency>
+
+          <dependency>
+              <groupId>javax.servlet</groupId>
+              <artifactId>javax.servlet-api</artifactId>
+              <version>3.0.1</version>
+              <scope>provided</scope>
+          </dependency>
+
+          <!-- SLF4J -->
+          <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-api</artifactId>
+              <version>${slf4j.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-log4j12</artifactId>
+              <version>${slf4j.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>jcl-over-slf4j</artifactId>
+              <version>${slf4j.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>jul-to-slf4j</artifactId>
+              <version>${slf4j.version}</version>
+          </dependency>
+
+          <!-- SPRING -->
+          <!--
+    Core utilities used by other modules.
+    Define this if you use Spring Utility APIs (org.springframework.core.*/org.springframework.util.*)
+-->
+          <dependency>
+              <groupId>org.springframework</groupId>
+              <artifactId>spring-core</artifactId>
+              <version>${org.springframework.version}</version>
+          </dependency>
+
+          <!--&lt;!&ndash;-->
+              <!--Bean Factory and JavaBeans utilities (depends on spring-core)-->
+              <!--Define this if you use Spring Bean APIs (org.springframework.beans.*)-->
+          <!--&ndash;&gt;-->
+          <!--<dependency>-->
+              <!--<groupId>org.springframework</groupId>-->
+              <!--<artifactId>spring-beans</artifactId>-->
+              <!--<version>${org.springframework.version}</version>-->
+          <!--</dependency>-->
+
+          <!--&lt;!&ndash;-->
+              <!--Aspect Oriented Programming (AOP) Framework (depends on spring-core, spring-beans)-->
+              <!--Define this if you use Spring AOP APIs (org.springframework.aop.*)-->
+          <!--&ndash;&gt;-->
+          <!--<dependency>-->
+              <!--<groupId>org.springframework</groupId>-->
+              <!--<artifactId>spring-aop</artifactId>-->
+              <!--<version>${org.springframework.version}</version>-->
+          <!--</dependency>-->
+
+          <!--&lt;!&ndash;-->
+              <!--Application Context (depends on spring-core, spring-expression, spring-aop, spring-beans)-->
+              <!--This is the central artifact for Spring's Dependency Injection Container and is generally always defined-->
+          <!--&ndash;&gt;-->
+
+          <dependency>
+              <groupId>org.springframework</groupId>
+              <artifactId>spring-context</artifactId>
+              <version>${org.springframework.version}</version>
+          </dependency>
+
+          <!--&lt;!&ndash;-->
+              <!--Transaction Management Abstraction (depends on spring-core, spring-beans, spring-aop, spring-context)-->
+              <!--Define this if you use Spring Transactions or DAO Exception Hierarchy-->
+              <!--(org.springframework.transaction.*/org.springframework.dao.*)-->
+          <!--&ndash;&gt;-->
+          <!--<dependency>-->
+              <!--<groupId>org.springframework</groupId>-->
+              <!--<artifactId>spring-tx</artifactId>-->
+              <!--<version>${org.springframework.version}</version>-->
+          <!--</dependency>-->
+
+          <!--&lt;!&ndash;-->
+              <!--JDBC Data Access Library (depends on spring-core, spring-beans, spring-context, spring-tx)-->
+              <!--Define this if you use Spring's JdbcTemplate API (org.springframework.jdbc.*)-->
+          <!--&ndash;&gt;-->
+          <!--<dependency>-->
+              <!--<groupId>org.springframework</groupId>-->
+              <!--<artifactId>spring-jdbc</artifactId>-->
+              <!--<version>${org.springframework.version}</version>-->
+          <!--</dependency>-->
+
+          <!--&lt;!&ndash;-->
+              <!--Web application development utilities applicable to both Servlet and Portlet Environments-->
+              <!--(depends on spring-core, spring-beans, spring-context)-->
+              <!--Define this if you use Spring MVC, or wish to use Struts, JSF, or another web framework with Spring (org.springframework.web.*)-->
+          <!--&ndash;&gt;-->
+          <!--<dependency>-->
+              <!--<groupId>org.springframework</groupId>-->
+              <!--<artifactId>spring-web</artifactId>-->
+              <!--<version>${org.springframework.version}</version>-->
+          <!--</dependency>-->
+
+          <!--
+              Support for testing Spring applications with tools such as JUnit and TestNG
+              This artifact is generally always defined with a 'test' scope for the integration testing framework and unit testing stubs
+          -->
+          <dependency>
+              <groupId>org.springframework</groupId>
+              <artifactId>spring-test</artifactId>
+              <version>${org.springframework.version}</version>
+              <scope>test</scope>
+          </dependency>
+
+
+          <!-- SPRING SECURITY -->
+          <dependency>
+              <groupId>org.springframework.security</groupId>
+              <artifactId>spring-security-core</artifactId>
+              <version>${spring.security.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.springframework.security</groupId>
+              <artifactId>spring-security-web</artifactId>
+              <version>${spring.security.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.springframework.security</groupId>
+              <artifactId>spring-security-config</artifactId>
+              <version>${spring.security.version}</version>
+          </dependency>
+      </dependencies>
+
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>utf-8</encoding>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <optimize>false</optimize>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                </configuration>
+            </plugin>
+
+            <!-- disable javadoc for quick release -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <noindex>true</noindex>
+                    <notree>true</notree>
+                    <!-- <quiet>true</quiet> -->
+                    <use>false</use>
+                    <excludePackageNames>com.payneteasy.*</excludePackageNames>
+                </configuration>
+            </plugin>
+
+            <!-- Specifying version as otherwise 2.0-beta-8 is resolved and
+                we don't have update-versions goal
+                -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
