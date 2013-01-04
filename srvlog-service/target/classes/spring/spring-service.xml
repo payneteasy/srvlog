@@ -8,7 +8,6 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:component-scan base-package="com.payneteasy.service"/>
-    <context:component-scan base-package="com.payneteasy.dao"/>
 
     <context:property-placeholder location="classpath:syslog4j.properties"/>
 

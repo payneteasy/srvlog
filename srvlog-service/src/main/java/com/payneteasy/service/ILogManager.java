@@ -7,6 +7,4 @@ import com.nesscomputing.syslog4j.server.SyslogServerIF;
  */
 public interface ILogManager {
     boolean isStarted();
-    String getSyslog4jProtocol();
-    int getSyslog4jPort();
 }

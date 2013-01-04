@@ -1,7 +1,0 @@
-ui 22:03:55 main            INFO  Application                - [WicketTesterApplication-0cd32cd4-adda-4886-bc9d-3eeaada98fdc] init: Wicket core library initializer
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=IBehaviorListener, method=public abstract void org.apache.wicket.behavior.IBehaviorListener.onRequest()]
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=IFormSubmitListener, method=public abstract void org.apache.wicket.markup.html.form.IFormSubmitListener.onFormSubmitted()]
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=ILinkListener, method=public abstract void org.apache.wicket.markup.html.link.ILinkListener.onLinkClicked()]
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=IOnChangeListener, method=public abstract void org.apache.wicket.markup.html.form.IOnChangeListener.onSelectionChanged()]
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=IRedirectListener, method=public abstract void org.apache.wicket.IRedirectListener.onRedirect()]
-ui 22:03:55 main            INFO  RequestListenerInterface   - registered listener interface [RequestListenerInterface name=IResourceListener, method=public abstract void org.apache.wicket.IResourceListener.onResourceRequested()]

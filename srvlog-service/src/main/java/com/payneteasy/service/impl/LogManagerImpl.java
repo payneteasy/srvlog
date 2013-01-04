@@ -1,9 +1,12 @@
 package com.payneteasy.service.impl;
 
 import com.nesscomputing.syslog4j.server.SyslogServer;
+import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
+import com.payneteasy.dao.ILogManagerDao;
 import com.payneteasy.service.ILogManager;
-import com.payneteasy.service.ILogManagerEventHandler;
+import com.payneteasy.service.ILogManagerConfig;
+import com.payneteasy.service.LogManagerEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,9 +29,14 @@ public class LogManagerImpl implements ILogManager {
     public void init(){
             LOG.info("  Starting syslog4j server....");
 
-            syslog4jInstance = SyslogServer.getInstance(syslog4jProtocol);
-            syslog4jInstance.getConfig().setPort(syslog4jPort);
-            syslog4jInstance.getConfig().addEventHandler(logManagerEventHandler);
+            syslog4jInstance = SyslogServer.getInstance(logManagerConfig.getSyslog4jProtocol());
+            syslog4jInstance.getConfig().setPort(logManagerConfig.getSyslog4jPort());
+            syslog4jInstance.getConfig().addEventHandler(new LogManagerEventHandler() {
+                @Override
+                public void event(SyslogServerIF syslogServer, SocketAddress socketAddress, SyslogServerEventIF event) {
+                    logManagerDao.saveLogMessage(event.getMessage());
+                }
+            });
             SyslogServer.getThreadedInstance("udp");
 
             for(int i=0; i<5 && !syslog4jInstance.isStarted(); i++) {
@@ -61,24 +70,13 @@ public class LogManagerImpl implements ILogManager {
         return syslog4jInstance.isStarted();
     }
 
-    @Override
-    public String getSyslog4jProtocol() {
-        return syslog4jProtocol;
-    }
 
-    @Override
-    public int getSyslog4jPort() {
-        return syslog4jPort;
-    }
-
-    @Value( "${port}" )
-    private int syslog4jPort;
-
-    @Value( "${protocol}" )
-    private String syslog4jProtocol;
 
     private SyslogServerIF syslog4jInstance;
 
     @Autowired
-    private ILogManagerEventHandler logManagerEventHandler;
+    private ILogManagerConfig logManagerConfig;
+
+    @Autowired
+    private ILogManagerDao logManagerDao;
 }
