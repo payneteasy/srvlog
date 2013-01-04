@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertNotNull;
  * Date: 03.01.13 Time: 13:11
  */
 
+@Ignore
 public class Syslog4jTest {
 
     public static final String HELLO_SYSLOG = "Hello Syslog!!";

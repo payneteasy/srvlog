@@ -9,4 +9,29 @@
 
     <context:component-scan base-package="com.payneteasy.srvlog.dao"/>
 
+    <!-- TRANSACTION MANAGER -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- gear for main datasource's procedures -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="abstractDaoMethodInfoFactory" abstract="true" class="com.googlecode.jdbcproc.daofactory.DaoMethodInfoFactory">
+        <property name="callableStatementGetStrategyFactory" value="#{ new com.googlecode.jdbcproc.daofactory.impl.dbstrategy.impl.CallableStatementGetStrategyFactoryIndexImpl() }" />
+        <property name="callableStatementSetStrategyFactory" value="#{ new com.googlecode.jdbcproc.daofactory.impl.dbstrategy.impl.CallableStatementSetStrategyFactoryIndexImpl() }" />
+    </bean>
+
+    <bean id="daoMethodInfoFactory" parent="abstractDaoMethodInfoFactory">
+        <property name="jdbcTemplate"           ref="jdbcTemplate"/>
+    </bean>
+
+    <!-- Abstract dao -->
+    <bean id="abstractDao" abstract="true" class="com.googlecode.jdbcproc.daofactory.StoredProcedureDaoFactoryBean">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+        <property name="daoMethodInfoFactory" ref="daoMethodInfoFactory"/>
+    </bean>
+
 </beans>

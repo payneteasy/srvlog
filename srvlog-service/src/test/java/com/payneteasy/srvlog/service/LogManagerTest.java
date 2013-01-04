@@ -5,6 +5,7 @@ import com.nesscomputing.syslog4j.impl.message.processor.SyslogMessageProcessor;
 import com.payneteasy.srvlog.dao.ILogManagerDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.impl.LogManagerImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ import static org.easymock.EasyMock.*;
 /**
  * Date: 04.01.13
  */
+@Ignore
 public class LogManagerTest {
 
     @Test
