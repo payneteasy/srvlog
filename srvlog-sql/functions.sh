@@ -9,6 +9,8 @@ export SRVLOG_DB_ROOT_PASSWORD=${SRVLOG_DB_ROOT_PASSWORD:-charpa}
 export SRVLOG_DB_HOST=${SRVLOG_DB_HOST:-localhost}
 export SRVLOG_DB_PORT=${SRVLOG_DB_PORT:-3306}
 
+export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
+
 logInfo() {
     # or tts -s
     test -t 0 && tput setaf 2 # green
@@ -54,7 +56,7 @@ runScript() {
     mkdir -p target
     logInfo "Installing to $SRVLOG_DB_USERNAME@$SRVLOG_DB_HOST:$SRVLOG_DB_PORT/$SRVLOG_DB_DATABASE $aScript ..."
     cat $aScript | sed s/srvlog/$SRVLOG_DB_DATABASE/g | \
-        mysql --default-character-set=utf8 --protocol=TCP -h $SRVLOG_DB_HOST --port $SRVLOG_DB_PORT -b -vv -u $SRVLOG_DB_USERNAME -p$SRVLOG_DB_PASSWORD $SRVLOG_DB_DATABASE --show-warnings --comments > target/$aScript.log 
+        $PATH_TO_MYSQL --default-character-set=utf8 --protocol=TCP -h $SRVLOG_DB_HOST --port $SRVLOG_DB_PORT -b -vv -u $SRVLOG_DB_USERNAME -p$SRVLOG_DB_PASSWORD $SRVLOG_DB_DATABASE --show-warnings --comments > target/$aScript.log
 
     die "can not process $aScript"
 
@@ -69,7 +71,7 @@ runScriptRoot() {
     mkdir -p target
     logWarn "Installing to root@$SRVLOG_DB_HOST:$SRVLOG_DB_PORT $aScript ..."
     cat $aScript | sed s/srvlog/$SRVLOG_DB_DATABASE/g | \
-        mysql --default-character-set=utf8 --protocol=TCP -h $SRVLOG_DB_HOST --port $SRVLOG_DB_PORT -b -vv -uroot -p$SRVLOG_DB_ROOT_PASSWORD --show-warnings --comments > target/$aScript.log
+        $PATH_TO_MYSQL --default-character-set=utf8 --protocol=TCP -h $SRVLOG_DB_HOST --port $SRVLOG_DB_PORT -b -vv -uroot -p$SRVLOG_DB_ROOT_PASSWORD --show-warnings --comments > target/$aScript.log
 
     die "can not process $aScript"
 
