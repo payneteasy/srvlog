@@ -35,7 +35,7 @@
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationClassName</param-name>
-            <param-value>com.payneteasy.srvacc.wicket.ServersAccountingUIApplication</param-value>
+            <param-value>com.payneteasy.srvlog.wicket.SrvlogUIApplication</param-value>
         </init-param>
     </filter>
 

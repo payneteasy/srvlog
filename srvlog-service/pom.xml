@@ -66,6 +66,13 @@
           <groupId>com.nesscomputing</groupId>
           <artifactId>ness-syslog4j</artifactId>
           <version>0.9.47-NESS-7</version>
+          <!--TODO move to parent artefact-->
+      </dependency>
+
+      <dependency>
+          <groupId>org.easymock</groupId>
+          <artifactId>easymock</artifactId>
+          <scope>test</scope>
       </dependency>
 
   </dependencies>
