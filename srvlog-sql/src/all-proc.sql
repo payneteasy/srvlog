@@ -19,4 +19,8 @@ engine = innodb;
 
 \. int/raise_application_error.sql
 
+\. get/get_procedures_resultset.sql
+
+\. save/save_log.sql
+
 commit;

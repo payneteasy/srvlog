@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.payneteasy.srvlog</groupId>
     <artifactId>srvlog-it</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-1-SNAPSHOT</version>
     <name>srvlog-it</name>
     <url>http://maven.apache.org</url>
 
@@ -39,9 +39,32 @@
     </build>
 
     <dependencies>
+        <!--our artifacts-->
+        <dependency>
+            <groupId>com.payneteasy.srvlog</groupId>
+            <artifactId>srvlog-service</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- SPRING -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -72,6 +95,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--commons dbcp-->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
         </dependency>
 
     </dependencies>

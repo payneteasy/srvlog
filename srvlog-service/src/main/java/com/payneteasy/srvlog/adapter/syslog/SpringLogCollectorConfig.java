@@ -1,6 +1,5 @@
-package com.payneteasy.srvlog.service.impl;
+package com.payneteasy.srvlog.adapter.syslog;
 
-import com.payneteasy.srvlog.service.ILogManagerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -8,14 +7,14 @@ import org.springframework.stereotype.Service;
  * Date: 04.01.13
  */
 @Service
-public class SpringLogManagerConfig implements ILogManagerConfig {
+public class SpringLogCollectorConfig implements SyslogAdapterConfig {
     @Override
-    public String getSyslog4jProtocol() {
+    public String getSyslogProtocol() {
         return syslog4jProtocol;
     }
 
     @Override
-    public int getSyslog4jPort() {
+    public int getSyslogPort() {
         return syslog4jPort;
     }
 

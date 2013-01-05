@@ -12,8 +12,8 @@
     <modules>
         <module>srvlog-service</module>
         <module>srvlog-web</module>
-    <module>srvlog-it</module>
-    <module>srvlog-sql</module>
+        <module>srvlog-it</module>
+        <module>srvlog-sql</module>
   </modules>
 
     <repositories>
@@ -35,6 +35,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--our artifacts-->
+            <dependency>
+                <groupId>com.payneteasy.srvlog</groupId>
+                <artifactId>srvlog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -136,6 +143,13 @@
             </dependency>
 
 
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+
+
             <!-- SPRING SECURITY -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -173,6 +187,13 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.1.22-3</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!--commons dbcp-->
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>1.4</version>
             </dependency>
 
         </dependencies>

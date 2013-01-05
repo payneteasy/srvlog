@@ -1,5 +1,7 @@
 package com.payneteasy.srvlog.data;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -13,6 +15,7 @@ public class LogData {
     private String message;
     private Integer id;
 
+    @Column(name = "log_date")
     public Date getDate() {
         return date;
     }
@@ -21,6 +24,7 @@ public class LogData {
         this.date = date;
     }
 
+    @Column(name = "host")
     public String getHost() {
         return host;
     }
@@ -29,6 +33,7 @@ public class LogData {
         this.host = host;
     }
 
+    @Column(name = "facility")
     public Integer getFacility() {
         return facility;
     }
@@ -37,6 +42,7 @@ public class LogData {
         this.facility = facility;
     }
 
+    @Column(name = "severity")
     public Integer getSeverity() {
         return severity;
     }
@@ -45,6 +51,7 @@ public class LogData {
         this.severity = severity;
     }
 
+    @Column(name = "message")
     public String getMessage() {
         return message;
     }
@@ -57,6 +64,8 @@ public class LogData {
         this.id = id;
     }
 
+    @Id
+    @Column(name = "log_id")
     public Integer getId() {
         return id;
     }
@@ -76,5 +85,17 @@ public class LogData {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "LogData{" +
+                "date=" + date +
+                ", host='" + host + '\'' +
+                ", facility=" + facility +
+                ", severity=" + severity +
+                ", message='" + message + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

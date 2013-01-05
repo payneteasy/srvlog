@@ -11,20 +11,14 @@ import java.io.*;
 public class DatabaseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseUtil.class);
 
-    public static void createDatabase(String[] createDbCommand, String testRunDir) throws IOException, InterruptedException {
+    public static void createDatabase(String[] createDbCommand) throws IOException, InterruptedException {
         if("true".equals(System.getProperty("skip.createdb"))) {
             LOG.warn("Skipped creating database");
         } else {
             LOG.info("Creating database structure ...  (use -Dskip.createdb=true to skip)");
             Runtime runtime = Runtime.getRuntime();
-//            Process process = runtime.exec(
-//                    createDbCommand
-//                    , null
-//                    , new File(testRunDir)
-//            );
 
-            System.setProperty("TEST", "test");
-            Process process = runtime.exec(new String[]{"bash","./create_database.sh"});
+            Process process = runtime.exec(createDbCommand);
             if(LOG.isInfoEnabled()) {
                 new Thread(new ProcessStreamReader(false, process.getInputStream())).start();
             }
