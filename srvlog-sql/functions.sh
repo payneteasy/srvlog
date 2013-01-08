@@ -11,26 +11,32 @@ export SRVLOG_DB_PORT=${SRVLOG_DB_PORT:-3306}
 
 export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
+fn_exists() {
+    declare -f -F $1 > /dev/null
+    return $?
+}
+
+
 logInfo() {
     # or tts -s
     test -t 0 && tput setaf 2 # green
     echo $1
     test -t 0 && tput sgr0
-    logger "$USER INFO: $1"
+    fn_exists logger && logger "$USER INFO: $1" || echo "$USER INFO: $1"
 }
 
 logError() {
     test -t 0 && tput setaf 1 # red
     echo $1
     test -t 0 && tput sgr0
-    logger "$USER ERROR: $1"
+    fn_exists logger && logger "$USER ERROR: $1" || echo "$USER ERROR: $1"
 }
 
 logWarn() {
     test -t 0 && tput setaf 3 # yellow
     echo $1
     test -t 0 && tput sgr0
-    logger "$USER WARN: $1"
+    fn_exists logger && logger "$USER WARN: $1" || echo "$USER WARN: $1"
 }
 
 die() {
@@ -78,3 +84,5 @@ runScriptRoot() {
     return $?
 
 }
+
+

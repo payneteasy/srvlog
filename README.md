@@ -1,4 +1,5 @@
 srvlog
 ======
 
-Server logger
+Centralized Log Collector
+Pure JAVA, MySQL and Sphinx solution
