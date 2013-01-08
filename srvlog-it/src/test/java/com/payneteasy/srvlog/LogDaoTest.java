@@ -42,8 +42,6 @@ public class LogDaoTest {
 
         logDao.saveLog(logData);
         assertNotNull("ID must be assigned to logData entity", logData.getId());
-
     }
-
 
 }
