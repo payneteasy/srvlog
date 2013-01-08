@@ -13,7 +13,7 @@ public class LogData {
     private Integer facility;
     private Integer severity;
     private String message;
-    private Integer id;
+    private Long id;
 
     @Column(name = "log_date")
     public Date getDate() {
@@ -60,13 +60,13 @@ public class LogData {
         this.message = message;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Id
     @Column(name = "log_id")
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

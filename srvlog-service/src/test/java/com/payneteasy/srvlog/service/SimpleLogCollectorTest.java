@@ -1,10 +1,10 @@
 package com.payneteasy.srvlog.service;
 
 import com.nesscomputing.syslog4j.*;
+import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
-import com.payneteasy.srvlog.adapter.syslog.SyslogAdapterConfig;
 import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class SimpleLogCollectorTest {
     public void testSendLog() throws InterruptedException {
 
         SyslogAdapter syslogAdapter = new SyslogAdapter();
-        SyslogAdapterConfig testSyslogConfig = getTestSyslogConfig();
+        ISyslogAdapterConfig testSyslogConfig = getTestSyslogConfig();
         syslogAdapter.setLogAdapterConfig(testSyslogConfig);
 
         SimpleLogCollector logCollector = new SimpleLogCollector();
@@ -73,7 +73,7 @@ public class SimpleLogCollectorTest {
         return logData;
     }
 
-    private SyslogIF createSyslog4jClient(SyslogAdapterConfig mockLogAdapterConfig) {
+    private SyslogIF createSyslog4jClient(ISyslogAdapterConfig mockLogAdapterConfig) {
         SyslogIF udpSyslogClient = Syslog.getInstance(mockLogAdapterConfig.getSyslogProtocol());
 
         udpSyslogClient.getConfig().setSendLocalName(false);
@@ -85,8 +85,8 @@ public class SimpleLogCollectorTest {
     }
 
 
-    private SyslogAdapterConfig getTestSyslogConfig() {
-        return new SyslogAdapterConfig() {
+    private ISyslogAdapterConfig getTestSyslogConfig() {
+        return new ISyslogAdapterConfig() {
 
             @Override
             public String getSyslogProtocol() {

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Date: 05.01.13
  */
@@ -25,4 +27,11 @@ public class SimpleLogCollector implements ILogCollector {
     public void setLogDao(ILogDao logDao) {
         this.logDao = logDao;
     }
+
+    @Override
+    public List<LogData> loadLatest(int numberOfLogs) {
+        return logDao.loadLatest(numberOfLogs);  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
 }

@@ -23,10 +23,12 @@ import java.util.concurrent.TimeUnit;
 public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     private static final Logger LOG = LoggerFactory.getLogger(SyslogAdapter.class);
+
+    @Autowired
     private ILogCollector logCollector;
 
     @Autowired
-    private SyslogAdapterConfig logAdapterConfig;
+    private ISyslogAdapterConfig logAdapterConfig;
 
 
     private SyslogServerIF syslog4jInstance;
@@ -67,7 +69,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     }
 
 
-    public void setLogAdapterConfig(SyslogAdapterConfig logAdapterConfig) {
+    public void setLogAdapterConfig(ISyslogAdapterConfig logAdapterConfig) {
         this.logAdapterConfig = logAdapterConfig;
     }
 

@@ -1,8 +1,8 @@
 package com.payneteasy.srvlog;
 
+import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.service.ILogCollector;
-import com.payneteasy.srvlog.adapter.syslog.SyslogAdapterConfig;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class LogManagerTest {
     private ILogCollector logCollector;
 
     @Autowired
-    private SyslogAdapterConfig logAdapterConfig;
+    private ISyslogAdapterConfig logAdapterConfig;
 
     @Autowired
     private ILogDao logDao;

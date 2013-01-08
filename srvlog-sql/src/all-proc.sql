@@ -11,6 +11,7 @@ create table mysql_routines_return_arguments (
 engine = innodb;
 
 \. run_install_command.sql
+
 \. run_install_cond_command.sql
 
 \. save_routine_information.sql
@@ -22,5 +23,9 @@ engine = innodb;
 \. get/get_procedures_resultset.sql
 
 \. save/save_log.sql
+
+\. get/get_log_by_id.sql
+
+\. get/get_latest.sql
 
 commit;

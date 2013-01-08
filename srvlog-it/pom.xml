@@ -94,7 +94,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>test</scope>
+            <version>5.1.22-3</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--commons dbcp-->

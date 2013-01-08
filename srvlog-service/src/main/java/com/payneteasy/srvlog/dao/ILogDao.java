@@ -17,4 +17,9 @@ public interface ILogDao {
     @AStoredProcedure(name="save_log")
     void saveLog(LogData log);
 
+    @AStoredProcedure(name="get_log_by_id")
+    LogData load(Long id);
+
+    @AStoredProcedure(name="get_latest")
+    List<LogData> loadLatest(int numberOfLogs);
 }
