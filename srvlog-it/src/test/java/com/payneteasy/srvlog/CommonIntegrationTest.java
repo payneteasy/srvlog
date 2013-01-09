@@ -16,13 +16,16 @@ public class CommonIntegrationTest {
 
     @Before
     public void setUp() throws IOException, InterruptedException {
-        DatabaseUtil.createDatabase(new String[]{"bash", "./create_database.sh"});
+        createDatabase();
         context = createSpringContext();
-
     }
 
     protected ClassPathXmlApplicationContext createSpringContext() {
         return new ClassPathXmlApplicationContext("classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml");
+    }
+
+    protected void createDatabase() throws IOException, InterruptedException {
+        DatabaseUtil.createDatabase(new String[]{"bash", "./create_database.sh"});
     }
 
     @After

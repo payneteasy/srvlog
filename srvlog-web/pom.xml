@@ -1,10 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>war</packaging>
 
     <artifactId>srvlog-web</artifactId>
     <groupId>com.payneteasy.srvlog</groupId>
-    <packaging>war</packaging>
+
     <name>srvlog-web    ${version}</name>
 
     <parent>
@@ -19,11 +20,20 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!--WICKET CORE-->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
         </dependency>
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
@@ -83,90 +93,25 @@
             <artifactId>spring-core</artifactId>
         </dependency>
 
-        <!--&lt;!&ndash;-->
-            <!--Bean Factory and JavaBeans utilities (depends on spring-core)-->
-            <!--Define this if you use Spring Bean APIs (org.springframework.beans.*)-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-beans</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--Aspect Oriented Programming (AOP) Framework (depends on spring-core, spring-beans)-->
-            <!--Define this if you use Spring AOP APIs (org.springframework.aop.*)-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-aop</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--Application Context (depends on spring-core, spring-expression, spring-aop, spring-beans)-->
-            <!--This is the central artifact for Spring's Dependency Injection Container and is generally always defined-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-context</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--Transaction Management Abstraction (depends on spring-core, spring-beans, spring-aop, spring-context)-->
-            <!--Define this if you use Spring Transactions or DAO Exception Hierarchy-->
-            <!--(org.springframework.transaction.*/org.springframework.dao.*)-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-tx</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--JDBC Data Access Library (depends on spring-core, spring-beans, spring-context, spring-tx)-->
-            <!--Define this if you use Spring's JdbcTemplate API (org.springframework.jdbc.*)-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-jdbc</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--Web application development utilities applicable to both Servlet and Portlet Environments-->
-            <!--(depends on spring-core, spring-beans, spring-context)-->
-            <!--Define this if you use Spring MVC, or wish to use Struts, JSF, or another web framework with Spring (org.springframework.web.*)-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-web</artifactId>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash;-->
-            <!--Support for testing Spring applications with tools such as JUnit and TestNG-->
-            <!--This artifact is generally always defined with a 'test' scope for the integration testing framework and unit testing stubs-->
-        <!--&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-
         <!-- security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
 
-
+        <!--our artifacts-->
+        <dependency>
+            <groupId>com.payneteasy.srvlog</groupId>
+            <artifactId>srvlog-service</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -188,6 +133,16 @@
                 </excludes>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                </configuration>
+            </plugin>
+        </plugins>
+
     </build>
 
 </project>

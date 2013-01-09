@@ -33,7 +33,7 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testSaveLog(){
         LogData logData = new LogData();
         logData.setSeverity(1);
-        logData.setDate(Calendar.getInstance().getTime());
+        logData.setDate(new Date());
         logData.setFacility(1);
         logData.setMessage("message");
         logData.setHost("localhost");
@@ -49,7 +49,7 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testLoadLatest() {
         for (int i = 0; i < 11; i++) {
             LogData logData = new LogData();
-            logData.setDate(Calendar.getInstance().getTime());
+            logData.setDate(new Date());
             logData.setFacility(1);
             logData.setSeverity(1);
             logData.setHost("localhost");

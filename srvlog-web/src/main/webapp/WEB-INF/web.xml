@@ -10,6 +10,10 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             /WEB-INF/spring/spring-security.xml
+            /WEB-INF/spring/spring-ui-datasource.xml
+            classpath:spring/spring-dao.xml
+            classpath:spring/spring-service.xml
+            classpath:spring/spring-log-adapter.xml
         </param-value>
     </context-param>
 
