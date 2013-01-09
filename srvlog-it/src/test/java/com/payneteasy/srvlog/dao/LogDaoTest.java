@@ -5,6 +5,8 @@ import com.payneteasy.srvlog.data.LogData;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +24,8 @@ public class LogDaoTest extends CommonIntegrationTest {
     private ILogDao logDao;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
+        super.setUp();
         logDao = context.getBean(ILogDao.class);
     }
 
@@ -30,7 +33,7 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testSaveLog(){
         LogData logData = new LogData();
         logData.setSeverity(1);
-        logData.setDate(new Date());
+        logData.setDate(Calendar.getInstance().getTime());
         logData.setFacility(1);
         logData.setMessage("message");
         logData.setHost("localhost");
@@ -46,7 +49,7 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testLoadLatest() {
         for (int i = 0; i < 11; i++) {
             LogData logData = new LogData();
-            logData.setDate(new Date());
+            logData.setDate(Calendar.getInstance().getTime());
             logData.setFacility(1);
             logData.setSeverity(1);
             logData.setHost("localhost");
