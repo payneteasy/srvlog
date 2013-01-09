@@ -5,6 +5,7 @@ import com.payneteasy.srvlog.data.LogData;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -14,15 +15,14 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Date: 04.01.13
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = {"classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml"})
 public class LogDaoTest extends CommonIntegrationTest {
 
 
     private ILogDao logDao;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
+        super.setUp();
         logDao = context.getBean(ILogDao.class);
     }
 

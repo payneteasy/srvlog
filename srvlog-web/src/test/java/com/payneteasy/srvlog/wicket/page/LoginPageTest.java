@@ -39,9 +39,7 @@ public class LoginPageTest{
         TextField password = (TextField) wicketTester.getComponentFromLastRenderedPage("loginForm:j_password");
         assertEquals("Password input field name property should be equal to j_password in order to support spring-security", "j_password", password.getInputName());
 
-
         wicketTester.assertComponent("loginForm:loginButton", Button.class);
-
 
     }
 

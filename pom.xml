@@ -44,6 +44,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.payneteasy.srvlog</groupId>
+                <artifactId>srvlog-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.8.1</version>
@@ -54,6 +60,11 @@
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-core</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-spring</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
 
@@ -194,6 +205,14 @@
                 <groupId>commons-dbcp</groupId>
                 <artifactId>commons-dbcp</artifactId>
                 <version>1.4</version>
+            </dependency>
+
+            <!--selenium-->
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>2.26.0</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

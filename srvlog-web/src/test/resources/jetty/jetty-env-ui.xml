@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
+
+    <New id="dataSource" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>java:/comp/env/jdbc/srvlog</Arg>
+        <Arg>
+            <New class="org.apache.commons.dbcp.BasicDataSource">
+                <Set name="url">jdbc:mysql://localhost/srvlog?autoReconnect=false&amp;characterEncoding=utf8&amp;useInformationSchema=true&amp;noAccessToProcedureBodies=true</Set>
+                <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+                <Set name="username">srvlog</Set>
+                <Set name="password">123srvlog123</Set>
+                <Set name="accessToUnderlyingConnectionAllowed">true</Set>
+                <Set name="testOnBorrow">true</Set>
+                <Set name="validationQuery">call create_collections()</Set>
+            </New>
+        </Arg>
+    </New>
+
+</Configure>

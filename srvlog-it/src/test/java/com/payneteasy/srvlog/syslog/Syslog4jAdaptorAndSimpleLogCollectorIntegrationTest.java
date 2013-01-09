@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  * Time: 16:53
  */
 
-public class Syslog4jAdaptor$SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
+public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
 
     private SyslogIF syslogClient;
     private ILogCollector logCollector;
