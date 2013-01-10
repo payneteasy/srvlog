@@ -1,11 +1,14 @@
 package com.payneteasy.srvlog.service;
 
-import com.nesscomputing.syslog4j.*;
+import com.nesscomputing.syslog4j.Syslog;
+import com.nesscomputing.syslog4j.SyslogConstants;
+import com.nesscomputing.syslog4j.SyslogFacility;
+import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
+import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
-import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import org.junit.Ignore;
 import org.junit.Test;
 

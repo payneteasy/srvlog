@@ -3,14 +3,16 @@ package com.payneteasy.srvlog;
 import com.nesscomputing.syslog4j.Syslog;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.nesscomputing.syslog4j.SyslogLevel;
-import com.nesscomputing.syslog4j.server.*;
+import com.nesscomputing.syslog4j.server.SyslogServer;
+import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
+import com.nesscomputing.syslog4j.server.SyslogServerIF;
+import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.SocketAddress;
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;

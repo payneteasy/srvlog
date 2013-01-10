@@ -1,22 +1,13 @@
 package com.payneteasy.srvlog.service;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
 import org.sphx.api.SphinxMatch;
 import org.sphx.api.SphinxResult;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Date: 09.01.13
@@ -27,7 +18,9 @@ public class SphinxTest {
     @Ignore
     @Test
     public void testQuerySearchd() throws SphinxException {
-
+        /**
+         * Sphinx Daemon needs to be started and index prepared before running the tests
+         */
 
         SphinxClient client = new SphinxClient();
         client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED);
