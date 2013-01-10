@@ -48,6 +48,7 @@
         <dependency>
             <groupId>com.payneteasy.srvlog</groupId>
             <artifactId>srvlog-web</artifactId>
+            <classifier>classes</classifier>
         </dependency>
 
         <dependency>

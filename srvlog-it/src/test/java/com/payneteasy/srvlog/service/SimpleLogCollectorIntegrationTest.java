@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +30,10 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
         );
     }
 
+    @Override
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
+        super.setUp();
         logCollector = context.getBean(ILogCollector.class);
     }
 

@@ -19,7 +19,7 @@ public class SeleniumUtils {
 
     public void initWebDriver() {
         webDriver = new FirefoxDriver(new FirefoxBinary(), null);
-        webDriver.manage().timeouts().pageLoadTimeout(3, TimeUnit.MINUTES);
+        webDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
     }
 
     public void releaseWebDriver() {

@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.ui;
 
 import com.payneteasy.srvlog.util.SeleniumUtils;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,19 +12,11 @@ import java.util.concurrent.TimeUnit;
  * Date: 09.01.13
  */
 public class StartUiTest extends CommonUiIntegrationTest{
+
     private SeleniumUtils seleniumContextTest;
 
     @Override
-    protected ClassPathXmlApplicationContext createSpringContext() {
-        return new ClassPathXmlApplicationContext();
-    }
-
-    @Override
-    protected void createDatabase() throws IOException, InterruptedException {
-
-    }
-
-    @Override
+    @After
     public void tearDown() {
         super.tearDown();
         seleniumContextTest.releaseWebDriver();
@@ -36,6 +29,6 @@ public class StartUiTest extends CommonUiIntegrationTest{
 
         seleniumContextTest.getWebDriver().get(seleniumContextTest.url("logs"));
 
-        TimeUnit.SECONDS.sleep(15);
+        TimeUnit.SECONDS.sleep(3);
     }
 }

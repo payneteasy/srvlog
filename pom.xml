@@ -46,7 +46,15 @@
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-web</artifactId>
+                <type>war</type>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.payneteasy.srvlog</groupId>
+                <artifactId>srvlog-web</artifactId>
+                <version>${project.version}</version>
+                <classifier>classes</classifier>
             </dependency>
 
             <dependency>

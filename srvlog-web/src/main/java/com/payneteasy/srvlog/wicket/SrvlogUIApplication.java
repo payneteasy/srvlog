@@ -2,7 +2,7 @@ package com.payneteasy.srvlog.wicket;
 
 import com.payneteasy.srvlog.wicket.page.BasePage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
-import com.payneteasy.srvlog.wicket.page.LogsPage;
+import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.util.file.WebApplicationPath;
@@ -24,7 +24,7 @@ public class SrvlogUIApplication extends WebApplication{
 
         //PAGES
         mountPage("login", LoginPage.class);
-        mountPage("logs", LogsPage.class);
+        mountPage("logs", OnlineLogMonitorPage.class);
     }
 
     protected void addSpringComponentInjector(){

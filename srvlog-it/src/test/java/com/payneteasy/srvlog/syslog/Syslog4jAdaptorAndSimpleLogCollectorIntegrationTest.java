@@ -38,6 +38,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         );
     }
 
+    @Override
     @Before
     public void setUp() throws IOException, InterruptedException {
         super.setUp();

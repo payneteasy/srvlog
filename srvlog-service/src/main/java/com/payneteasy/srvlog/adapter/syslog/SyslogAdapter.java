@@ -37,18 +37,26 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     public void init(){
             LOG.info("  Starting syslog4j server....");
 
+            // Stupid thing which needs to be done for integration tests. However it does not affect application performance anyhow
+            SyslogServer.shutdown();
+            SyslogServer.initialize();
+            // Now create a new instance of Syslog.
             syslog4jInstance = SyslogServer.getInstance(logAdapterConfig.getSyslogProtocol());
             syslog4jInstance.getConfig().setPort(logAdapterConfig.getSyslogPort());
             syslog4jInstance.getConfig().addEventHandler(this);
+
+            LOG.info("  Trying to obtain threaded instance of syslog server....");
             SyslogServer.getThreadedInstance(logAdapterConfig.getSyslogProtocol());
 
-            for(int i=0; i<5 && !syslog4jInstance.isStarted(); i++) {
-                LOG.info("  Waiting syslog4j server to be run ...");
+            LOG.info("  Waiting for syslog4j server to be run ...");
+            for(int i=0; i<10 && !syslog4jInstance.isStarted(); i++) {
+
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     LOG.error(" Can't run syslog4j server", e);
                 }
+                LOG.info("  Waiting for syslog4j server to be run. {} seconds passed ", i);
             }
     }
 
@@ -56,7 +64,13 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     @PreDestroy
     public void destroy(){
         LOG.info("  Stopping syslog4j server ...");
-        syslog4jInstance.shutdown();
+
+        //syslog4jInstance.shutdown();
+
+        //SyslogServer.destroyInstance(syslog4jInstance);
+        SyslogServer.shutdown();
+
+
 
         for(int i=0; i<5 && !syslog4jInstance.isStopped(); i++) {
             LOG.info("  Waiting syslog4j server to be stop ...");
@@ -65,6 +79,9 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             } catch (InterruptedException e) {
                 LOG.error(" Can't stop syslog4j server", e);
             }
+        }
+        if (!syslog4jInstance.isStopped()) {
+            LOG.info("Syslog server was not stopped in 5 seconds interval");
         }
     }
 

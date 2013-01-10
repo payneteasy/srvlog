@@ -6,8 +6,11 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.junit.After;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
@@ -20,6 +23,7 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
     private Server server;
 
     @Override
+    @Before
     public void setUp() throws IOException, InterruptedException {
         super.setUp();
         try {
@@ -30,6 +34,12 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
     }
 
     @Override
+    protected final ClassPathXmlApplicationContext createSpringContext() {
+        return null;
+    }
+
+    @Override
+    @After
     public void tearDown() {
         super.tearDown();
         try {

@@ -30,7 +30,7 @@ public class SimpleLogCollector implements ILogCollector {
 
     @Override
     public List<LogData> loadLatest(int numberOfLogs) {
-        return logDao.loadLatest(numberOfLogs);  //To change body of implemented methods use File | Settings | File Templates.
+        return logDao.loadLatest(numberOfLogs);
     }
 
 
