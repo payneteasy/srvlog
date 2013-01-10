@@ -1,0 +1,61 @@
+#
+# Minimal Sphinx configuration sample (clean, simple, functional)
+#
+
+source srvlog_logs
+{
+	type			= mysql
+
+	sql_host		= @SRVLOG_DB_HOST@
+	sql_user		= @SRVLOG_DB_USERNAME@
+	sql_pass		= @SRVLOG_DB_PASSWORD@
+	sql_db			= @SRVLOG_DB_DATABASE@
+	sql_port		= @SRVLOG_DB_PORT@
+	sql_sock        = @SRVLOG_DB_SOCK@
+
+
+	sql_query		= \
+		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host, message \
+		FROM logs
+
+	sql_attr_uint		= facility
+        sql_attr_uint		= severity
+	sql_attr_timestamp	= log_date
+        sql_attr_string         = host
+
+	sql_query_info		= SELECT * FROM logs WHERE log_id=$id
+}
+
+
+index srvlog_index
+{
+	source			= srvlog_logs
+	path			= @SPHINX_DIR@/data/srvlog_index
+	docinfo			= extern
+	charset_type	= sbcs
+}
+
+
+
+#indexer
+#{
+#	mem_limit		= 32M
+#}
+
+
+searchd
+{
+	listen			= 9312
+	listen			= 9306:mysql41
+	log			    = @SPHINX_DIR@/log/searchd.log
+	query_log		= @SPHINX_DIR@/log/query.log
+	read_timeout	= 5
+	max_children	= 30
+	pid_file		= @SPHINX_DIR@/log/searchd.pid
+	max_matches		= 1000
+	seamless_rotate	= 1
+	preopen_indexes	= 1
+	unlink_old		= 1
+	workers			= threads # for RT to work
+	binlog_path		= @SPHINX_DIR@/data
+}
