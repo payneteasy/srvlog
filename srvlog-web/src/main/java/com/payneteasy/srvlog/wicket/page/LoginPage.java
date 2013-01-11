@@ -26,16 +26,10 @@ public class LoginPage extends WebPage {
         add(loginForm);
 
         //login field
-        Label loginLabel = new Label("loginLabel", "Login");
-        loginForm.add(loginLabel);
-
         RequiredTextField<String> loginInputField = new RequiredTextField<String>(J_USERNAME, Model.<String>of(""));
         loginForm.add(loginInputField);
 
         //password filed
-        Label passwordLabel = new Label("passwordLabel", "Password");
-        loginForm.add(passwordLabel);
-
         PasswordTextField passwordInputField = new PasswordTextField(J_PASSWORD, Model.<String>of(""));
         loginForm.add(passwordInputField);
 

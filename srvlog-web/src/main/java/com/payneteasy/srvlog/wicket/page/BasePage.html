@@ -1,13 +1,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
     <title>Accounting of servers</title>
+    <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
-<span wicket:id="label"></span>
-<span wicket:id="admin-label"></span>
 
+<div class="container">
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
 
-<a href="j_spring_security_logout">logout</a>
+            <a class="brand" href="#">SRVLOG</a>
+
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li wicket:id="main-container">
+                        <a href="#" wicket:id="main">Main</a>
+                    </li>
+                    <li wicket:id="online-container">
+                        <a href="#" wicket:id="online">Online Logs</a>
+                    </li>
+                </ul>
+
+                <div class="navbar-form pull-right">
+                    <a class="btn" href="j_spring_security_logout">Logout</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <wicket:child/>
 </body>

@@ -4,16 +4,47 @@
 </head>
 <body>
 <wicket:extend>
-    <form wicket:id="search-form">
-        <select wicket:id="search-filter-latestChoice"></select>
-        <button wicket:id="search-btn">Search</button>
 
-        <ul>
-            <li wicket:id="search-log-data">
-                <span wicket:id="log-date"></span>
-            </li>
-        </ul>
-    </form>
+    <div class="container">
+
+            <ul class="inline">
+                <li>
+                    <h4 class="muted">Latest logs:</h4>
+                </li>
+                <li>
+                    <div class="btn-group">
+                        <a class="btn btn-info" href="" wicket:id="group-button-25">25</a>
+                        <a class="btn btn-info" href="" wicket:id="group-button-50">50</a>
+                        <a class="btn btn-info" href="" wicket:id="group-button-100">100</a>
+                    </div>
+                </li>
+            </ul>
+
+
+            <table class="table table-bordered table-striped table-hover main-table-head-color">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Facility</th>
+                    <th>Severity</th>
+                    <th>Host</th>
+                    <th>Message</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr wicket:id="search-log-data">
+                    <td wicket:id="log-id">Id</td>
+                    <td wicket:id="log-date">Date</td>
+                    <td wicket:id="log-facility">Facility</td>
+                    <td wicket:id="log-severity">Severity</td>
+                    <td wicket:id="log-host">Host</td>
+                    <td wicket:id="log-message">Message</td>
+                </tr>
+                </tbody>
+            </table>
+    </div>
+
 </wicket:extend>
 </body>
 </html>

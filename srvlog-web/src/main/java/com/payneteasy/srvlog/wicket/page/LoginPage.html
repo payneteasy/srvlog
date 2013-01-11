@@ -2,6 +2,7 @@
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
     <title>Login page</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <!--<wicket:head>-->
 
         <!--<script type="text/javascript">-->
@@ -10,24 +11,60 @@
             <!--}-->
         <!--</script>-->
     <!--</wicket:head>-->
+    <style type="text/css">
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-signin {
+            max-width: 300px;
+            padding: 19px 29px 29px;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+        .form-signin input[type="text"],
+        .form-signin input[type="password"] {
+            font-size: 16px;
+            height: auto;
+            margin-bottom: 15px;
+            padding: 7px 9px;
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Authentication</h2>
+<div class="container">
+
+    <form wicket:id="loginForm" class="form-signin" action="">
+        <h2 class="form-signin-heading">Please log in</h2>
+
+        <div class="alert" wicket:id="reason"></div>
 
 
-    <form wicket:id="loginForm" action="">
+        <input class="input-block-level" wicket:id="j_username" id="j_username" name="j_username" type="text" placeholder="Username"/>
 
-        <label wicket:id="loginLabel" for="j_username"></label>
-        <input wicket:id="j_username" id="j_username" name="j_username" type="text"/>
 
-        <label wicket:id="passwordLabel" for="j_password"></label>
-        <input wicket:id="j_password" id="j_password" name="j_password" type="password"/>
+        <input class="input-block-level" wicket:id="j_password" id="j_password" name="j_password" type="password" placeholder="Password"/>
 
-        <input wicket:id="loginButton" type="submit"/>
+        <input class="btn btn-large btn-primary" wicket:id="loginButton" type="submit"/>
 
-        <div wicket:id="reason"></div>
     </form>
+
+</div>
+
 
 </body>
 </html>

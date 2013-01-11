@@ -1,8 +1,15 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.wicket.security.SecurityUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.Arrays;
@@ -12,9 +19,28 @@ import java.util.Arrays;
  */
 @Secured("ROLE_ADMIN")
 public class BasePage extends WebPage{
-    public BasePage() {
-        add(new Label("label", "Hello "+ SecurityUtils.getUsername()+ "! You have roles "+ Arrays.toString(SecurityUtils.getRoles())));
+    private Class<? extends Page> pageClass;
 
-        add(new Label("admin-label", "Admin label"));
+    public BasePage(PageParameters pageParameters, Class<? extends Page> pageClass) {
+        this.pageClass = pageClass;
+
+        //BAR MENU
+        addBarLink("main", MainPage.class);
+        addBarLink("online", OnlineLogMonitorPage.class);
+    }
+
+    private void addBarLink(String linkId, Class<? extends Page> pageClass){
+        WebMarkupContainer webMarkupContainer = new WebMarkupContainer(linkId+"-container");
+        BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<Page>(linkId, pageClass);
+        if(this.pageClass.equals(pageClass)){
+            webMarkupContainer.add(new AttributeModifier("class",  new AbstractReadOnlyModel<String>() {
+                @Override
+                public String getObject() {
+                   return "active";
+                }
+            }));
+        }
+        webMarkupContainer.add(bookmarkablePageLink);
+        add(webMarkupContainer);
     }
 }

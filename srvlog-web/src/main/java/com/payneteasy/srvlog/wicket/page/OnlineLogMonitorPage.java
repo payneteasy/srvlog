@@ -2,13 +2,20 @@ package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.*;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
 
@@ -25,18 +32,13 @@ public class OnlineLogMonitorPage extends BasePage {
     @SpringBean
     private ILogCollector logCollector;
 
-    public OnlineLogMonitorPage() {
+    public OnlineLogMonitorPage(PageParameters pageParameters) {
+        super(pageParameters, OnlineLogMonitorPage.class);
         final FilterModel filterModel = new FilterModel();
-        Form<FilterModel> searchForm = new Form<FilterModel>("search-form", Model.<FilterModel>of(filterModel));
-        add(searchForm);
 
-        searchForm.add(
-                new DropDownChoice<Integer>(
-                        "search-filter-latestChoice"
-                        , new PropertyModel<Integer>(filterModel, "latestLogs")
-                        , Arrays.asList(25, 50, 100)
-                )
-        );
+        addButtonToGroup(25, filterModel);
+        addButtonToGroup(50, filterModel);
+        addButtonToGroup(100, filterModel);
 
         IModel<List<LogData>> logDataModel = new LoadableDetachableModel<List<LogData>>() {
             @Override
@@ -45,27 +47,38 @@ public class OnlineLogMonitorPage extends BasePage {
             }
         };
 
-//        IModel<List<LogData>> logDataModel = new AbstractReadOnlyModel<List<LogData>>() {
-//            @Override
-//            public List<LogData> getObject() {
-//                return logCollector.loadLatest(filterModel.getLatestLogs());
-//            }
-//        };
-
-        searchForm.add(new ListView<LogData>("search-log-data", logDataModel) {
+        add(new ListView<LogData>("search-log-data", logDataModel) {
             @Override
             protected void populateItem(ListItem<LogData> item) {
                 LogData logData = item.getModelObject();
+                item.add(new Label("log-id", logData.getId()));
                 item.add(new Label("log-date", logData.getDate()));
+                item.add(new Label("log-severity", logData.getSeverity()));
+                item.add(new Label("log-facility", logData.getFacility()));
+                item.add(new Label("log-host", logData.getHost()));
+                item.add(new Label("log-message", logData.getMessage()));
             }
         });
+    }
 
-        searchForm.add(new Button("search-btn") {
+    private void addButtonToGroup(final Integer latestLogs, final FilterModel filterModel) {
+        Link<Void> groupButton = new Link<Void>("group-button-" + latestLogs) {
             @Override
-            public void onSubmit() {
-//                filterModel.setLogData(logCollector.loadLatest(filterModel.getLatestLogs()));
+            public void onClick() {
+                filterModel.setLatestLogs(latestLogs);
             }
-        });
+        };
+
+        groupButton.add(new AttributeAppender("class", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                if (latestLogs.equals(filterModel.getLatestLogs())) {
+                    return "active";
+                }
+                return "";
+            }
+        }, " "));
+        add(groupButton);
     }
 
     public class FilterModel implements Serializable {

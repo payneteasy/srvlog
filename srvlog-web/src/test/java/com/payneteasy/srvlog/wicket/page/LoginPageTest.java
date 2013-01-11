@@ -29,11 +29,11 @@ public class LoginPageTest{
 //        Form form = (Form) wicketTester.getComponentFromLastRenderedPage("loginForm");
 //        assertEquals("", LoginPage.buildCheckUrl(""), form.getMarkupAttributes().getStringValue("action"));
 
-        wicketTester.assertComponent("loginForm:loginLabel", Label.class);
+
         wicketTester.assertComponent("loginForm:j_username", RequiredTextField.class);
         TextField username = (TextField) wicketTester.getComponentFromLastRenderedPage("loginForm:j_username");
         assertEquals("Username input field name property should be equal to j_username in order to support spring-security", "j_username", username.getInputName());
-        wicketTester.assertComponent("loginForm:passwordLabel", Label.class);
+
         wicketTester.assertComponent("loginForm:j_password", PasswordTextField.class);
 
         TextField password = (TextField) wicketTester.getComponentFromLastRenderedPage("loginForm:j_password");

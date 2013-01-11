@@ -41,6 +41,10 @@
             <param-name>applicationClassName</param-name>
             <param-value>com.payneteasy.srvlog.wicket.SrvlogUIApplication</param-value>
         </init-param>
+        <init-param>
+            <param-name>configuration</param-name>
+            <param-value>development</param-value>
+        </init-param>
     </filter>
 
     <filter-mapping>

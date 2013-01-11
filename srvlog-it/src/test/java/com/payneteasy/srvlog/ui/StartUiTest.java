@@ -31,4 +31,6 @@ public class StartUiTest extends CommonUiIntegrationTest{
 
         TimeUnit.SECONDS.sleep(3);
     }
+
+
 }

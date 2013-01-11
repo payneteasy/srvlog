@@ -1,10 +1,16 @@
 package com.payneteasy.srvlog;
 
+import com.nesscomputing.syslog4j.SyslogFacility;
+import com.nesscomputing.syslog4j.SyslogIF;
+import com.nesscomputing.syslog4j.server.SyslogServer;
+import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.srvlog.syslog.Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 /**
  * Date: 04.01.13
@@ -90,5 +96,60 @@ public class DatabaseUtil {
 
         private final boolean theIsErrorLevel;
         private final InputStream theIn;
+    }
+
+
+    public static void generateTestLogs(ILogCollector logCollector) {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 1, 0, 0, 0);
+
+        List<Integer> facilityList = Arrays.asList(0, 1, 2, 3); // from 0 to 23
+//        kern(0), user(1), mail(2), daemon(3), auth(4), syslog(5),
+//                lpr(6), news(7), uucp(8), cron(9), authpriv(10), ftp(11),
+//                ntp(12), audit(13), alert(14), clock(15),
+//                local0(16), local1(17), local2(18), local3(19), local4(20),
+//                local5(21), local6(22), local7(23);
+
+
+        List<Integer> severityList = Arrays.asList(0, 1, 2, 3); // from 0 to 6
+        // EMERGENCY(0), ALERT(1), CRITICAL(2), ERROR(3), WARN(4),  NOTICE(5), INFO(6), DEBUG(7);
+
+        List<String> hosts = Arrays.asList("host1", "host2");
+
+        int numOfDates = 10;
+        List<Date> dates = new ArrayList<Date>(numOfDates);
+
+        for (int i = 0; i < numOfDates; i++) {
+            c.roll(Calendar.DAY_OF_YEAR, 1);
+            dates.add(c.getTime());
+        }
+        System.out.println(dates);
+
+        for(Date d: dates) {
+            c.setTime(d);
+            for (int i = 0; i < facilityList.size(); i++) {
+
+                c.roll(Calendar.HOUR_OF_DAY, 1);
+
+                for (int j = 0; j < hosts.size(); j++) {
+
+                    LogData logData = new LogData();
+                    logData.setDate(c.getTime());
+                    logData.setFacility(i);
+                    logData.setSeverity(i);
+                    logData.setHost(hosts.get(j));
+                    logData.setMessage("Log from host " + hosts.get(j));
+                    logCollector.saveLog(logData);
+                    System.out.println(logData);
+                }
+
+
+            }
+
+        }
+    }
+
+    public static void main(String[] args) {
+        DatabaseUtil.generateTestLogs(null);
     }
 }

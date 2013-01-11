@@ -65,4 +65,12 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
     public Server getServer() {
         return server;
     }
+
+    public static void main(String[] args) {
+        try {
+            new CommonUiIntegrationTest().startWebapps();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
