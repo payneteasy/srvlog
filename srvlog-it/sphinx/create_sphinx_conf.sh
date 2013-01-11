@@ -10,13 +10,15 @@ mkdir data
 
 mkdir log
 
-APWD=$(PWD)
+fn_exists cygpath
 
-#echo $APWD
-
-
-SPHINX_DIR=`cygpath --windows $(PWD)`
-
+if [ $? -eq 0 ]
+    then
+        logInfo "Detected cygpath. Applying cygpath --windows to pwd"
+        SPHINX_DIR=`cygpath --windows $(PWD)`
+    else
+        SPHINX_DIR=$(PWD)
+    fi
 
 SPHINX_DIR=$(echo "$SPHINX_DIR" | sed 's#\\#/#g')
 

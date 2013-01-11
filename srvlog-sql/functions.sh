@@ -13,13 +13,10 @@ export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/tmp/mysql.sock}
 
 export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
-export SPHINX_DIR=${PATH_TO_MYSQL:-/tmp}
-
 fn_exists() {
     declare -f -F $1 > /dev/null
     return $?
 }
-
 
 logInfo() {
     # or tts -s
@@ -47,7 +44,7 @@ die() {
     errorCode=$?
     errorMessage=$1
     
-    if [ $errorCode != 0 ] 
+    if [ $errorCode != 0 ]
     then
         logError ".ERROR.: $errorCode - $errorMessage"
         test -t 0 || exit 1
