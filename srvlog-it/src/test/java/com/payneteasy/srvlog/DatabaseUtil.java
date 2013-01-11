@@ -3,10 +3,8 @@ package com.payneteasy.srvlog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import java.io.*;
+import java.util.List;
 
 /**
  * Date: 04.01.13
@@ -33,6 +31,33 @@ public class DatabaseUtil {
             }
         }
     }
+
+
+    public static Process runCommand(List<String> parameters, File workingDir) throws IOException {
+        LOG.info("Running {}", parameters);
+        ProcessBuilder pb = new ProcessBuilder(parameters);
+
+        if (workingDir != null) {
+            pb.directory(workingDir);
+        }
+
+        Process process = pb.start();
+        if(LOG.isInfoEnabled()) {
+            new Thread(new ProcessStreamReader(false, process.getInputStream())).start();
+        }
+        new Thread(new ProcessStreamReader(true, process.getErrorStream())).start();
+
+        return process;
+    }
+
+    public static void runCommandAndWaitUntilFinished(List<String> parameters, File workingDir) throws IOException, InterruptedException {
+        Process process = runCommand(parameters, workingDir);
+        int result = process.waitFor();
+        if(result!=0) {
+            throw new IllegalStateException("Error executing "+ parameters + "  [error_code="+result+"]");
+        }
+    }
+
 
     private static class ProcessStreamReader implements Runnable {
 
