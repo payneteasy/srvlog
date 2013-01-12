@@ -31,38 +31,24 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
     public void renderPage(){
         WicketTester wicketTester = getWicketTester();
 
-        EasyMock.expect(logCollector.loadLatest(25)).andReturn(getTestLogData(25));
+        List<LogData> testLogData25 = getTestLogData(25);
+        EasyMock.expect(logCollector.loadLatest(25)).andReturn(testLogData25);
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(OnlineLogMonitorPage.class);
-        //wicketTester.assertRenderedPage(OnlineLogMonitorPage.class);
 
         EasyMock.verify(logCollector);
-
         EasyMock.reset(logCollector);
 
-        EasyMock.expect(logCollector.loadLatest(50)).andReturn(getTestLogData(50));
+        List<LogData> testLogData50 = getTestLogData(50);
+        EasyMock.expect(logCollector.loadLatest(50)).andReturn(testLogData50);
 
         EasyMock.replay(logCollector);
 
-        FormTester formTester = wicketTester.newFormTester("search-form");
-        wicketTester.assertComponent("search-form:search-filter-latestChoice", DropDownChoice.class);
-        wicketTester.assertComponent("search-form:search-log-data", ListView.class);
-
-//        SEARCH FILTER
-        DropDownChoice<Integer> latestChoice = (DropDownChoice<Integer>) wicketTester.getComponentFromLastRenderedPage("search-form:search-filter-latestChoice");
-        //Assert.assertEquals("Expected 3 select choices : [25, 50, 100]", 25, latestChoice.getChoices().size());
-        formTester.select("search-filter-latestChoice", 1); // 0 is index
-
-        Integer latestChoiceValue = latestChoice.getModelObject();
-
-        formTester.submit("search-btn");
-
-//        ListView<LogData> listView = (ListView) wicketTester.getComponentFromLastRenderedPage("search-form:search-log-data");
-//        Assert.assertEquals(latestChoiceValue, Integer.valueOf(listView.getViewSize()));
+        wicketTester.clickLink("group-button-50");
 
         EasyMock.verify(logCollector);
-
+        EasyMock.reset(logCollector);
     }
 
     public static List<LogData> getTestLogData(Integer limit) {

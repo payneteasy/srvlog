@@ -10,15 +10,7 @@ mkdir data
 
 mkdir log
 
-fn_exists cygpath
-
-if [ $? -eq 0 ]
-    then
-        logInfo "Detected cygpath. Applying cygpath --windows to pwd"
-        SPHINX_DIR=`cygpath --windows $(PWD)`
-    else
-        SPHINX_DIR=$(PWD)
-    fi
+SPHINX_DIR=$([ $OS_NAME == "Cygwin" ] && cygpath --windows $(PWD) || $(PWD))
 
 SPHINX_DIR=$(echo "$SPHINX_DIR" | sed 's#\\#/#g')
 

@@ -13,6 +13,8 @@ export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/tmp/mysql.sock}
 
 export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
+OS_NAME=$(uname -o)
+
 fn_exists() {
     declare -f -F $1 > /dev/null
     return $?
@@ -23,21 +25,21 @@ logInfo() {
     test -t 0 && tput setaf 2 # green
     echo $1
     test -t 0 && tput sgr0
-    fn_exists logger && logger "$USER INFO: $1" || echo "$USER INFO: $1"
+    [ $OS_NAME == "Cygwin" ] && echo "$USER INFO: $1" || logger "$USER INFO: $1"
 }
 
 logError() {
     test -t 0 && tput setaf 1 # red
     echo $1
     test -t 0 && tput sgr0
-    fn_exists logger && logger "$USER ERROR: $1" || echo "$USER ERROR: $1"
+    [ $OS_NAME == "Cygwin" ] && echo "$USER ERROR: $1" || logger "$USER ERROR: $1"
 }
 
 logWarn() {
     test -t 0 && tput setaf 3 # yellow
     echo $1
     test -t 0 && tput sgr0
-    fn_exists logger && logger "$USER WARN: $1" || echo "$USER WARN: $1"
+    [ $OS_NAME == "Cygwin" ] && echo "$USER WARN: $1" || logger "$USER WARN: $1" 
 }
 
 die() {
