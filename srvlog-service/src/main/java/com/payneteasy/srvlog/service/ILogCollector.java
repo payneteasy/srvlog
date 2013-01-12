@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.service;
 
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface ILogCollector {
     void saveLog(LogData logData);
 
     List<LogData> loadLatest(int number_of_logs);
+
+    void saveHost(HostData hostData);
 }

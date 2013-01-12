@@ -16,16 +16,22 @@ engine = innodb;
 
 \. save_routine_information.sql
 
+\. save/save_host.sql
+
+\. save/save_log.sql
+
 \. create/create_collections.sql
 
 \. int/raise_application_error.sql
 
 \. get/get_procedures_resultset.sql
 
-\. save/save_log.sql
-
 \. get/get_log_by_id.sql
 
 \. get/get_latest.sql
+
+\. get/get_hosts.sql
+
+\. get/get_unprocessed_log_by_id.sql
 
 commit;

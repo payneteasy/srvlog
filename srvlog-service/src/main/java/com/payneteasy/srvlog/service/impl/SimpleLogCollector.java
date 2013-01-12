@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.dao.ILogDao;
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class SimpleLogCollector implements ILogCollector {
     @Override
     public List<LogData> loadLatest(int numberOfLogs) {
         return logDao.loadLatest(numberOfLogs);
+    }
+
+    @Override
+    public void saveHost(HostData hostData) {
+        logDao.saveHost(hostData);
     }
 
 

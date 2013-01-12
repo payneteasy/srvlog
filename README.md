@@ -1,5 +1,5 @@
 srvlog
 ======
 
-Centralized Log Collector
-Pure JAVA, MySQL and Sphinx solution
+Centralized Log Collector.
+JAVA, MySQL and Sphinx based solution.

@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.service;
 
+import com.payneteasy.srvlog.CommonIntegrationTest;
 import com.payneteasy.srvlog.DatabaseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 09.01.13
  * Time: 1:36
  */
-public class SphinxBaseIntegrationTest {
+public class SphinxBaseIntegrationTest extends CommonIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SphinxBaseIntegrationTest.class);
 
@@ -29,7 +30,9 @@ public class SphinxBaseIntegrationTest {
 
     @Before
     public void setUp() throws IOException, InterruptedException {
-        DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
+        super.setUp();
+        //DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
+        DatabaseUtil.generateTestLogs(context.getBean(ILogCollector.class));
         DatabaseUtil .runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"),new File("sphinx"));
         File targetWorkingDir = new File("target");
         DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("indexer", "--config","test-sphinx.conf", "--all"), targetWorkingDir);
@@ -46,7 +49,7 @@ public class SphinxBaseIntegrationTest {
 
         SphinxClient client = new SphinxClient();
         client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED);
-        client.SetSelect("log_date, facility, severity, host");
+        client.SetSelect("log_date, facility, severity, host_id");
         client.SetSortMode(SphinxClient.SPH_SORT_ATTR_DESC, "log_date");
         SphinxResult result = client.Query("message", "srvlog_index");
 

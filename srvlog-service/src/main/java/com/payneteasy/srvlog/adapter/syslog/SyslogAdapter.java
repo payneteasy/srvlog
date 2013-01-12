@@ -107,7 +107,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     @Override
     public void exception(SyslogServerIF syslogServer, SocketAddress socketAddress, Exception exception) {
-        LOG.error("Error while retrieving log.", exception);
+        LOG.error("While listening syslog.", exception);
     }
 
     @Override

@@ -5,10 +5,18 @@ import com.payneteasy.srvlog.DatabaseUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Date: 11.01.13
  */
 public class LoadTestDataTest extends CommonIntegrationTest {
+
+
+    @Override
+    protected void createDatabase() throws IOException, InterruptedException {
+        // do not touch database here
+    }
 
     @Ignore
     @Test

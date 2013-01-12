@@ -3,6 +3,8 @@ package com.payneteasy.srvlog;
 import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.nesscomputing.syslog4j.server.SyslogServer;
+import com.payneteasy.srvlog.dao.ILogDao;
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.syslog.Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest;
@@ -144,6 +146,8 @@ public class DatabaseUtil {
 
 
     public static void generateTestLogs(ILogCollector logCollector) {
+
+
         Calendar c = Calendar.getInstance();
         c.set(2012, 0, 1, 0, 0, 0);
 
@@ -159,6 +163,14 @@ public class DatabaseUtil {
         // EMERGENCY(0), ALERT(1), CRITICAL(2), ERROR(3), WARN(4),  NOTICE(5), INFO(6), DEBUG(7);
 
         List<String> hosts = Arrays.asList("host1", "host2");
+        HostData host1 = new HostData();
+        host1.setHostname("host1");
+
+        HostData host2 = new HostData();
+        host2.setHostname("host2");
+
+        logCollector.saveHost(host1);
+        logCollector.saveHost(host2);
 
         int numOfDates = 10;
         List<Date> dates = new ArrayList<Date>(numOfDates);
@@ -191,6 +203,16 @@ public class DatabaseUtil {
             }
 
         }
+    }
+
+
+    public static void addLocalhostToHostList(ILogDao logDao) {
+        HostData hostData = new HostData();
+        hostData.setHostname("localhost");
+        hostData.setIpAddress("127.0.0.1");
+        logDao.saveHost(hostData);
+
+
     }
 
     public static void main(String[] args) {

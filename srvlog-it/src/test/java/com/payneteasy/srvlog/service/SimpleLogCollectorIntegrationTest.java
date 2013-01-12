@@ -1,6 +1,8 @@
 package com.payneteasy.srvlog.service;
 
 import com.payneteasy.srvlog.CommonIntegrationTest;
+import com.payneteasy.srvlog.DatabaseUtil;
+import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +23,8 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
     private ILogCollector logCollector;
 
     @Override
-    protected ClassPathXmlApplicationContext createSpringContext() {
-        return new ClassPathXmlApplicationContext(
+    protected void createSpringContext() {
+        context = new ClassPathXmlApplicationContext(
                 "classpath:spring/spring-test-datasource.xml",
                 "classpath:spring/spring-dao.xml",
                 "classpath:spring/spring-service.xml",
@@ -35,6 +37,7 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
     public void setUp() throws IOException, InterruptedException {
         super.setUp();
         logCollector = context.getBean(ILogCollector.class);
+        DatabaseUtil.addLocalhostToHostList(context.getBean(ILogDao.class));
     }
 
     @Test

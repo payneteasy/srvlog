@@ -15,13 +15,13 @@ source srvlog_logs
 
 
 	sql_query		= \
-		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host, message \
+		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
 		FROM logs
 
 	sql_attr_uint		= facility
         sql_attr_uint		= severity
 	sql_attr_timestamp	= log_date
-        sql_attr_string         = host
+        sql_attr_uint           = host_id
 
 	sql_query_info		= SELECT * FROM logs WHERE log_id=$id
 }

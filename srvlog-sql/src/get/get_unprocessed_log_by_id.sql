@@ -1,21 +1,20 @@
-drop procedure if exists get_log_by_id;
+drop procedure if exists get_unprocessed_log_by_id;
 delimiter $$
-create procedure get_log_by_id(i_log_id int (10))
+create procedure get_unprocessed_log_by_id(i_log_id int (10))
 main_sql:
   begin
      select l.log_id,
             l.log_date,
-            h.hostname host,
+            l.host,
             l.severity,
             l.facility,
             l.message
-       from logs l
-            join hosts h on l.host_id = h.host_id
+       from unprocessed_logs l
       where l.log_id = i_log_id;
   end
 $$
 delimiter ;
-call save_routine_information('get_log_by_id',
+call save_routine_information('get_unprocessed_log_by_id',
                               concat_ws(',',
                                         'log_id int',
                                         'log_date datetime',

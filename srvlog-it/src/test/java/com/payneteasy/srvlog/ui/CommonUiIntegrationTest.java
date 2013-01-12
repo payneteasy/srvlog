@@ -34,8 +34,7 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
     }
 
     @Override
-    protected final ClassPathXmlApplicationContext createSpringContext() {
-        return null;
+    protected final void createSpringContext() {
     }
 
     @Override

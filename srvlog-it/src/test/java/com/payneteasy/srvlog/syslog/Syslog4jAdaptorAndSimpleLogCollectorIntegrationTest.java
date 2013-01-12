@@ -6,6 +6,7 @@ import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.CommonIntegrationTest;
 import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
+import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.junit.After;
@@ -31,8 +32,8 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
     private ILogCollector logCollector;
 
     @Override
-    protected ClassPathXmlApplicationContext createSpringContext() {
-        return new ClassPathXmlApplicationContext(
+    protected void createSpringContext() {
+        context =  new ClassPathXmlApplicationContext(
                 "classpath:spring/spring-test-datasource.xml",
                 "classpath:spring/spring-dao.xml",
                 "classpath:spring/spring-service.xml",
@@ -46,6 +47,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         super.setUp();
         syslogClient = createSyslog4jClient(context.getBean(ISyslogAdapterConfig.class));
         logCollector = context.getBean(ILogCollector.class);
+        DatabaseUtil.addLocalhostToHostList(context.getBean(ILogDao.class));
     }
 
     @After
@@ -57,6 +59,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
     @Test
     public void testRetrieveAndSaveSyslogMessage() throws InterruptedException {
         syslogClient.info("A test info message");
+        syslogClient.getConfig().setHost("localhost");
         int numberOfLogs = 25;
         int numOfTries = 3;
         List<LogData> logDataList = null;

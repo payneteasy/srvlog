@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.dao;
 
 import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,4 +23,13 @@ public interface ILogDao {
 
     @AStoredProcedure(name="get_latest")
     List<LogData> loadLatest(int numberOfLogs);
+
+    @AStoredProcedure(name="save_host")
+    void saveHost(HostData hostData);
+
+    @AStoredProcedure(name="get_hosts")
+    List<HostData> loadHosts();
+
+    @AStoredProcedure(name="get_unprocessed_log_by_id")
+    LogData finInUnporocessed(Long id);
 }
