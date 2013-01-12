@@ -1,6 +1,8 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.LogFacility;
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -47,8 +49,8 @@ public class OnlineLogMonitorPage extends BasePage {
             protected void populateItem(ListItem<LogData> item) {
                 LogData logData = item.getModelObject();
                 item.add(new Label("log-date", DateFormatUtils.SMTP_DATETIME_FORMAT.format(logData.getDate().getTime())));
-                item.add(new Label("log-severity", logData.getSeverity()));
-                item.add(new Label("log-facility", logData.getFacility()));
+                item.add(new Label("log-severity", LogLevel.forValue(logData.getSeverity())));
+                item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
                 item.add(new Label("log-message", logData.getMessage()));
             }

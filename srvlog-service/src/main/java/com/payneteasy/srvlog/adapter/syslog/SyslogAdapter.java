@@ -92,12 +92,16 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     @Override
     public void event(SyslogServerIF syslogServer, SocketAddress socketAddress, SyslogServerEventIF event) {
+
         LogData log = new LogData();
         log.setDate(event.getDate());
         log.setFacility(event.getFacility().getValue());
         log.setHost(event.getHost());
         log.setMessage(event.getMessage());
         log.setSeverity(event.getLevel().getValue());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Saving log: " + log);
+        }
         logCollector.saveLog(log);
     }
 

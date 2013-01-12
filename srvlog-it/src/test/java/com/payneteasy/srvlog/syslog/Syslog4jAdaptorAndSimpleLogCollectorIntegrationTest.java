@@ -4,11 +4,13 @@ import com.nesscomputing.syslog4j.Syslog;
 import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.CommonIntegrationTest;
+import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -69,15 +71,33 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         assertTrue("Logs should exist in defined time interval", logDataList.size() > 0);
     }
 
-    private SyslogIF createSyslog4jClient(ISyslogAdapterConfig syslogAdapterConfig) {
+    @Test
+    @Ignore
+    public void testLoadData() {
+        DatabaseUtil.generateTestLogsThroughSyslogClient(syslogClient);
+    }
+
+    public static SyslogIF createSyslog4jClient(ISyslogAdapterConfig syslogAdapterConfig) {
         SyslogIF udpSyslogClient = Syslog.getInstance(syslogAdapterConfig.getSyslogProtocol());
 
         udpSyslogClient.getConfig().setSendLocalName(false);
         udpSyslogClient.getConfig().setPort(syslogAdapterConfig.getSyslogPort());
-
-        udpSyslogClient.getConfig().setFacility(SyslogFacility.forValue(1));
-
+        udpSyslogClient.getConfig().setFacility(SyslogFacility.local0);
         return udpSyslogClient;
+    }
+
+    public static void main(String[] args) {
+        DatabaseUtil.generateTestLogsThroughSyslogClient(createSyslog4jClient(new ISyslogAdapterConfig() {
+            @Override
+            public String getSyslogProtocol() {
+                return "tcp";
+            }
+
+            @Override
+            public int getSyslogPort() {
+                return 514;
+            }
+        }));
     }
 
 
