@@ -1,13 +1,10 @@
 package com.payneteasy.srvlog;
 
-import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogIF;
-import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import com.payneteasy.srvlog.syslog.Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +142,8 @@ public class DatabaseUtil {
 
 
 
+
+
     public static void generateTestLogs(ILogCollector logCollector) {
 
 
@@ -163,14 +162,9 @@ public class DatabaseUtil {
         // EMERGENCY(0), ALERT(1), CRITICAL(2), ERROR(3), WARN(4),  NOTICE(5), INFO(6), DEBUG(7);
 
         List<String> hosts = Arrays.asList("host1", "host2");
-        HostData host1 = new HostData();
-        host1.setHostname("host1");
 
-        HostData host2 = new HostData();
-        host2.setHostname("host2");
 
-        logCollector.saveHost(host1);
-        logCollector.saveHost(host2);
+        addTestHostsToDatabase(logCollector);
 
         int numOfDates = 10;
         List<Date> dates = new ArrayList<Date>(numOfDates);
@@ -194,15 +188,43 @@ public class DatabaseUtil {
                     logData.setFacility(i);
                     logData.setSeverity(i);
                     logData.setHost(hosts.get(j));
-                    logData.setMessage("Log from host " + hosts.get(j));
+                    logData.setMessage("Big Log message from host " + hosts.get(j));
                     logCollector.saveLog(logData);
                     System.out.println(logData);
                 }
 
-
             }
 
         }
+    }
+
+    private static void addTestHostsToDatabase(ILogCollector logCollector) {
+
+        List<HostData> hostDataList = logCollector.loadHosts();
+
+
+        HostData host1 = new HostData();
+        host1.setHostname("host1");
+        if (!containsHost(hostDataList, host1)) {
+            logCollector.saveHost(host1);
+        }
+
+        HostData host2 = new HostData();
+        host2.setHostname("host2");
+        if (!containsHost(hostDataList, host1)) {
+            logCollector.saveHost(host2);
+        }
+
+    }
+
+    private static boolean containsHost(List<HostData> hostDataList, HostData host) {
+        for (HostData hostData : hostDataList) {
+            if(host.getHostname().equals(hostData.getHostname())) {
+                 return true;
+            }
+        }
+        return false;
+
     }
 
 

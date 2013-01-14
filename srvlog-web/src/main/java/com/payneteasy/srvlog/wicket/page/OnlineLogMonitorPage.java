@@ -48,11 +48,13 @@ public class OnlineLogMonitorPage extends BasePage {
             @Override
             protected void populateItem(ListItem<LogData> item) {
                 LogData logData = item.getModelObject();
+                String logLevel = LogLevel.forValue(logData.getSeverity());
                 item.add(new Label("log-date", DateFormatUtils.SMTP_DATETIME_FORMAT.format(logData.getDate().getTime())));
-                item.add(new Label("log-severity", LogLevel.forValue(logData.getSeverity())));
+                item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
                 item.add(new Label("log-message", logData.getMessage()));
+                setHighlightCssClass(logLevel, item);
             }
         });
     }
@@ -75,6 +77,60 @@ public class OnlineLogMonitorPage extends BasePage {
             }
         }, " "));
         add(groupButton);
+    }
+
+    private void setHighlightCssClass(String logLevel, ListItem listItem){
+       switch (LogLevel.valueOf(logLevel)){
+           case WARN:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "warning";
+                   }
+               }));
+            break;
+           case ERROR:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "error";
+                   }
+               }));
+            break;
+           case EMERGENCY:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "main-emergency";
+                   }
+               }));
+               break;
+           case CRITICAL:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "main-critical";
+                   }
+               }));
+               break;
+           case ALERT:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "warning";
+                   }
+               }));
+               break;
+           case INFO:
+               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                   @Override
+                   public Object getObject() {
+                       return "info";
+                   }
+               }));
+               break;
+
+       }
     }
 
     public class FilterModel implements Serializable {

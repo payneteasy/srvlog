@@ -39,5 +39,10 @@ public class SimpleLogCollector implements ILogCollector {
         logDao.saveHost(hostData);
     }
 
+    @Override
+    public List<HostData> loadHosts() {
+        return logDao.loadHosts();
+    }
+
 
 }
