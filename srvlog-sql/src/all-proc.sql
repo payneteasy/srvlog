@@ -34,4 +34,6 @@ engine = innodb;
 
 \. get/get_unprocessed_log_by_id.sql
 
+\. get/get_logs_by_ids.sql
+
 commit;

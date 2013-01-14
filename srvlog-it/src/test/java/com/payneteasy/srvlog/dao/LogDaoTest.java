@@ -102,6 +102,23 @@ public class LogDaoTest extends CommonIntegrationTest {
         assertEquals("loadLatest should return the numOfLogs log entries.", 7, logDataList.size());
     }
 
+    @Test
+    public void testGetLogsDataByIds(){
+        addLocalhostToHostList();
 
+        for (int i = 0; i < 11; i++) {
+            LogData logData = new LogData();
+            logData.setDate(new Date());
+            logData.setFacility(1);
+            logData.setSeverity(1);
+            logData.setHost("localhost");
+            logData.setMessage("Log message " + i);
+            logDao.saveLog(logData);
+        }
+
+        List<LogData> logDataList = logDao.getLogsByIds("1,2,3,4,5");
+        assertEquals("getLogsByIds should return 5 log entries.", 5, logDataList.size());
+
+    }
 
 }

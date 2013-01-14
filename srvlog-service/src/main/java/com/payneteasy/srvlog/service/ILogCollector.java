@@ -21,4 +21,6 @@ public interface ILogCollector {
     void saveHost(HostData hostData);
 
     List<HostData> loadHosts();
+
+    List<LogData> search(List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int startNum, int rowCount);
 }

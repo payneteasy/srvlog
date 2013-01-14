@@ -32,4 +32,8 @@ public interface ILogDao {
 
     @AStoredProcedure(name="get_unprocessed_log_by_id")
     LogData finInUnporocessed(Long id);
+
+    @AStoredProcedure(name="get_logs_by_ids")
+    List<LogData> getLogsByIds(String logIds);
+
 }
