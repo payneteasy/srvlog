@@ -15,14 +15,13 @@ public class CommonIntegrationTest {
 
     protected ClassPathXmlApplicationContext context;
 
-    @Before
+
     public void setUp() throws IOException, InterruptedException {
         createDatabase();
         createSpringContext();
     }
 
     protected void createSpringContext() {
-
         context =  new ClassPathXmlApplicationContext("classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml");
     }
 
@@ -30,7 +29,7 @@ public class CommonIntegrationTest {
         DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
     }
 
-    @After
+
     public void tearDown() {
         if (context != null) {
             context.close();

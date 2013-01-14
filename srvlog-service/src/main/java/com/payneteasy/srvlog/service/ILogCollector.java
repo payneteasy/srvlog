@@ -3,6 +3,7 @@ package com.payneteasy.srvlog.service;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,5 +23,5 @@ public interface ILogCollector {
 
     List<HostData> loadHosts();
 
-    List<LogData> search(List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int startNum, int rowCount);
+    List<LogData> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int offset, int limit) throws IndexerServiceException;
 }
