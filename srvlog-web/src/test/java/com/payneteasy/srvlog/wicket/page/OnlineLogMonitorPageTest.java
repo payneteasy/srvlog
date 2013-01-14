@@ -55,8 +55,8 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
         ArrayList<LogData> listData = new ArrayList<LogData>();
         for (int i = 1; i <=limit; i++) {
             LogData logData = new LogData();
-            logData.setSeverity(i);
-            logData.setFacility(i);
+            logData.setSeverity(1);
+            logData.setFacility(1);
             logData.setHost("localhost");
             logData.setDate(new Date());
             logData.setId(Long.valueOf(i));
