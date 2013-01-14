@@ -15,10 +15,11 @@ export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
 SYSTEM=`uname`
 
+
 case "$SYSTEM" in
-  CYGWIN*) OS_NAME="cygwin" ;;
-  Darwin*) OS_NAME="macosx"  ;;
-  Linux*)  OS_NAME="linux"   ;;
+  CYGWIN*) OS_NAME="Cygwin" ;;
+  Darwin*) OS_NAME="macosx"  ;;
+  Linux*)  OS_NAME="linux"   ;;
 esac
 
 
