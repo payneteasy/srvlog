@@ -50,8 +50,10 @@ public class SphinxBaseIntegrationTest extends CommonIntegrationTest {
         SphinxClient client = new SphinxClient();
         client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED);
         client.SetSelect("log_date, facility, severity, host_id");
+        client.SetFilter("host_id", 1, false);
+        client.SetLimits(20, 20);
         client.SetSortMode(SphinxClient.SPH_SORT_ATTR_DESC, "log_date");
-        SphinxResult result = client.Query("message", "srvlog_index");
+        SphinxResult result = client.Query("", "srvlog_index");
 
         System.out.println(result.matches.length + " results found.");
         for (SphinxMatch sm : result.matches) {
