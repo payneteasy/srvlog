@@ -10,7 +10,7 @@ mkdir data
 
 mkdir log
 
-SPHINX_DIR=$([ $OS_NAME == "Cygwin" ] && cygpath --windows $(PWD) || $(PWD))
+SPHINX_DIR=$([ "$OS_NAME" = "Cygwin" ] && cygpath --windows $(PWD) || echo $(PWD))
 
 SPHINX_DIR=$(echo "$SPHINX_DIR" | sed 's#\\#/#g')
 
