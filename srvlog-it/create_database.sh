@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo $PATH
+
 . ../srvlog-sql/functions.sh
 
 cd ../srvlog-sql/db

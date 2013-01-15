@@ -58,7 +58,7 @@ public class MainPageTest extends AbstractWicketTester {
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
         // this call is necessary to expect because wicketTester checks for component visibility
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
+//        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
 //        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(getTestLogData);
 //        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 50, 26)).andReturn(getTestLogData);
 //        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(getTestLogData);

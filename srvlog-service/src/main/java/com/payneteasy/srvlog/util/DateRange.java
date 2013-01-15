@@ -1,12 +1,13 @@
 package com.payneteasy.srvlog.util;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Date: 15.01.13 Time: 12:51
  */
-public class DateRange {
+public class DateRange implements Serializable{
     private Date fromDate;
     private Date toDate;
 
