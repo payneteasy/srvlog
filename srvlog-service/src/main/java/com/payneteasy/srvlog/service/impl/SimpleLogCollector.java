@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,11 @@ public class SimpleLogCollector implements ILogCollector {
     public List<LogData> search(Date from , Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int offset, int limit) throws IndexerServiceException {
         List<Long> ids = indexerService.search(from, to, facilities, severities, hosts, pattern, offset, limit);
         String stringIds = StringUtils.collectionToCommaDelimitedString(ids);
-        return logDao.getLogsByIds(stringIds);
+        if(StringUtils.hasText(stringIds)){
+            return logDao.getLogsByIds(stringIds);
+        }else {
+            return Collections.<LogData>emptyList();
+        }
     }
 
     public void setIndexerService(IIndexerService indexerService) {

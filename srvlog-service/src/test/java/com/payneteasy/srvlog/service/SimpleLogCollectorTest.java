@@ -14,10 +14,7 @@ import org.junit.Test;
 import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.easymock.EasyMock.*;
@@ -26,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Date: 04.01.13
  */
-@Ignore
+//@Ignore
 public class SimpleLogCollectorTest {
 
     @Test

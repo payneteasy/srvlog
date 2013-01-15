@@ -20,6 +20,8 @@ import org.springframework.security.access.annotation.Secured;
 import java.io.Serializable;
 import java.util.List;
 
+import static com.payneteasy.srvlog.wicket.component.repeater.LogDataTableUtil.setHighlightCssClass;
+
 /**
  * Date: 09.01.13
  */
@@ -77,60 +79,6 @@ public class OnlineLogMonitorPage extends BasePage {
             }
         }, " "));
         add(groupButton);
-    }
-
-    private void setHighlightCssClass(String logLevel, ListItem listItem){
-       switch (LogLevel.valueOf(logLevel)){
-           case WARN:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "warning";
-                   }
-               }));
-            break;
-           case ERROR:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "error";
-                   }
-               }));
-            break;
-           case EMERGENCY:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "main-emergency";
-                   }
-               }));
-               break;
-           case CRITICAL:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "main-critical";
-                   }
-               }));
-               break;
-           case ALERT:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "warning";
-                   }
-               }));
-               break;
-           case INFO:
-               listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
-                   @Override
-                   public Object getObject() {
-                       return "info";
-                   }
-               }));
-               break;
-
-       }
     }
 
     public class FilterModel implements Serializable {
