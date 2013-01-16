@@ -20,7 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.payneteasy.srvlog.wicket.component.repeater.LogDataTableUtil.setHighlightCssClass;
+import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
 
 /**
  * Date: 09.01.13

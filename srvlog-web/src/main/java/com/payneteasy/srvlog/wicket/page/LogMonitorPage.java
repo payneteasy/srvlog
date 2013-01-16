@@ -5,20 +5,19 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
+import com.payneteasy.srvlog.wicket.component.navigation.PageableDataProvider;
+import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableListView;
+import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableNavigator;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -26,7 +25,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.payneteasy.srvlog.wicket.component.repeater.LogDataTableUtil.setHighlightCssClass;
+import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
 
 /**
  * Date: 11.01.13
@@ -43,6 +42,8 @@ public class LogMonitorPage extends BasePage {
 
         Form<FilterModel> form = new Form<FilterModel>("form");
         add(form);
+
+        form.add(new TextField<String>("pattern", new PropertyModel<String>(filterModel, "pattern")));
 
         final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<DateRangeType>(
                 "date-range-type"
@@ -156,13 +157,14 @@ public class LogMonitorPage extends BasePage {
         form.add(new Button("search-button") {
             @Override
             public void onSubmit() {
-                System.out.println(filterModel.getDateRange());
+
             }
         });
 
-        IModel<List<LogData>> listDataModel = new LoadableDetachableModel<List<LogData>>() {
+
+        PageableDataProvider<LogData> dataProvider = new PageableDataProvider<LogData>() {
             @Override
-            protected List<LogData> load() {
+            public Collection<LogData> load(int offset, int limit) {
                 try {
                     return logCollector.search(
                             filterModel.getDateRange().getFromDate()
@@ -171,18 +173,17 @@ public class LogMonitorPage extends BasePage {
                             , filterModel.getSeverityIds()
                             , filterModel.getHostIds()
                             , filterModel.getPattern()
-                            , 0
-                            , 26);
+                            , offset
+                            , limit);
                 } catch (IndexerServiceException e) {
-                    error("Error while retrieving log data"); //TODO fetch message from resource file
+                    error("Error while retrieving log data: " + e.getMessage()); //TODO fetch message from resource file
                     return Collections.emptyList();
-                }
-            }
+                }            }
         };
 
-        ListView<LogData> listLogDataView = new ListView<LogData>("list-log-data", listDataModel) {
+        UncountablyPageableListView<LogData> listView = new UncountablyPageableListView<LogData>("list-log-data", dataProvider, 25) {
             @Override
-            protected void populateItem(ListItem<LogData> item) {
+            protected void populateItem(Item<LogData> item) {
                 LogData logData = item.getModelObject();
                 String logLevel = LogLevel.forValue(logData.getSeverity());
                 item.add(new Label("log-date", DateFormatUtils.SMTP_DATETIME_FORMAT.format(logData.getDate().getTime())));
@@ -193,7 +194,9 @@ public class LogMonitorPage extends BasePage {
                 setHighlightCssClass(logLevel, item);
             }
         };
-        add(listLogDataView);
+        add(listView);
+
+        add(new UncountablyPageableNavigator<LogData>("paging-navigator", listView));
     }
 
     private boolean isVisibleDateField(DateRangeType type){
@@ -231,6 +234,7 @@ public class LogMonitorPage extends BasePage {
             this.dateRangeType = DateRangeType.TODAY;
             this.severities = new ArrayList<LogLevel>();
             this.facilities = new ArrayList<LogFacility>();
+
         }
 
         public void setDateRangeType(DateRangeType dateRangeType) {

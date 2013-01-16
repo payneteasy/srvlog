@@ -6,6 +6,10 @@ package com.payneteasy.srvlog.service;
  */
 public class IndexerServiceException extends Exception {
 
+    public IndexerServiceException(String message) {
+        super(message);
+    }
+
     public IndexerServiceException(String message, Throwable throwable) {
         super(message, throwable);
     }

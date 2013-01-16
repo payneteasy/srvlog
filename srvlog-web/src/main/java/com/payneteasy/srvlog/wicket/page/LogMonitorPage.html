@@ -11,7 +11,7 @@
             <form wicket:id="form">
 
                 <div class="input-append main-input-append">
-                    <input class="span11" id="appendedInputButton" type="text">
+                    <input class="span11" id="appendedInputButton" wicket:id="pattern" type="text"/>
                     <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
                 </div>
                 <div class="well main-filter-container">
@@ -42,6 +42,8 @@
                 </div>
 
             </form>
+
+        <div wicket:id="paging-navigator"></div>
 
         <table class="table table-bordered table-striped table-hover main-table">
             <colgroup>

@@ -95,20 +95,44 @@ public class LogMonitorPageTest extends AbstractWicketTester {
 
     }
 
-    @Ignore
     @Test
-    public void testPager() throws IndexerServiceException {
+    public void testSearchForPattern() throws IndexerServiceException {
+        WicketTester wicketTester = getWicketTester();
+        DateRange today = DateRange.today();
+        List<LogData> searchLogData = getTestLogData();
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), "search me", 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(LogMonitorPage.class);
+
+        FormTester formTester = wicketTester.newFormTester("form");
+
+        formTester.setValue("pattern", "search me");
+
+        formTester.submit("search-button");
+
+        EasyMock.verify();
+    }
+
+
+    @Test
+    public void testPaging() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
         DateRange today = DateRange.today();
         List<LogData> testLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
-        Component component = wicketTester.getComponentFromLastRenderedPage("table-logs:pager:paging-next", false);
-        wicketTester.clickLink(component);
+        wicketTester.clickLink("paging-navigator:paging-next");
+        wicketTester.clickLink("paging-navigator:paging-previous");
+
         EasyMock.verify(logCollector);
+
     }
 
     @Test
@@ -137,7 +161,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
         wicketTester.assertComponent("feedback-panel", FeedbackPanel.class);
-        wicketTester.assertErrorMessages("Error while retrieving log data");
+        wicketTester.assertErrorMessages("Error while retrieving log data: While calling indexing service");
         EasyMock.verify(logCollector);
 
     }

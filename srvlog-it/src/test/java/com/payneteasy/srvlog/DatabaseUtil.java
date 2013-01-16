@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Date: 04.01.13
@@ -123,7 +124,7 @@ public class DatabaseUtil {
             c.roll(Calendar.DAY_OF_YEAR, 1);
             dates.add(c.getTime());
         }
-        System.out.println(dates);
+        //System.out.println(dates);
 
         for(Date d: dates) {
             c.setTime(d);
@@ -132,9 +133,8 @@ public class DatabaseUtil {
                 c.roll(Calendar.HOUR_OF_DAY, 1);
 
                 for (int j = 0; j < hosts.size(); j++) {
-                    syslogClient.warn("A warning from syslog client");
 
-
+                    syslogClient.warn("A warning from syslog client with additional info for testing long logs messages. This message should be properly wrapped on the front-end.");
                     syslogClient.info("A info from syslog client");
                 }
             }
@@ -189,7 +189,7 @@ public class DatabaseUtil {
                     logData.setFacility(i);
                     logData.setSeverity(i);
                     logData.setHost(hosts.get(j));
-                    logData.setMessage("Big Log message from host " + hosts.get(j));
+                    logData.setMessage("Big Log message from host " + hosts.get(j) + " for testing long messages on the UI");
                     logCollector.saveLog(logData);
                     System.out.println(logData);
                 }
