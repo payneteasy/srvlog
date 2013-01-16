@@ -52,14 +52,15 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
 
     @After
     public void tearDown() {
-        super.tearDown();
         syslogClient.shutdown();
+        super.tearDown();
     }
 
     @Test
     public void testRetrieveAndSaveSyslogMessage() throws InterruptedException {
-        syslogClient.info("A test info message");
         syslogClient.getConfig().setHost("localhost");
+        syslogClient.info("A test info message");
+        syslogClient.flush();
         int numberOfLogs = 25;
         int numOfTries = 3;
         List<LogData> logDataList = null;
@@ -74,11 +75,6 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         assertTrue("Logs should exist in defined time interval", logDataList.size() > 0);
     }
 
-    @Test
-    @Ignore
-    public void testLoadData() {
-        DatabaseUtil.generateTestLogsThroughSyslogClient(syslogClient);
-    }
 
     public static SyslogIF createSyslog4jClient(ISyslogAdapterConfig syslogAdapterConfig) {
         SyslogIF udpSyslogClient = Syslog.getInstance(syslogAdapterConfig.getSyslogProtocol());
@@ -90,7 +86,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
     }
 
     public static void main(String[] args) {
-        DatabaseUtil.generateTestLogsThroughSyslogClient(createSyslog4jClient(new ISyslogAdapterConfig() {
+        SyslogIF syslog4jClient = createSyslog4jClient(new ISyslogAdapterConfig() {
             @Override
             public String getSyslogProtocol() {
                 return "tcp";
@@ -98,9 +94,19 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
 
             @Override
             public int getSyslogPort() {
-                return 514;
+                return 1514;
             }
-        }));
+        });
+        try {
+            DatabaseUtil.generateTestLogsThroughSyslogClient(syslog4jClient);
+            syslog4jClient.flush();
+        }finally {
+            if (syslog4jClient !=null) {
+
+                syslog4jClient.shutdown();
+            }
+        }
+
     }
 
 

@@ -15,7 +15,7 @@ public class CommonIntegrationTest {
 
     protected ClassPathXmlApplicationContext context;
 
-
+    @Before
     public void setUp() throws IOException, InterruptedException {
         createDatabase();
         createSpringContext();
@@ -29,7 +29,7 @@ public class CommonIntegrationTest {
         DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
     }
 
-
+    @After
     public void tearDown() {
         if (context != null) {
             context.close();

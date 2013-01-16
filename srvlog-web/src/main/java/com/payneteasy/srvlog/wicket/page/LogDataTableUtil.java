@@ -1,4 +1,4 @@
-package com.payneteasy.srvlog.wicket.component.repeater;
+package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogLevel;
 import org.apache.wicket.behavior.AttributeAppender;

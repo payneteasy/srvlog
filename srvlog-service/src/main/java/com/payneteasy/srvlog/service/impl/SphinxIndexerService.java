@@ -2,6 +2,9 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
 import org.sphx.api.SphinxMatch;
@@ -18,6 +21,8 @@ import java.util.*;
 @Service
 public class SphinxIndexerService implements IIndexerService{
 
+    private static final Logger LOG = LoggerFactory.getLogger(SphinxIndexerService.class);
+
     @Override
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
         SphinxClient sphinxClient = new SphinxClient();
@@ -25,7 +30,9 @@ public class SphinxIndexerService implements IIndexerService{
         if (from != null && to != null) {
             try {
                 sphinxClient.SetFilterRange("log_date", toUnixTime(from), toUnixTime(to), false);
+                sphinxClient.SetSortMode(SphinxClient.SPH_SORT_ATTR_DESC, "log_date");
             } catch (SphinxException e) {
+                LOG.error("While trying to set date range", e);
                 throw new IndexerServiceException("While trying to set date range", e);
             }
         }
@@ -40,10 +47,14 @@ public class SphinxIndexerService implements IIndexerService{
         if (offset != null && limit != null) {
             try {
                 sphinxClient.SetLimits(offset, limit);
+
             } catch (SphinxException e) {
+                LOG.error("While trying to set limits", e);
                 throw new IndexerServiceException("While trying to set limits", e);
             }
         }
+
+
         if (pattern == null) {
             pattern = "";
         }
@@ -52,11 +63,20 @@ public class SphinxIndexerService implements IIndexerService{
         try {
             result = sphinxClient.Query(pattern);
         } catch (SphinxException e) {
+            LOG.error("While sending query to Sphinx Daemon", e);
             throw new IndexerServiceException("While sending query to Sphinx Daemon", e);
         }
         if (result == null || result.matches.length == 0) {
+            if (StringUtils.isNotEmpty(sphinxClient.GetLastError())) {
+                LOG.error("While sending query to Sphinx Daemon: " + sphinxClient.GetLastError());
+                throw new IndexerServiceException("While sending query to Sphinx Daemon: " + sphinxClient.GetLastError());
+            }
             return Collections.emptyList();
         }
+        if (StringUtils.isNotEmpty(sphinxClient.GetLastWarning())) {
+            LOG.warn("From Sphinx Daemon: " + sphinxClient.GetLastWarning());
+        }
+
         List<Long> logIds = new LinkedList<Long>();
         for (SphinxMatch sm: result.matches) {
             logIds.add(sm.docId);

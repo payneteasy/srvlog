@@ -12,7 +12,8 @@ main_sql:
             ' l.message',
        ' from logs l',
        ' join hosts h on l.host_id = h.host_id ',
-       ' where l.log_id in (',i_log_ids, ');');
+       ' where l.log_id in (',i_log_ids, ')',
+       ' order by l.log_date desc');
 
     prepare v_stmt from @v_ddl_statement;
     execute v_stmt;
