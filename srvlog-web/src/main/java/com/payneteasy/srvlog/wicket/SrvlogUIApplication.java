@@ -1,16 +1,14 @@
 package com.payneteasy.srvlog.wicket;
 
 import com.google.common.collect.Lists;
-import com.payneteasy.srvlog.wicket.page.BasePage;
+import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
 import com.payneteasy.srvlog.wicket.page.MainPage;
 import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
-import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 
@@ -33,9 +31,11 @@ public class SrvlogUIApplication extends WebApplication{
 
         addSpringComponentInjector();
         //PAGES
-        mountPage("main", LoginPage.class);
+        mountPage("main", MainPage.class);
+        mountPage("logs", LogMonitorPage.class);
+        mountPage("online-logs", OnlineLogMonitorPage.class);
+
         mountPage("login", LoginPage.class);
-        mountPage("logs", OnlineLogMonitorPage.class);
     }
 
     protected void addSpringComponentInjector(){
