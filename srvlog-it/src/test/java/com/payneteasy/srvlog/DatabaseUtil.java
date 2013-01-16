@@ -212,9 +212,17 @@ public class DatabaseUtil {
 
         HostData host2 = new HostData();
         host2.setHostname("host2");
-        if (!containsHost(hostDataList, host1)) {
+        if (!containsHost(hostDataList, host2)) {
             logCollector.saveHost(host2);
         }
+
+        HostData localhost = new HostData();
+        localhost.setHostname("localhost");
+        localhost.setIpAddress("127.0.0.1");
+        if (!containsHost(hostDataList, localhost)) {
+            logCollector.saveHost(localhost);
+        }
+
 
     }
 

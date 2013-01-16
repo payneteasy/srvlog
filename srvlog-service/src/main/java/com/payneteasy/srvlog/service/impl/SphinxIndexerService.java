@@ -30,6 +30,7 @@ public class SphinxIndexerService implements IIndexerService{
         if (from != null && to != null) {
             try {
                 sphinxClient.SetFilterRange("log_date", toUnixTime(from), toUnixTime(to), false);
+                sphinxClient.SetSortMode(SphinxClient.SPH_SORT_ATTR_DESC, "log_date");
             } catch (SphinxException e) {
                 LOG.error("While trying to set date range", e);
                 throw new IndexerServiceException("While trying to set date range", e);
@@ -46,11 +47,14 @@ public class SphinxIndexerService implements IIndexerService{
         if (offset != null && limit != null) {
             try {
                 sphinxClient.SetLimits(offset, limit);
+
             } catch (SphinxException e) {
                 LOG.error("While trying to set limits", e);
                 throw new IndexerServiceException("While trying to set limits", e);
             }
         }
+
+
         if (pattern == null) {
             pattern = "";
         }
