@@ -15,9 +15,18 @@
                     <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
                 </div>
                 <div class="well main-filter-container">
-                    <select wicket:id="date-range-type">
-                        <option id="TODAY">TODAY</option>
-                    </select>
+
+                    <div>
+                        <select wicket:id="date-range-type">
+                            <option id="TODAY">TODAY</option>
+                        </select>
+
+                        <div wicket:id="holder-exactly-dateRange">
+                            <input  wicket:id="dateFrom-field" />
+                            <input  wicket:id="dateTo-field" />
+                        </div>
+
+                    </div>
 
                     <select wicket:id="severity-choice">
                         <option id="ALERT">ALERT</option>

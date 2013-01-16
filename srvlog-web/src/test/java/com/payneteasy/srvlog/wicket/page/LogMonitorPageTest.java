@@ -7,8 +7,11 @@ import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
+import com.payneteasy.srvlog.util.DateRangeType;
 import junit.framework.Assert;
 import org.apache.wicket.Component;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.tester.FormTester;
@@ -58,6 +61,40 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         EasyMock.verify(logCollector);
     }
 
+    @Test
+    public void testExactlyDateRangeFilter() throws IndexerServiceException {
+        WicketTester wicketTester = getWicketTester();
+        DateRange today = DateRange.today();
+        List<LogData> searchLogData = getTestLogData();
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+
+        DateRange exactly = DateRange.thisMonth();
+        EasyMock.expect(logCollector.search(exactly.getFromDate(), exactly.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), null, 0, 26)).andReturn(searchLogData);
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(LogMonitorPage.class);
+        wicketTester.assertInvisible("form:holder-exactly-dateRange");
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.select("date-range-type", 6); //6 - date, 7 - time
+
+        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
+
+
+        wicketTester.assertVisible("form:holder-exactly-dateRange");
+
+        formTester.setValue("holder-exactly-dateRange:dateFrom-field", "1.1.2013");
+        formTester.setValue("holder-exactly-dateRange:dateTo-field", "1.2.2013");
+
+        formTester.select("date-range-type", 6); //6 - date, 7 - time
+
+        formTester.submit("search-button");
+
+        EasyMock.verify(logCollector);
+
+    }
+
     @Ignore
     @Test
     public void testPager() throws IndexerServiceException {
@@ -66,20 +103,11 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         List<LogData> testLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
-        // this call is necessary to expect because wicketTester checks for component visibility
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
-//        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
-//        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(getTestLogData);
-//        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 50, 26)).andReturn(getTestLogData);
-//        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(getTestLogData);
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
         Component component = wicketTester.getComponentFromLastRenderedPage("table-logs:pager:paging-next", false);
         wicketTester.clickLink(component);
-
-        //wicketTester.clickLink("table-logs:pager:paging-next");
-//        wicketTester.clickLink("table-logs:pager:paging-next");
-//        wicketTester.clickLink("table-logs:pager:paging-first");
         EasyMock.verify(logCollector);
     }
 

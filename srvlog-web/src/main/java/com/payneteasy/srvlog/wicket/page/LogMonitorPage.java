@@ -6,6 +6,12 @@ import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.extensions.yui.calendar.DatePicker;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -38,9 +44,14 @@ public class LogMonitorPage extends BasePage {
         Form<FilterModel> form = new Form<FilterModel>("form");
         add(form);
 
-        form.add(new DropDownChoice<DateRangeType>(
+        final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<DateRangeType>(
                 "date-range-type"
-                , new PropertyModel<DateRangeType>(filterModel, "dateRangeType")
+                , new PropertyModel<DateRangeType>(filterModel, "dateRangeType") {
+            @Override
+            public void setObject(DateRangeType object) {
+                super.setObject(object);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+        }
                 , Arrays.asList(DateRangeType.values())
                 , new IChoiceRenderer<DateRangeType>() {
             @Override
@@ -52,7 +63,44 @@ public class LogMonitorPage extends BasePage {
             public String getIdValue(DateRangeType object, int index) {
                 return object.name();
             }
-        }));
+        });
+        form.add(dateRangeType);
+        dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+//                if(isVisibleDateField(filterModel.getDateRangeType())){
+//                    holderDateRangeContainer.setVisible(true);
+//                    target.add(holderDateRangeContainer);
+//                }else {
+//                    holderDateRangeContainer.setVisible(false);
+//                    target.add(holderDateRangeContainer);
+//                }
+                dateRangeType.onSelectionChanged();
+
+                target.add(holderDateRangeContainer);
+            }
+        });
+
+        holderDateRangeContainer = new WebMarkupContainer("holder-exactly-dateRange") {
+
+            @Override
+            public boolean isVisible() {
+                return isVisibleDateField(filterModel.getDateRangeType());    //To change body of overridden methods use File | Settings | File Templates.
+            }
+        };
+        holderDateRangeContainer.setOutputMarkupPlaceholderTag(true);
+        //holderDateRangeContainer.setVisible(isVisibleDateField(filterModel.getDateRangeType()));
+        form.add(holderDateRangeContainer);
+
+        dateFromTextField = new DateTextField("dateFrom-field", new PropertyModel<Date>(filterModel, "exactlyDateFrom"), "dd.MM.yyyy");
+        dateFromTextField.add(new DatePicker());
+        holderDateRangeContainer.add(dateFromTextField);
+
+        dateToTextField = new DateTextField("dateTo-field", new PropertyModel<Date>(filterModel, "exactlyDateTo"), "dd.MM.yyyy");
+        dateToTextField.add(new DatePicker());
+        holderDateRangeContainer.add(dateToTextField);
+
+
 
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
                 "severity-choice"
@@ -67,8 +115,7 @@ public class LogMonitorPage extends BasePage {
             public String getIdValue(LogLevel object, int index) {
                 return object.name();
             }
-        }
-        );
+        });
         form.add(severityChoice);
 
         //TODO needed refactoring this component
@@ -85,8 +132,7 @@ public class LogMonitorPage extends BasePage {
             public String getIdValue(LogFacility object, int index) {
                 return object.name();
             }
-        }
-        );
+        });
         form.add(facilityChoice);
 
         List<HostData> hostData = logCollector.loadHosts();
@@ -104,14 +150,13 @@ public class LogMonitorPage extends BasePage {
             public String getIdValue(HostData object, int index) {
                 return object.getHostname();
             }
-        }
-        );
+        });
         form.add(hostDataChoice);
-
 
         form.add(new Button("search-button") {
             @Override
             public void onSubmit() {
+                System.out.println(filterModel.getDateRange());
             }
         });
 
@@ -151,12 +196,25 @@ public class LogMonitorPage extends BasePage {
         add(listLogDataView);
     }
 
+    private boolean isVisibleDateField(DateRangeType type){
+        if(DateRangeType.EXACTLY_DATE.equals(type) || DateRangeType.EXACTLY_TIME.equals(type)){
+            return true;
+        }
+        return false;
+    }
+
     @SpringBean
     private ILogCollector logCollector;
+
+    private DateTextField dateFromTextField;
+    private DateTextField dateToTextField;
+    private WebMarkupContainer holderDateRangeContainer;
 
     private class FilterModel implements Serializable {
         private DateRange dateRange;
         private DateRangeType dateRangeType;
+        private Date exactlyDateFrom;
+        private Date exactlyDateTo;
 
         private List<Integer> facilityIds;
         private List<LogFacility> facilities;
@@ -175,19 +233,26 @@ public class LogMonitorPage extends BasePage {
             this.facilities = new ArrayList<LogFacility>();
         }
 
-        public DateRange getDateRange() {
-            return dateRange;
-        }
-
         public void setDateRangeType(DateRangeType dateRangeType) {
             this.dateRangeType = dateRangeType;
             setDateRange();
         }
-
         public DateRangeType getDateRangeType() {
             return dateRangeType;
         }
 
+        public Date getExactlyDateFrom() { return exactlyDateFrom; }
+        public void setExactlyDateFrom(Date exactlyDateFrom) { this.exactlyDateFrom = exactlyDateFrom; }
+
+        public Date getExactlyDateTo() { return exactlyDateTo; }
+        public void setExactlyDateTo(Date exactlyDateTo) { this.exactlyDateTo = exactlyDateTo; }
+
+        public DateRange getDateRange() {
+            if(isVisibleDateField(this.dateRangeType)){
+               dateRange = new DateRange(exactlyDateFrom, exactlyDateTo);
+            }
+            return dateRange;
+        }
         private void setDateRange() {
             switch (this.dateRangeType) {
                 case TODAY:
@@ -208,6 +273,10 @@ public class LogMonitorPage extends BasePage {
                 case LAST_MONTH:
                     dateRange = DateRange.lastMonth();
                     break;
+                case EXACTLY_DATE:
+                    break;
+                case EXACTLY_TIME:
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown date range type: " + this.dateRangeType);
             }
@@ -215,45 +284,31 @@ public class LogMonitorPage extends BasePage {
 
 
         //FACILITY
-        public List<Integer> getFacilityIds() {
-            return facilityIds;
-        }
-
+        public List<Integer> getFacilityIds() { return facilityIds; }
         private void setFacilityIds(List<LogFacility> logFacilities) {
             this.facilityIds = getListIdsFromListEnum(logFacilities);
         }
 
-        public List<LogFacility> getFacilities() {
-            return facilities;
-        }
-
+        public List<LogFacility> getFacilities() { return facilities; }
         public void setFacilities(List<LogFacility> facilities) {
             this.facilities = facilities;
             setFacilityIds(facilities);
         }
 
         //SEVERITY
-        public List<Integer> getSeverityIds() {
-            return severityIds;
-        }
-
+        public List<Integer> getSeverityIds() { return severityIds; }
         private void setSeverityIds(List<LogLevel> logLevels) {
             this.severityIds = getListIdsFromListEnum(logLevels);
         }
 
-        public List<LogLevel> getSeverities() {
-            return severities;
-        }
-
+        public List<LogLevel> getSeverities() { return severities; }
         public void setSeverities(List<LogLevel> severities) {
             this.severities = severities;
             setSeverityIds(severities);
         }
 
-        public List<Integer> getHostIds() {
-            return hostIds;
-        }
-
+        //HOST
+        public List<Integer> getHostIds() { return hostIds; }
         private void setHostIds(List<HostData> hosts) {
             List<Integer> ids = new ArrayList<Integer>();
             for (HostData host : hosts) {
@@ -262,22 +317,14 @@ public class LogMonitorPage extends BasePage {
             this.hostIds = ids;
         }
 
-        public List<HostData> getHosts() {
-            return hosts;
-        }
-
+        public List<HostData> getHosts() { return hosts; }
         public void setHosts(List<HostData> hosts) {
             this.hosts = hosts;
             setHostIds(hosts);
         }
 
-        public String getPattern() {
-            return pattern;
-        }
-
-        public void setPattern(String pattern) {
-            this.pattern = pattern;
-        }
+        public String getPattern() { return pattern; }
+        public void setPattern(String pattern) { this.pattern = pattern; }
 
         private List<Integer> getListIdsFromListEnum(List<? extends LogEnum> logEnums) {
             List<Integer> ids = new ArrayList<Integer>(logEnums.size());
