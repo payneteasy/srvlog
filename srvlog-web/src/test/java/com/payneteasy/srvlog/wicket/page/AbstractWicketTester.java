@@ -49,6 +49,7 @@ public abstract class AbstractWicketTester {
     @After
     public void destroy(){
        clearSecurityContextHolderMock();
+       wicketTester.destroy();
     }
 
     protected abstract void setupTest();

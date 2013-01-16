@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+    <title></title>
+</head>
+<body>
+<wicket:extend>
+    <div class="container">
+
+        <div wicket:id="feedback-panel"></div>
+
+            <form wicket:id="form">
+
+                <div class="input-append main-input-append">
+                    <input class="span11" id="appendedInputButton" type="text">
+                    <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
+                </div>
+                <div class="well main-filter-container">
+
+                    <div>
+                        <select wicket:id="date-range-type">
+                            <option id="TODAY">TODAY</option>
+                        </select>
+
+                        <div wicket:id="holder-exactly-dateRange">
+                            <input  wicket:id="dateFrom-field" />
+                            <input  wicket:id="dateTo-field" />
+                        </div>
+
+                    </div>
+
+                    <select wicket:id="severity-choice">
+                        <option id="ALERT">ALERT</option>
+                    </select>
+
+                    <select wicket:id="facility-choice">
+                        <option id="kern">ALERT</option>
+                    </select>
+
+                    <select wicket:id="hostData-choice">
+                        <option id="localhost">localhost</option>
+                    </select>
+                </div>
+
+            </form>
+
+        <table class="table table-bordered table-striped table-hover main-table">
+            <colgroup>
+                <col width="220px" />
+                <col width="100px" />
+                <col width="100px" />
+            </colgroup>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Facility</th>
+                <th>Severity</th>
+                <th>Host</th>
+                <th>Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr wicket:id="list-log-data">
+                <td wicket:id="log-date">Date</td>
+                <td wicket:id="log-facility">Facility</td>
+                <td wicket:id="log-severity">Severity</td>
+                <td wicket:id="log-host">Host</td>
+                <td wicket:id="log-message">Message</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</wicket:extend>
+</body>
+</html>

@@ -2,7 +2,7 @@
 @import "bootstrap.min.css";
 
 .main-input-append > input{
-    height: inherit;
+    height: 44px;
 }
 
 .main-table{
@@ -33,3 +33,10 @@
     .table tbody tr.main-critical:hover td{
         background-color: #bc1414;
     }
+
+.main-filter-container select{
+    vertical-align: top;
+}
+.main-filter-container select[multiple]{
+    height: 145px;
+}
