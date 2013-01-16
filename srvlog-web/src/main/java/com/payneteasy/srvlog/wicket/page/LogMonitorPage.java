@@ -5,12 +5,14 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
+import com.payneteasy.srvlog.wicket.component.validator.DateRangeValidator;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.datetime.StyleDateConverter;
-import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
+import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -44,14 +46,10 @@ public class LogMonitorPage extends BasePage {
         Form<FilterModel> form = new Form<FilterModel>("form");
         add(form);
 
+        //DATE RANGE FILTER
         final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<DateRangeType>(
                 "date-range-type"
-                , new PropertyModel<DateRangeType>(filterModel, "dateRangeType") {
-            @Override
-            public void setObject(DateRangeType object) {
-                super.setObject(object);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-        }
+                , new PropertyModel<DateRangeType>(filterModel, "dateRangeType")
                 , Arrays.asList(DateRangeType.values())
                 , new IChoiceRenderer<DateRangeType>() {
             @Override
@@ -68,40 +66,30 @@ public class LogMonitorPage extends BasePage {
         dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-//                if(isVisibleDateField(filterModel.getDateRangeType())){
-//                    holderDateRangeContainer.setVisible(true);
-//                    target.add(holderDateRangeContainer);
-//                }else {
-//                    holderDateRangeContainer.setVisible(false);
-//                    target.add(holderDateRangeContainer);
-//                }
-                dateRangeType.onSelectionChanged();
-
                 target.add(holderDateRangeContainer);
             }
         });
 
         holderDateRangeContainer = new WebMarkupContainer("holder-exactly-dateRange") {
-
             @Override
             public boolean isVisible() {
-                return isVisibleDateField(filterModel.getDateRangeType());    //To change body of overridden methods use File | Settings | File Templates.
+                return isVisibleDateField(filterModel.getDateRangeType());
             }
         };
         holderDateRangeContainer.setOutputMarkupPlaceholderTag(true);
-        //holderDateRangeContainer.setVisible(isVisibleDateField(filterModel.getDateRangeType()));
         form.add(holderDateRangeContainer);
 
-        dateFromTextField = new DateTextField("dateFrom-field", new PropertyModel<Date>(filterModel, "exactlyDateFrom"), "dd.MM.yyyy");
-        dateFromTextField.add(new DatePicker());
+        DateTextField dateFromTextField = getExactlyDateTextField("dateFrom-field",form, filterModel, "exactlyDateFrom", "dateForm");
         holderDateRangeContainer.add(dateFromTextField);
-
-        dateToTextField = new DateTextField("dateTo-field", new PropertyModel<Date>(filterModel, "exactlyDateTo"), "dd.MM.yyyy");
-        dateToTextField.add(new DatePicker());
+        DateTextField dateToTextField = getExactlyDateTextField("dateTo-field", form, filterModel, "exactlyDateTo", "dateTo");
         holderDateRangeContainer.add(dateToTextField);
 
+        DateTimeField dateFromTimeField = getExactlyDateTimeField("timeFrom-field", form, filterModel, "exactlyDateFrom", "timeFrom");
+        holderDateRangeContainer.add(dateFromTimeField);
+        DateTimeField dateToTimeField = getExactlyDateTimeField("timeTo-field", form, filterModel, "exactlyDateTo", "timeTo");
+        holderDateRangeContainer.add(dateToTimeField);
 
-
+        // SEVERITY CHOICE FILTER
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
                 "severity-choice"
                 , new PropertyModel<List<LogLevel>>(filterModel, "severities")
@@ -118,6 +106,7 @@ public class LogMonitorPage extends BasePage {
         });
         form.add(severityChoice);
 
+        //FACILITY CHOICE FILTER
         //TODO needed refactoring this component
         ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<LogFacility>(
                 "facility-choice"
@@ -135,6 +124,7 @@ public class LogMonitorPage extends BasePage {
         });
         form.add(facilityChoice);
 
+        //HOST CHOICE FILTER
         List<HostData> hostData = logCollector.loadHosts();
         ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<HostData>(
                 "hostData-choice"
@@ -160,6 +150,7 @@ public class LogMonitorPage extends BasePage {
             }
         });
 
+        //LIST LOG DATA
         IModel<List<LogData>> listDataModel = new LoadableDetachableModel<List<LogData>>() {
             @Override
             protected List<LogData> load() {
@@ -196,8 +187,47 @@ public class LogMonitorPage extends BasePage {
         add(listLogDataView);
     }
 
+    private DateTextField getExactlyDateTextField(String id,Form form, final FilterModel filterModel, String expression, String keyPrefix) {
+        DateTextField dateTextField = new DateTextField(id, new PropertyModel<Date>(filterModel, expression), new PatternDateConverter(DATE_PATTERN, false)){
+            @Override
+            public boolean isVisible() {
+                return DateRangeType.EXACTLY_DATE == filterModel.getDateRangeType();
+            }
+        };
+        dateTextField.add(new DatePicker());
+        form.add(new DateRangeValidator(dateTextField, keyPrefix));
+        return dateTextField;
+    }
+
+    private DateTimeField getExactlyDateTimeField(String id, Form form, final FilterModel filterModel, String expression, String keyPrefix) {
+        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<Date>(filterModel, expression)) {
+            @Override
+            protected boolean use12HourFormat() {
+                return false;
+            }
+
+            @Override
+            public boolean isVisible() {
+                return DateRangeType.EXACTLY_TIME == filterModel.getDateRangeType();
+            }
+
+            @Override
+            protected DatePicker newDatePicker() {
+                return new DatePicker() {
+                    @Override
+                    protected String getDatePattern() {
+                        return DATE_PATTERN;
+                    }
+                };
+            }
+        };
+
+        form.add(new DateRangeValidator(dateTimeField, keyPrefix));
+        return dateTimeField;
+    }
+
     private boolean isVisibleDateField(DateRangeType type){
-        if(DateRangeType.EXACTLY_DATE.equals(type) || DateRangeType.EXACTLY_TIME.equals(type)){
+        if(DateRangeType.EXACTLY_DATE == type || DateRangeType.EXACTLY_TIME == type){
             return true;
         }
         return false;
@@ -205,9 +235,7 @@ public class LogMonitorPage extends BasePage {
 
     @SpringBean
     private ILogCollector logCollector;
-
-    private DateTextField dateFromTextField;
-    private DateTextField dateToTextField;
+    private static final String DATE_PATTERN = "dd.MM.yyyy";
     private WebMarkupContainer holderDateRangeContainer;
 
     private class FilterModel implements Serializable {

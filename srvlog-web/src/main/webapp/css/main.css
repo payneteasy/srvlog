@@ -40,3 +40,65 @@
 .main-filter-container select[multiple]{
     height: 145px;
 }
+
+.main-filter-row{
+    border-top: 1px solid #cccccc ;
+}
+
+.main-filter-title, .main-filter-title-small{
+    font-size: 15px;
+    color: #808080;
+    font-weight: bold;
+    margin: 0px 5px 0px 8px;
+}
+.main-filter-title-small{
+    font-size: 13px;
+}
+div.main-filter-title{
+    margin: 10px 0px 5px 0px;
+}
+
+.main-inline-dateRange li{
+    vertical-align: top;
+}
+
+.main-inline-dateRange input{
+    width: 60px;
+}
+
+.main-timeField, .main-timeField  span{
+    display: inline-block;
+    vertical-align: top;
+}
+.main-timeField span input{
+    height: 27px;
+}
+.main-fluid-span3{
+    width: 30%;
+}
+
+/*FEEDBACK PANEL*/
+.feedbackPanel li{
+    display: block;
+}
+.feedbackPanel {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    padding: 8px 35px 8px 14px;
+    margin: 0px 0px 20px 0px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #fcf8e3;
+    border: 1px solid #fbeed5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.feedbackPanelERROR, .feedbackPanelFATAL, .feedbackPanelUNDEFINED, .feedbackPanelWARNING{
+    color: #b94a48;
+}
+.feedbackPanelINFO, .feedbackPanelDEBUG{
+    color: #2b8513;
+}

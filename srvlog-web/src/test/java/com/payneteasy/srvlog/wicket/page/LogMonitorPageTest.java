@@ -62,6 +62,34 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     }
 
     @Test
+    public void testDateRangeValidation() throws IndexerServiceException {
+        WicketTester wicketTester = getWicketTester();
+
+        DateRange today = DateRange.today();
+        List<LogData> searchLogData = getTestLogData();
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.search(null, null, null, null, null, null, 0, 26)).andReturn(searchLogData);
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(LogMonitorPage.class);
+
+        wicketTester.assertNoErrorMessage();
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.select("date-range-type", 6);
+        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
+
+        formTester.select("date-range-type", 6);
+        formTester.submit("search-button");
+
+        wicketTester.assertErrorMessages("Date from is required", "Date to is required");
+
+        EasyMock.verify(logCollector);
+
+    }
+
+    @Test
     public void testExactlyDateRangeFilter() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
         DateRange today = DateRange.today();
@@ -77,12 +105,21 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         wicketTester.assertInvisible("form:holder-exactly-dateRange");
 
         FormTester formTester = wicketTester.newFormTester("form");
+        formTester.select("date-range-type", 7); //6 - date, 7 - time
+
+        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
+
+        wicketTester.assertVisible("form:holder-exactly-dateRange");
+        wicketTester.assertVisible("form:holder-exactly-dateRange:timeFrom-field");
+        wicketTester.assertVisible("form:holder-exactly-dateRange:timeTo-field");
+
         formTester.select("date-range-type", 6); //6 - date, 7 - time
 
         wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
 
-
         wicketTester.assertVisible("form:holder-exactly-dateRange");
+        wicketTester.assertVisible("form:holder-exactly-dateRange:dateFrom-field");
+        wicketTester.assertVisible("form:holder-exactly-dateRange:dateTo-field");
 
         formTester.setValue("holder-exactly-dateRange:dateFrom-field", "1.1.2013");
         formTester.setValue("holder-exactly-dateRange:dateTo-field", "1.2.2013");
