@@ -8,18 +8,31 @@
 
         <div wicket:id="feedback-panel"></div>
 
-        <div class="row">
-            <form class="offset1" wicket:id="form">
-                <select wicket:id="date-range-type">
-                    <option id="TODAY">TODAY</option>
-                </select>
+            <form wicket:id="form">
+
                 <div class="input-append main-input-append">
-                    <input class="span9" id="appendedInputButton" type="text">
-                    <button class="btn btn-info" type="submit" wicket:id="search-button">Search</button>
+                    <input class="span11" id="appendedInputButton" type="text">
+                    <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
+                </div>
+                <div class="well main-filter-container">
+                    <select wicket:id="date-range-type">
+                        <option id="TODAY">TODAY</option>
+                    </select>
+
+                    <select wicket:id="severity-choice">
+                        <option id="ALERT">ALERT</option>
+                    </select>
+
+                    <select wicket:id="facility-choice">
+                        <option id="kern">ALERT</option>
+                    </select>
+
+                    <select wicket:id="hostData-choice">
+                        <option id="localhost">localhost</option>
+                    </select>
                 </div>
 
             </form>
-        </div>
 
         <table class="table table-bordered table-striped table-hover main-table">
             <colgroup>

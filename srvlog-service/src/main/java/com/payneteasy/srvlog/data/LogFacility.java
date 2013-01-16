@@ -1,13 +1,15 @@
 package com.payneteasy.srvlog.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Date: 12.01.13
  * Time: 20:28
  */
-public enum LogFacility {
+public enum LogFacility implements LogEnum{
 
     kern(0), user(1), mail(2), daemon(3), auth(4), syslog(5),
     lpr(6), news(7), uucp(8), cron(9), authpriv(10), ftp(11),
@@ -16,10 +18,12 @@ public enum LogFacility {
     local5(21), local6(22), local7(23);
 
     private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
+    private static List<LogFacility> logFacilities = new ArrayList<LogFacility>();
 
     static {
         for (LogFacility lf: LogFacility.values()) {
             valueToName.put(lf.getValue(), lf.name());
+            logFacilities.add(lf);
         }
     }
 
@@ -30,9 +34,13 @@ public enum LogFacility {
         this.value = value;
     }
 
-    public int getValue()
+    public Integer getValue()
     {
         return value;
+    }
+
+    public static List<LogFacility> getLogEnumList() {
+        return logFacilities;
     }
 
 

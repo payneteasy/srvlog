@@ -1,18 +1,13 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.data.LogFacility;
-import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -59,11 +54,64 @@ public class LogMonitorPage extends BasePage {
             }
         }));
 
+        ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
+                "severity-choice"
+                , new PropertyModel<List<LogLevel>>(filterModel, "severities")
+                , LogLevel.getLogEnumList(), new IChoiceRenderer<LogLevel>() {
+            @Override
+            public Object getDisplayValue(LogLevel object) {
+                return object.name();
+            }
+
+            @Override
+            public String getIdValue(LogLevel object, int index) {
+                return object.name();
+            }
+        }
+        );
+        form.add(severityChoice);
+
+        //TODO needed refactoring this component
+        ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<LogFacility>(
+                "facility-choice"
+                , new PropertyModel<List<LogFacility>>(filterModel, "facilities")
+                , LogFacility.getLogEnumList(), new IChoiceRenderer<LogFacility>() {
+            @Override
+            public Object getDisplayValue(LogFacility object) {
+                return object.name();
+            }
+
+            @Override
+            public String getIdValue(LogFacility object, int index) {
+                return object.name();
+            }
+        }
+        );
+        form.add(facilityChoice);
+
+        List<HostData> hostData = logCollector.loadHosts();
+        ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<HostData>(
+                "hostData-choice"
+                , new PropertyModel<List<HostData>>(filterModel, "hosts")
+                , hostData
+                , new IChoiceRenderer<HostData>() {
+            @Override
+            public Object getDisplayValue(HostData object) {
+                return object.getHostname();
+            }
+
+            @Override
+            public String getIdValue(HostData object, int index) {
+                return object.getHostname();
+            }
+        }
+        );
+        form.add(hostDataChoice);
+
 
         form.add(new Button("search-button") {
             @Override
             public void onSubmit() {
-
             }
         });
 
@@ -74,9 +122,9 @@ public class LogMonitorPage extends BasePage {
                     return logCollector.search(
                             filterModel.getDateRange().getFromDate()
                             , filterModel.getDateRange().getToDate()
-                            , filterModel.getFacilities()
-                            , filterModel.getSeverities()
-                            , filterModel.getHosts()
+                            , filterModel.getFacilityIds()
+                            , filterModel.getSeverityIds()
+                            , filterModel.getHostIds()
                             , filterModel.getPattern()
                             , 0
                             , 26);
@@ -109,14 +157,22 @@ public class LogMonitorPage extends BasePage {
     private class FilterModel implements Serializable {
         private DateRange dateRange;
         private DateRangeType dateRangeType;
-        private List<Integer> facilities;
-        private List<Integer> severities;
-        private List<Integer> hosts;
+
+        private List<Integer> facilityIds;
+        private List<LogFacility> facilities;
+
+        private List<Integer> severityIds;
+        private List<LogLevel> severities;
+
+        private List<Integer> hostIds;
+        private List<HostData> hosts;
         private String pattern;
 
         private FilterModel() {
             this.dateRange = DateRange.today();
             this.dateRangeType = DateRangeType.TODAY;
+            this.severities = new ArrayList<LogLevel>();
+            this.facilities = new ArrayList<LogFacility>();
         }
 
         public DateRange getDateRange() {
@@ -157,28 +213,62 @@ public class LogMonitorPage extends BasePage {
             }
         }
 
-        public List<Integer> getFacilities() {
+
+        //FACILITY
+        public List<Integer> getFacilityIds() {
+            return facilityIds;
+        }
+
+        private void setFacilityIds(List<LogFacility> logFacilities) {
+            this.facilityIds = getListIdsFromListEnum(logFacilities);
+        }
+
+        public List<LogFacility> getFacilities() {
             return facilities;
         }
 
-        public void setFacilities(List<Integer> facilities) {
+        public void setFacilities(List<LogFacility> facilities) {
             this.facilities = facilities;
+            setFacilityIds(facilities);
         }
 
-        public List<Integer> getSeverities() {
+        //SEVERITY
+        public List<Integer> getSeverityIds() {
+            return severityIds;
+        }
+
+        private void setSeverityIds(List<LogLevel> logLevels) {
+            this.severityIds = getListIdsFromListEnum(logLevels);
+        }
+
+        public List<LogLevel> getSeverities() {
             return severities;
         }
 
-        public void setSeverities(List<Integer> severities) {
+        public void setSeverities(List<LogLevel> severities) {
             this.severities = severities;
+            setSeverityIds(severities);
         }
 
-        public List<Integer> getHosts() {
+        public List<Integer> getHostIds() {
+            return hostIds;
+        }
+
+        private void setHostIds(List<HostData> hosts) {
+            List<Integer> ids = new ArrayList<Integer>();
+            for (HostData host : hosts) {
+                ids.add(host.getId().intValue());
+            }
+            this.hostIds = ids;
+        }
+
+        public List<HostData> getHosts() {
             return hosts;
         }
 
-        public void setHosts(List<Integer> hosts) {
+        public void setHosts(List<HostData> hosts) {
             this.hosts = hosts;
+            setHostIds(hosts);
         }
 
         public String getPattern() {
@@ -187,6 +277,14 @@ public class LogMonitorPage extends BasePage {
 
         public void setPattern(String pattern) {
             this.pattern = pattern;
+        }
+
+        private List<Integer> getListIdsFromListEnum(List<? extends LogEnum> logEnums) {
+            List<Integer> ids = new ArrayList<Integer>(logEnums.size());
+            for (LogEnum logEnum : logEnums) {
+                ids.add(logEnum.getValue());
+            }
+            return ids;
         }
     }
 

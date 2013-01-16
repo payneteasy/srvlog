@@ -2,12 +2,13 @@ package com.payneteasy.srvlog.data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * Date: 12.01.13
  * Time: 22:39
  */
-public class HostData {
+public class HostData implements Serializable{
 
 
     private Long id;
