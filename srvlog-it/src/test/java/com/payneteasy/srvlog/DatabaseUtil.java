@@ -115,7 +115,7 @@ public class DatabaseUtil {
         List<Integer> severityList = Arrays.asList(0, 1, 2, 3); // from 0 to 6
         // EMERGENCY(0), ALERT(1), CRITICAL(2), ERROR(3), WARN(4),  NOTICE(5), INFO(6), DEBUG(7);
 
-        List<String> hosts = Arrays.asList("host1", "host2");
+        List<String> hosts = Arrays.asList("host3", "host4");
 
         int numOfDates = 10;
         List<Date> dates = new ArrayList<Date>(numOfDates);

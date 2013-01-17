@@ -97,6 +97,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
                 return 1514;
             }
         });
+        syslog4jClient.getConfig().setHost("localhost");
         try {
             DatabaseUtil.generateTestLogsThroughSyslogClient(syslog4jClient);
             syslog4jClient.flush();

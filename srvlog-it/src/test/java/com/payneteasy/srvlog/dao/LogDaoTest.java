@@ -3,10 +3,12 @@ package com.payneteasy.srvlog.dao;
 import com.payneteasy.srvlog.CommonIntegrationTest;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.util.DateRange;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +27,11 @@ public class LogDaoTest extends CommonIntegrationTest {
         super.setUp();
         logDao = context.getBean(ILogDao.class);
     }
+
+//    @Override
+//    protected void createDatabase() throws IOException, InterruptedException {
+//
+//    }
 
     @Test
     public void testSaveHost() {
@@ -57,7 +64,6 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testSaveLog(){
         addLocalhostToHostList();
 
-
         LogData logData = new LogData();
         logData.setSeverity(1);
         logData.setDate(new Date());
@@ -83,13 +89,22 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testLoadLatest() {
         addLocalhostToHostList();
 
-        for (int i = 0; i < 11; i++) {
+        DateRange dateRange = DateRange.thisMonth();
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(dateRange.getFromDate());
+        Calendar end = Calendar.getInstance();
+        end.setTime(dateRange.getToDate());
+
+        for (; !start.after(end); start.add(Calendar.DATE, 1)) {
+            Date current = start.getTime();
+            System.out.println(current);
             LogData logData = new LogData();
-            logData.setDate(new Date());
+            logData.setDate(current);
             logData.setFacility(1);
             logData.setSeverity(1);
             logData.setHost("localhost");
-            logData.setMessage("Log message " + i);
+            logData.setMessage("Log message ");
             logDao.saveLog(logData);
         }
 
@@ -119,6 +134,20 @@ public class LogDaoTest extends CommonIntegrationTest {
         List<LogData> logDataList = logDao.getLogsByIds("1,2,3,4,5");
         assertEquals("getLogsByIds should return 5 log entries.", 5, logDataList.size());
 
+    }
+
+    public static void main(String[] args) {
+        DateRange dateRange = DateRange.thisMonth();
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(dateRange.getFromDate());
+        Calendar end = Calendar.getInstance();
+        end.setTime(dateRange.getToDate());
+
+        for (; !start.after(end); start.add(Calendar.DATE, 1)) {
+            Date current = start.getTime();
+            System.out.println(current);
+        }
     }
 
 }

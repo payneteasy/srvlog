@@ -16,7 +16,7 @@ main_sql:
      select host_id
        into v_host_id
        from hosts
-      where hostname = i_host or ip = i_host;
+      where hostname = i_host;
 
       if v_host_id is not null then
            insert into logs(log_date, facility, severity, host_id, message)

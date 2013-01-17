@@ -73,35 +73,42 @@
 
                 </div>
 
+
+                <div class="row">
+                    <div wicket:id="item-perPage" class="span3 pager"></div>
+                    <div wicket:id="paging-navigator" class="span7"></div>
+                </div>
+
+
+                <table class="table table-bordered table-striped table-hover main-table">
+                    <colgroup>
+                        <col width="220px" />
+                        <col width="100px" />
+                        <col width="100px" />
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Facility</th>
+                        <th>Severity</th>
+                        <th>Host</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr wicket:id="list-log-data">
+                        <td wicket:id="log-date">Date</td>
+                        <td wicket:id="log-facility">Facility</td>
+                        <td wicket:id="log-severity">Severity</td>
+                        <td wicket:id="log-host">Host</td>
+                        <td wicket:id="log-message">Message</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
             </form>
 
-        <div wicket:id="paging-navigator"></div>
-
-        <table class="table table-bordered table-striped table-hover main-table">
-            <colgroup>
-                <col width="220px" />
-                <col width="100px" />
-                <col width="100px" />
-            </colgroup>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Facility</th>
-                <th>Severity</th>
-                <th>Host</th>
-                <th>Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr wicket:id="list-log-data">
-                <td wicket:id="log-date">Date</td>
-                <td wicket:id="log-facility">Facility</td>
-                <td wicket:id="log-severity">Severity</td>
-                <td wicket:id="log-host">Host</td>
-                <td wicket:id="log-message">Message</td>
-            </tr>
-            </tbody>
-        </table>
 
     </div>
 </wicket:extend>
