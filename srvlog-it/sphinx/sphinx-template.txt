@@ -2,7 +2,7 @@
 # Minimal Sphinx configuration sample (clean, simple, functional)
 #
 
-source srvlog_logs
+source srvlog_logs_main
 {
 	type			= mysql
 
@@ -13,10 +13,12 @@ source srvlog_logs
 	sql_port		= @SRVLOG_DB_PORT@
 	sql_sock        = @SRVLOG_DB_SOCK@
 
+    sql_query_pre = SET NAMES utf8
+    sql_query_pre = REPLACE INTO sph_counter SELECT 1, MAX(log_id) FROM logs
 
 	sql_query		= \
-		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
-		FROM logs
+		SELECT log_id, UNIXj_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
+		FROM logs WHERE log_id <= (SELECT max_doc_id FROM sph_counter WHERE index_id = 1 )
 
 	sql_attr_uint		= facility
         sql_attr_uint		= severity
@@ -26,14 +28,32 @@ source srvlog_logs
 	sql_query_info		= SELECT * FROM logs WHERE log_id=$id
 }
 
-
-index srvlog_index
+source srvlog_logs_delta: srvlog_logs_main
 {
-	source			= srvlog_logs
-	path			= @SPHINX_DIR@/data/srvlog_index
+    sql_query_pre = SET NAMES utf8
+
+    sql_query		= \
+    		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
+    		FROM logs WHERE log_id > (SELECT max_doc_id FROM sph_counter WHERE index_id = 1 )
+
+}
+
+index srvlog_index_main
+{
+	source			= srvlog_logs_main
+	path			= @SPHINX_DIR@/data/srvlog_index_main
 	docinfo			= extern
 	charset_type	= sbcs
 }
+
+index srvlog_index_delta: srvlog_index_main
+{
+    source           = srvlog_logs_delta
+	path			= @SPHINX_DIR@/data/srvlog_index_delta
+	docinfo			= extern
+	charset_type	= sbcs
+}
+
 
 
 

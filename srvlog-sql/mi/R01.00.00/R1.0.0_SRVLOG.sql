@@ -37,5 +37,14 @@ create table hosts (
 ) engine = innodb;
 
 
+drop table if exists sph_counter;
+
+create table sph_counter (
+   index_id           int(3)  unsigned not null,
+   max_doc_id         int(10)  unsigned not null,
+   primary key pk_sph_counter(index_id)
+) engine = innodb;
+
+
 
 commit;
