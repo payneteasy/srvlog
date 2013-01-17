@@ -154,14 +154,6 @@ public class LogMonitorPage extends BasePage {
         });
         form.add(hostDataChoice);
 
-        form.add(new Button("search-button") {
-            @Override
-            public void onSubmit() {
-
-            }
-        });
-
-
         PageableDataProvider<LogData> dataProvider = new PageableDataProvider<LogData>() {
             @Override
             public Collection<LogData> load(int offset, int limit) {
@@ -181,7 +173,7 @@ public class LogMonitorPage extends BasePage {
                 }            }
         };
 
-        UncountablyPageableListView<LogData> listView = new UncountablyPageableListView<LogData>("list-log-data", dataProvider, 25) {
+        final UncountablyPageableListView<LogData> listView = new UncountablyPageableListView<LogData>("list-log-data", dataProvider, 25) {
             @Override
             protected void populateItem(Item<LogData> item) {
                 LogData logData = item.getModelObject();
@@ -196,7 +188,15 @@ public class LogMonitorPage extends BasePage {
         };
         add(listView);
 
-        add(new UncountablyPageableNavigator<LogData>("paging-navigator", listView));
+        final UncountablyPageableNavigator<LogData> pagingNavigator = new UncountablyPageableNavigator<LogData>("paging-navigator", listView);
+        add(pagingNavigator);
+
+        form.add(new Button("search-button") {
+            @Override
+            public void onSubmit() {
+                 listView.setCurrentPage(0);
+            }
+        });
     }
 
     private boolean isVisibleDateField(DateRangeType type){

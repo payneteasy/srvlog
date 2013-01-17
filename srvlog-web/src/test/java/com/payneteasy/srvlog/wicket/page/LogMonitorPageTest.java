@@ -126,10 +126,19 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), null, 0, 26)).andReturn(testLogData);
+
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
         wicketTester.clickLink("paging-navigator:paging-next");
         wicketTester.clickLink("paging-navigator:paging-previous");
+
+        wicketTester.clickLink("paging-navigator:paging-next");
+
+        FormTester form = wicketTester.newFormTester("form");
+
+        form.submit("search-button");
 
         EasyMock.verify(logCollector);
 
