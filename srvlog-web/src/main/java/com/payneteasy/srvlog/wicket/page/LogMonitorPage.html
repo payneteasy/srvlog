@@ -6,7 +6,7 @@
 <wicket:extend>
     <div class="container">
 
-        <div wicket:id="feedback-panel"></div>
+           <div wicket:id="feedback-panel"></div>
 
             <form wicket:id="form">
 
@@ -15,30 +15,61 @@
                     <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
                 </div>
                 <div class="well main-filter-container">
+                        <ul class="inline main-inline-dateRange">
+                            <li>
+                                <span class="main-filter-title">Date range:</span>
+                            </li>
+                            <li>
+                                <select wicket:id="date-range-type">
+                                    <option id="TODAY">TODAY</option>
+                                </select>
+                            </li>
+                            <li>
+                                <div wicket:id="holder-exactly-dateRange">
+                                    <!--date range-->
+                                    <wicket:enclosure child="dateFrom-field">
+                                        <span class="main-filter-title-small">From:</span>
+                                        <input class="input-mini" wicket:id="dateFrom-field" />
+                                    </wicket:enclosure>
+                                    <wicket:enclosure child="dateTo-field">
+                                        <span class="main-filter-title-small">To:</span>
+                                        <input class="input-mini" wicket:id="dateTo-field" />
+                                    </wicket:enclosure>
 
-                    <div>
-                        <select wicket:id="date-range-type">
-                            <option id="TODAY">TODAY</option>
-                        </select>
+                                    <!--time range-->
+                                    <wicket:enclosure child="timeFrom-field">
+                                        <span class="main-filter-title-small">From:</span>
+                                        <span wicket:id="timeFrom-field" class="main-timeField"></span>
+                                    </wicket:enclosure>
+                                    <wicket:enclosure child="timeTo-field">
+                                        <span class="main-filter-title-small">To:</span>
+                                        <span wicket:id="timeTo-field" class="main-timeField"></span>
+                                    </wicket:enclosure>
+                                </div>
+                            </li>
+                        </ul>
 
-                        <div wicket:id="holder-exactly-dateRange">
-                            <input  wicket:id="dateFrom-field" />
-                            <input  wicket:id="dateTo-field" />
+                    <div class="row-fluid main-filter-row">
+                        <div class="span3">
+                            <div class="main-filter-title">Severity:</div>
+                            <select wicket:id="severity-choice">
+                                <option id="ALERT">ALERT</option>
+                            </select>
                         </div>
-
+                        <div class="span3">
+                            <div class="main-filter-title">Facility:</div>
+                            <select wicket:id="facility-choice">
+                                <option id="kern">ALERT</option>
+                            </select>
+                        </div>
+                        <div class="span3">
+                            <div class="main-filter-title">Host:</div>
+                            <select wicket:id="hostData-choice">
+                                <option id="localhost">localhost</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <select wicket:id="severity-choice">
-                        <option id="ALERT">ALERT</option>
-                    </select>
-
-                    <select wicket:id="facility-choice">
-                        <option id="kern">ALERT</option>
-                    </select>
-
-                    <select wicket:id="hostData-choice">
-                        <option id="localhost">localhost</option>
-                    </select>
                 </div>
 
             </form>
