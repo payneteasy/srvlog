@@ -29,6 +29,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.security.access.annotation.Secured;
 
 import java.io.Serializable;
 import java.util.*;
@@ -38,6 +39,7 @@ import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCss
 /**
  * Date: 11.01.13
  */
+@Secured("ROLE_ADMIN")
 public class LogMonitorPage extends BasePage {
 
     public LogMonitorPage(PageParameters pageParameters) {
@@ -218,6 +220,11 @@ public class LogMonitorPage extends BasePage {
             @Override
             public boolean isVisible() {
                 return DateRangeType.EXACTLY_TIME == filterModel.getDateRangeType();
+            }
+
+            @Override
+            protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel) {
+                return DateTextField.forDatePattern(id, dateFieldModel, DATE_PATTERN);
             }
 
             @Override

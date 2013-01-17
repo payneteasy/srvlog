@@ -34,6 +34,8 @@
         background-color: #bc1414;
     }
 
+
+/*FILTER*/
 .main-filter-container select{
     vertical-align: top;
 }
@@ -51,12 +53,12 @@
     font-weight: bold;
     margin: 0px 5px 0px 8px;
 }
-.main-filter-title-small{
-    font-size: 13px;
-}
-div.main-filter-title{
-    margin: 10px 0px 5px 0px;
-}
+    .main-filter-title-small{
+        font-size: 13px;
+    }
+    div.main-filter-title{
+        margin: 10px 0px 5px 0px;
+    }
 
 .main-inline-dateRange li{
     vertical-align: top;
@@ -64,6 +66,8 @@ div.main-filter-title{
 
 .main-inline-dateRange input{
     width: 60px;
+    font-size: 11px;
+    padding: 1px;
 }
 
 .main-timeField, .main-timeField  span{
