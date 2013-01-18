@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog;
 
+import com.google.common.base.Charsets;
 import com.nesscomputing.syslog4j.Syslog;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.nesscomputing.syslog4j.SyslogLevel;
@@ -7,12 +8,17 @@ import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
+import com.nesscomputing.syslog4j.server.impl.event.printstream.FileSyslogServerEventHandler;
+import com.nesscomputing.syslog4j.server.impl.event.printstream.PrintStreamSyslogServerEventHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.*;
 import java.net.SocketAddress;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -24,18 +30,26 @@ import static junit.framework.Assert.assertNotNull;
 @Ignore
 public class Syslog4jTest {
 
+    private static final String PROTOCOL = "udp";
+    private static final int PORT = 1514;
     public static final String HELLO_SYSLOG = "Hello Syslog!!";
     private SyslogServerIF udpSyslogInstance;
+    private SyslogIF udpSyslogClient;
 
     @Before
     public void setUp() {
-        udpSyslogInstance = SyslogServer.getInstance("udp");
-        udpSyslogInstance.getConfig().setPort(1514);
+        udpSyslogInstance = SyslogServer.getInstance(PROTOCOL);
+        udpSyslogInstance.getConfig().setPort(PORT);
+
+        udpSyslogClient = Syslog.getInstance(PROTOCOL);
+        udpSyslogClient.getConfig().setSendLocalName(false);
+        udpSyslogClient.getConfig().setPort(PORT);
     }
 
     @After
     public void tearDown() {
         udpSyslogInstance.shutdown();
+        udpSyslogClient.shutdown();
     }
 
     @Test
@@ -48,12 +62,8 @@ public class Syslog4jTest {
         SyslogEventHandler eventHandler = new SyslogEventHandler();
         udpSyslogInstance.getConfig().addEventHandler(eventHandler);
 
+        SyslogServer.getThreadedInstance(PROTOCOL);
 
-        SyslogServer.getThreadedInstance("udp");
-
-        SyslogIF udpSyslogClient = Syslog.getInstance("udp");
-        udpSyslogClient.getConfig().setSendLocalName(false);
-        udpSyslogClient.getConfig().setPort(1514);
         udpSyslogClient.info(HELLO_SYSLOG);
 
         for (int i = 0; i < 5; i++) {
@@ -70,7 +80,11 @@ public class Syslog4jTest {
 
         assertNotNull("Message was not obtained", eventHandler.message);
         assertEquals("Syslog Adapter has to properly handle messages", HELLO_SYSLOG, eventHandler.message);
+    }
 
+    @Test
+    @Ignore
+    public void sendFromFile()  {
 
     }
 
@@ -81,22 +95,19 @@ public class Syslog4jTest {
 
         @Override
         public void event(SyslogServerIF syslogServer, SocketAddress socketAddress, SyslogServerEventIF event) {
-            System.out.println("message =" + event.getMessage());
+            System.out.println("message = " + event.getMessage());
             message = new String(event.getMessage());
             host = event.getHost();
         }
 
         @Override
-        public void exception(SyslogServerIF syslogServer, SocketAddress socketAddress, Exception exception) {
-        }
+        public void exception(SyslogServerIF syslogServer, SocketAddress socketAddress, Exception exception) { }
 
         @Override
-        public void initialize(SyslogServerIF syslogServer) {
-        }
+        public void initialize(SyslogServerIF syslogServer) { }
 
         @Override
-        public void destroy(SyslogServerIF syslogServer) {
-        }
+        public void destroy(SyslogServerIF syslogServer) { }
     }
 
 }
