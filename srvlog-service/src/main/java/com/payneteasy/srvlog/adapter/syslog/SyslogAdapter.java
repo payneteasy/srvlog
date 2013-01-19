@@ -44,6 +44,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             syslog4jInstance = SyslogServer.getInstance(logAdapterConfig.getSyslogProtocol());
             syslog4jInstance.getConfig().setPort(logAdapterConfig.getSyslogPort());
             syslog4jInstance.getConfig().addEventHandler(this);
+            syslog4jInstance.getConfig().setUseStructuredData(true);
 
             LOG.info("  Trying to obtain threaded instance of syslog server....");
             SyslogServer.getThreadedInstance(logAdapterConfig.getSyslogProtocol());
@@ -99,6 +100,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         log.setHost(event.getHost());
         log.setMessage(event.getMessage());
         log.setSeverity(event.getLevel().getValue());
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Saving log: " + log);
         }

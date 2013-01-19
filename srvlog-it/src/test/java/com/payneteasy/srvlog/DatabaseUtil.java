@@ -1,6 +1,8 @@
 package com.payneteasy.srvlog;
 
 import com.nesscomputing.syslog4j.SyslogIF;
+import com.nesscomputing.syslog4j.SyslogMessageIF;
+import com.nesscomputing.syslog4j.impl.message.pci.PCISyslogMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
@@ -133,6 +135,10 @@ public class DatabaseUtil {
                 c.roll(Calendar.HOUR_OF_DAY, 1);
 
                 for (int j = 0; j < hosts.size(); j++) {
+                    syslogClient.getConfig().setLocalName(hosts.get(j));
+                    syslogClient.getConfig().setSendLocalName(true);
+                    PCISyslogMessage message = new PCISyslogMessage("root", "change parameters", new Date(),  "false", "host1", "database");
+                    syslogClient.critical(message);
 
                     syslogClient.warn("A warning from syslog client with additional info for testing long logs messages. This message should be properly wrapped on the front-end.");
                     syslogClient.info("A info from syslog client");
