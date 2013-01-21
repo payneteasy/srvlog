@@ -11,7 +11,7 @@ export SRVLOG_DB_PORT=${SRVLOG_DB_PORT:-3306}
 
 export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/tmp/mysql.sock}
 
-export PATH_TO_MYSQL=${PATH_TO_MYSQL:-/opt/mysql-5.5.29/bin/mysql}
+export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
 SYSTEM=`uname`
 
