@@ -2,16 +2,19 @@
 drop table if exists logs;
 
 create table logs(
-  log_id           int(10) unsigned not null auto_increment,
-  log_date         datetime,
-  facility         int(3),
-  severity         int(3),
-  host_id          int(10),
-  message      text,
-  primary key pk_log(log_id)
+  log_id              int(10) unsigned not null auto_increment,
+  log_date            datetime,
+  logs_partition_key  int(6)  unsigned not null,
+  facility            int(3),
+  severity            int(3),
+  host_id             int(10),
+  message             text,
+  index pk_log(log_id)
 )
-engine = innodb;
-
+engine = innodb
+partition by range (logs_partition_key)(
+  partition logs_100000 values less than(100001)
+  );
 
 drop table if exists unprocessed_logs;
 
@@ -33,7 +36,8 @@ create table hosts (
    host_id           int(10) unsigned not null auto_increment,
    hostname          varchar(120),
    ip                varchar(60),
-   primary key pk_host(host_id)
+   primary key pk_host(host_id),
+   unique unq_hosts_hostname(hostname)
 ) engine = innodb;
 
 

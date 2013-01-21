@@ -19,8 +19,8 @@ main_sql:
       where hostname = i_host;
 
       if v_host_id is not null then
-           insert into logs(log_date, facility, severity, host_id, message)
-           values (i_log_date, i_facility, i_severity, v_host_id, i_message);
+           insert into logs(log_date, logs_partition_key, facility, severity, host_id, message)
+           values (i_log_date, date_format(log_date, "%Y%m"), i_facility, i_severity, v_host_id, i_message);
       else
            insert into unprocessed_logs(log_date, facility, severity, host, message)
            values (i_log_date, i_facility, i_severity, i_host, i_message);
