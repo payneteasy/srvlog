@@ -49,6 +49,7 @@ public class LogDaoTest extends CommonIntegrationTest {
         logData.setFacility(1);
         logData.setMessage("message");
         logData.setHost("unknown.host");
+        logData.setProgram("program");
 
         logDao.saveLog(logData);
 
@@ -66,10 +67,13 @@ public class LogDaoTest extends CommonIntegrationTest {
 
         LogData logData = new LogData();
         logData.setSeverity(1);
-        logData.setDate(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MILLISECOND,0);
+        logData.setDate(calendar.getTime());
         logData.setFacility(1);
         logData.setMessage("message");
         logData.setHost("localhost");
+        logData.setProgram("program");
 
         logDao.saveLog(logData);
         assertNotNull("ID must be assigned to logData entity", logData.getId());
@@ -89,12 +93,13 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testLoadLatest() {
         addLocalhostToHostList();
 
-        DateRange dateRange = DateRange.thisMonth();
+        DateRange dateRange = DateRange.lastMonth();
 
         Calendar start = Calendar.getInstance();
         start.setTime(dateRange.getFromDate());
         Calendar end = Calendar.getInstance();
         end.setTime(dateRange.getToDate());
+        end.add(Calendar.DATE, -3);
 
         for (; !start.after(end); start.add(Calendar.DATE, 1)) {
             Date current = start.getTime();

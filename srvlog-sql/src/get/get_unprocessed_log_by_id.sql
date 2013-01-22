@@ -8,7 +8,8 @@ main_sql:
             l.host,
             l.severity,
             l.facility,
-            l.message
+            l.message,
+            l.program
        from unprocessed_logs l
       where l.log_id = i_log_id;
   end
@@ -21,6 +22,7 @@ call save_routine_information('get_unprocessed_log_by_id',
                                         'host varchar',
                                         'severity int',
                                         'facility int',
-                                        'message varchar'
+                                        'message varchar',
+                                        'program varchar'
                                        )
                              );

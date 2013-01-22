@@ -105,4 +105,8 @@ create event ev_check_log_partitions
     comment 'Check log table partitions'
     do call check_monthly_partitions('logs', date(now()), 999);
 
+insert into hosts(hostname, ip)
+  value ("host1", ""),
+        ("host2", "");
+
 commit;

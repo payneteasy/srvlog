@@ -1,10 +1,14 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import com.nesscomputing.syslog4j.impl.message.structured.StructuredSyslogMessageIF;
 import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
+import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.LogFacility;
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -93,13 +98,46 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     @Override
     public void event(SyslogServerIF syslogServer, SocketAddress socketAddress, SyslogServerEventIF event) {
-
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Obtain message from syslog: {}", new String(event.getRaw()));
+        }
         LogData log = new LogData();
         log.setDate(event.getDate());
-        log.setFacility(event.getFacility().getValue());
-        log.setHost(event.getHost());
-        log.setMessage(event.getMessage());
-        log.setSeverity(event.getLevel().getValue());
+
+        log.setFacility(event.getFacility() == null ? LogFacility.local0.getValue() : (event.getFacility().getValue()>>3));
+        log.setSeverity(event.getLevel() == null ? LogLevel.INFO.getValue() : (event.getLevel().getValue()));
+
+        if (event instanceof StructuredSyslogServerEvent) { //rfc5424
+            log.setHost(event.getHost());
+            log.setProgram(((StructuredSyslogServerEvent)event).getApplicationName());
+            log.setMessage(event.getMessage());
+        } else {  //rfc3164
+            log.setHost(event.getHost());
+
+            String message = event.getMessage();
+
+            int tagIdx = message.indexOf("[");
+
+            if (tagIdx == -1) {
+                tagIdx = message.indexOf(":");
+            }
+
+            if (tagIdx > -1) {
+                String hostAndTag = message.substring(0, tagIdx);
+                message = message.substring(tagIdx);
+                if (hostAndTag.length() <= 32 ) { //rfc 3164
+                    String[] hostAndTagSplited = hostAndTag.split(" ");
+                    if (hostAndTagSplited.length > 1) {
+                        log.setProgram(hostAndTagSplited[1]);
+                    } else {
+                        log.setProgram(hostAndTagSplited[0]);
+                    }
+
+                }
+            }
+
+            log.setMessage(message);
+        }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Saving log: " + log);

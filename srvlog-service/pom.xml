@@ -70,7 +70,7 @@
       <dependency>
           <groupId>com.nesscomputing</groupId>
           <artifactId>ness-syslog4j</artifactId>
-          <version>0.9.47-NESS-7</version>
+          <version>0.9.47-NESS-8-SNAPSHOT</version>
           <!--TODO move to parent artefact-->
       </dependency>
 

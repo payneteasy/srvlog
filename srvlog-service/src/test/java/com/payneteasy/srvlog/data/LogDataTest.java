@@ -22,6 +22,8 @@ public class LogDataTest {
         logData1.setFacility(1);
         logData1.setHost("localhost");
         logData1.setSeverity(1);
+        logData1.setMessage("message1");
+        logData1.setProgram("program1");
 
         LogData logData2 = new LogData();
         logData2.setId(1L);
@@ -29,6 +31,8 @@ public class LogDataTest {
         logData2.setFacility(1);
         logData2.setHost("localhost");
         logData2.setSeverity(1);
+        logData2.setMessage("message1");
+        logData2.setProgram("program1");
 
         Assert.assertEquals(logData1, logData2);
 
@@ -43,6 +47,8 @@ public class LogDataTest {
         logData1.setFacility(1);
         logData1.setHost("localhost");
         logData1.setSeverity(1);
+        logData1.setMessage("message1");
+        logData1.setProgram("program1");
 
         LogData logData2 = new LogData();
         logData2.setId(2L);
@@ -50,6 +56,8 @@ public class LogDataTest {
         logData2.setFacility(1);
         logData2.setHost("localhost");
         logData2.setSeverity(1);
+        logData1.setMessage("message2");
+        logData1.setProgram("program2");
 
         Assert.assertNotSame(logData1, logData2);
     }
