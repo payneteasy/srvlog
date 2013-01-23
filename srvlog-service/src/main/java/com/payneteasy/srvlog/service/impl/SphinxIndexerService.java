@@ -27,6 +27,14 @@ public class SphinxIndexerService implements IIndexerService{
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
         SphinxClient sphinxClient = new SphinxClient();
 
+
+        try {
+            sphinxClient.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
+        } catch (SphinxException e) {
+            LOG.error("While trying setting sphinx match mode", e);
+            throw new IndexerServiceException("While trying setting sphinx match mode", e);
+        }
+
         if (from != null && to != null) {
             try {
                 sphinxClient.SetFilterRange("log_date", toUnixTime(from), toUnixTime(to), false);

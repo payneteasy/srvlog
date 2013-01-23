@@ -6,7 +6,9 @@ import com.payneteasy.srvlog.data.LogLevel;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
+import org.sphx.api.SphinxResult;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
@@ -98,6 +100,9 @@ public class SphinxIndexerServiceIntegrationTest {
         idList = indexerService.search(null, null, null, null, null, "@message \"host1\"", 0, 100);
         assertEquals("@message \"host1\" should return 40 elements", 40, idList.size());
 
+        idList = indexerService.search(null, null, null, null, null, " @program \"host1program\" ", 0, 100);
+        assertEquals("'@program \"host1program\"' should return 40 elements", 40, idList.size());
+
     }
 
     @AfterClass
@@ -108,6 +113,14 @@ public class SphinxIndexerServiceIntegrationTest {
         if (sphinxDaemonProcess != null) {
             sphinxDaemonProcess.destroy();
         }
+    }
+
+    public static void main(String[] args) throws SphinxException {
+        SphinxClient client = new SphinxClient();
+        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
+        client.SetLimits(0, 100);
+        SphinxResult result = client.Query("@program \"host1program\"");
+        System.out.println(result.matches.length + " results found");
     }
 
 }
