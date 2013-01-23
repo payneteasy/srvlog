@@ -69,12 +69,6 @@ public class SphinxIndexerServiceIntegrationTest {
         assertEquals("10 logs should be found by the host and the severity", 10, idList.size());
     }
 
-    @Test
-    public void testQueryByProgram() throws IndexerServiceException {
-        int offset = 30;
-        List<Long> idList = indexerService.search(null, null, null, null, null, "program", 0, offset);
-        assertEquals("30 logs should be found by the program", offset, idList.size());
-    }
 
     @Test
     public void testQueryByDates() throws IndexerServiceException {
@@ -115,12 +109,12 @@ public class SphinxIndexerServiceIntegrationTest {
         }
     }
 
-    public static void main(String[] args) throws SphinxException {
-        SphinxClient client = new SphinxClient();
-        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
-        client.SetLimits(0, 100);
-        SphinxResult result = client.Query("@program \"host1program\"");
-        System.out.println(result.matches.length + " results found");
-    }
+//    public static void main(String[] args) throws SphinxException {
+//        SphinxClient client = new SphinxClient();
+//        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
+//        client.SetLimits(0, 100);
+//        SphinxResult result = client.Query("@program \"host1program\"");
+//        System.out.println(result.matches.length + " results found");
+//    }
 
 }
