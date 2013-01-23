@@ -38,18 +38,9 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
         wicketTester.startPage(OnlineLogMonitorPage.class);
 
         EasyMock.verify(logCollector);
-        EasyMock.reset(logCollector);
-
-        List<LogData> testLogData50 = getTestLogData(50);
-        EasyMock.expect(logCollector.loadLatest(50)).andReturn(testLogData50);
-
-        EasyMock.replay(logCollector);
-
-        wicketTester.clickLink("group-button-50");
-
-        EasyMock.verify(logCollector);
-        EasyMock.reset(logCollector);
     }
+
+
 
     public static List<LogData> getTestLogData(Integer limit) {
         ArrayList<LogData> listData = new ArrayList<LogData>();

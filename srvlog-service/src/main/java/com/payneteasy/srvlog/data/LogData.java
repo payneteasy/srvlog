@@ -15,6 +15,7 @@ public class LogData implements Serializable {
     private Integer severity;
     private String message;
     private Long id;
+    private String program;
 
     @Column(name = "log_date")
     public Date getDate() {
@@ -71,14 +72,30 @@ public class LogData implements Serializable {
         return id;
     }
 
+    @Column(name = "program")
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof LogData)) return false;
 
         LogData logData = (LogData) o;
 
+//        if (!date.equals(logData.date)) return false;
+        if (facility != null ? !facility.equals(logData.facility) : logData.facility != null) return false;
+        if (host != null ? !host.equals(logData.host) : logData.host != null) return false;
         if (id != null ? !id.equals(logData.id) : logData.id != null) return false;
+        if (!message.equals(logData.message)) return false;
+        if (program != null ? !program.equals(logData.program) : logData.program != null) return false;
+        if (severity != null ? !severity.equals(logData.severity) : logData.severity != null) return false;
 
         return true;
     }
@@ -97,6 +114,7 @@ public class LogData implements Serializable {
                 ", severity=" + severity +
                 ", message='" + message + '\'' +
                 ", id=" + id +
+                ", program='" + program + '\'' +
                 '}';
     }
 }

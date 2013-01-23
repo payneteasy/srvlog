@@ -61,6 +61,13 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
         currentPage = page;
     }
 
+    public void setItemsPerPage(int itemsPerPage) {
+        if(this.itemsPerPage != itemsPerPage){
+            addStateChange(); //TODO I have no idea what is it for. Just copied from my colleague's code
+        }
+        this.itemsPerPage = itemsPerPage;
+    }
+
     @Override
     protected void onDetach() {
         pageableDataProvider.detach();

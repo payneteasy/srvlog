@@ -17,7 +17,7 @@ source srvlog_logs_main
     sql_query_pre = REPLACE INTO sph_counter SELECT 1, MAX(log_id) FROM logs
 
 	sql_query		= \
-		SELECT log_id, UNIXj_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
+		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message, program \
 		FROM logs WHERE log_id <= (SELECT max_doc_id FROM sph_counter WHERE index_id = 1 )
 
 	sql_attr_uint		= facility
@@ -33,7 +33,7 @@ source srvlog_logs_delta: srvlog_logs_main
     sql_query_pre = SET NAMES utf8
 
     sql_query		= \
-    		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message \
+    		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message, program \
     		FROM logs WHERE log_id > (SELECT max_doc_id FROM sph_counter WHERE index_id = 1 )
 
 }

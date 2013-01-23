@@ -68,6 +68,13 @@ public class SphinxIndexerServiceIntegrationTest {
     }
 
     @Test
+    public void testQueryByProgram() throws IndexerServiceException {
+        int offset = 30;
+        List<Long> idList = indexerService.search(null, null, null, null, null, "program", 0, offset);
+        assertEquals("30 logs should be found by the program", offset, idList.size());
+    }
+
+    @Test
     public void testQueryByDates() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
         c.set(2012, 0, 2, 0, 0, 0);

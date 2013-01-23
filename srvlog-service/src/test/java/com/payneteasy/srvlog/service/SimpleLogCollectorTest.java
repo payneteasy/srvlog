@@ -8,6 +8,7 @@ import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,8 +47,8 @@ public class SimpleLogCollectorTest {
         try {
             syslogAdapter.init();
             SyslogIF udpSyslogClient = createSyslog4jClient(testSyslogConfig);
-            udpSyslogClient.info("message");
-            for (int i = 1; i <= 5; i++) {
+            udpSyslogClient.info("program[1234]:message"); //log level 6
+            for (int i = 1; i <= 3; i++) {
                 try {
                    verify(mockLogDao);
                    messageRetrieved = true;
@@ -70,10 +71,13 @@ public class SimpleLogCollectorTest {
 
     private LogData getTestLogData() {
         LogData logData = new LogData();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MILLISECOND, 0);
         logData.setDate(new Date());
-        logData.setSeverity(1);
-        logData.setFacility(1);
-        logData.setMessage("message");
+        logData.setSeverity(6);
+        logData.setFacility(LogFacility.alert.getValue());
+        logData.setMessage("[1234]:message");
+        logData.setProgram("program");
         return logData;
     }
 
@@ -83,7 +87,7 @@ public class SimpleLogCollectorTest {
         udpSyslogClient.getConfig().setSendLocalName(false);
         udpSyslogClient.getConfig().setPort(mockLogAdapterConfig.getSyslogPort());
 
-        udpSyslogClient.getConfig().setFacility(SyslogFacility.forValue(1));
+        udpSyslogClient.getConfig().setFacility(SyslogFacility.alert);
 
         return udpSyslogClient;
     }

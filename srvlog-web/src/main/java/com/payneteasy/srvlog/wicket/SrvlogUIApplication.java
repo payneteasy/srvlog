@@ -7,6 +7,8 @@ import com.payneteasy.srvlog.wicket.page.MainPage;
 import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
+import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -22,10 +24,12 @@ public class SrvlogUIApplication extends WebApplication{
     protected void init() {
         getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-        List<IResourceFinder> resourceFinders = Lists.newArrayList();
-        resourceFinders.add(new Path("../srvlog-web/src/main/java"));
-        resourceFinders.addAll(getResourceSettings().getResourceFinders());
-        getResourceSettings().setResourceFinders(resourceFinders);
+        if (this.getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT) {
+            List<IResourceFinder> resourceFinders = Lists.newArrayList();
+            resourceFinders.add(new WebApplicationPath(getServletContext(), "../srvlog-web/src/main/java"));
+            resourceFinders.addAll(getResourceSettings().getResourceFinders());
+            getResourceSettings().setResourceFinders(resourceFinders);
+        }
 
         getSecuritySettings().setAuthorizationStrategy(new SrvlogAuthorizationStrategy());
 

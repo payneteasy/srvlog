@@ -1,6 +1,4 @@
-﻿set names utf8 collate utf8_general_ci;
-
-drop procedure if exists check_monthly_partitions;
+﻿drop procedure if exists check_monthly_partitions;
 delimiter $$
 create procedure check_monthly_partitions(i_table_name              varchar(128),
                                           i_data_date               datetime,
@@ -95,18 +93,3 @@ create procedure check_monthly_partitions(i_table_name              varchar(128)
   end
 $$
 delimiter ;
-
-call check_monthly_partitions('logs', date(now()), 999);
-
-drop event if exists ev_check_log_partitions;
-
-create event ev_check_log_partitions
-    on schedule every 1 day starts now()
-    comment 'Check log table partitions'
-    do call check_monthly_partitions('logs', date(now()), 999);
-
-insert into hosts(hostname, ip)
-  value ("host1", ""),
-        ("host2", "");
-
-commit;
