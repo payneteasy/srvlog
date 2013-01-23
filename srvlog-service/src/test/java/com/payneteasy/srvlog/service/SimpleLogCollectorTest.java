@@ -41,6 +41,7 @@ public class SimpleLogCollectorTest {
         syslogAdapter.setLogCollector(logCollector);
 
         mockLogDao.saveLog(getTestLogData());
+
         replay(mockLogDao);
         boolean messageRetrieved = false;
         AssertionError verificationError = null;
@@ -64,7 +65,7 @@ public class SimpleLogCollectorTest {
         } finally {
             syslogAdapter.destroy();
         }
-        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError.getMessage()), messageRetrieved);
+        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError !=null ? verificationError.getMessage(): null), messageRetrieved);
 
 
     }
@@ -85,6 +86,7 @@ public class SimpleLogCollectorTest {
         SyslogIF udpSyslogClient = Syslog.getInstance(mockLogAdapterConfig.getSyslogProtocol());
 
         udpSyslogClient.getConfig().setSendLocalName(false);
+        udpSyslogClient.getConfig().setSendLocalTimestamp(false);
         udpSyslogClient.getConfig().setPort(mockLogAdapterConfig.getSyslogPort());
 
         udpSyslogClient.getConfig().setFacility(SyslogFacility.alert);

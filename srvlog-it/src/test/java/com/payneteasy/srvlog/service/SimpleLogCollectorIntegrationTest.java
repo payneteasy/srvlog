@@ -47,7 +47,7 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
             logData.setDate(new Date());
             logData.setFacility(1);
             logData.setSeverity(1);
-            logData.setHost("localhost");
+            logData.setHost("127.0.0.1");
             logData.setMessage("Log message " + i);
             logData.setProgram("program");
             logCollector.saveLog(logData);

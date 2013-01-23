@@ -72,7 +72,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
             }
         }
 
-        assertTrue("Logs should exist in defined time interval", logDataList.size() > 0);
+        assertTrue("Logs should be created in defined time interval", logDataList.size() > 0);
     }
 
 

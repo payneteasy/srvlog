@@ -87,6 +87,19 @@ public class SphinxIndexerServiceIntegrationTest {
         assertEquals("8 logs should be found by date range specified", 8, idList.size());
     }
 
+    @Test
+    public void testQueryByPattern() throws IndexerServiceException {
+        List<Long> idList = indexerService.search(null, null, null, null, null, "host", 0, 100);
+        assertEquals(80, idList.size());
+
+        idList = indexerService.search(null, null, null, null, null, "host1", 0, 100);
+        assertEquals(40, idList.size());
+
+        idList = indexerService.search(null, null, null, null, null, "@message \"host1\"", 0, 100);
+        assertEquals("@message \"host1\" should return 40 elements", 40, idList.size());
+
+    }
+
     @AfterClass
     public static void tearDown() {
         if (context !=null) {

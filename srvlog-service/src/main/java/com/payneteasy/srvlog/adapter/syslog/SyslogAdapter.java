@@ -65,6 +65,8 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             }
             LOG.info("  Waiting for syslog4j server to be run. {} seconds passed ", i);
         }
+
+        LOG.info("Syslog server successfully started on port={}, using protocol={}", logAdapterConfig.getSyslogPort(), logAdapterConfig.getSyslogProtocol());
     }
 
 

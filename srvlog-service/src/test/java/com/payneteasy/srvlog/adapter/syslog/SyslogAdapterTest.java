@@ -13,6 +13,7 @@ import sun.util.resources.CalendarData_ar;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Date: 22.01.13 Time: 13:42
@@ -23,7 +24,7 @@ public class SyslogAdapterTest {
 
     @Before
     public void setUp () {
-
+        Locale.setDefault(Locale.US);
     }
 
 
