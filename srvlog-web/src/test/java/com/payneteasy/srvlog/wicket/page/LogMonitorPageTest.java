@@ -38,6 +38,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     }
 
     @Test
+    @Ignore
     public void testDateRangeFilter() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
 
@@ -62,6 +63,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     }
 
     @Test
+    @Ignore
     public void testDateRangeValidation() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
 
