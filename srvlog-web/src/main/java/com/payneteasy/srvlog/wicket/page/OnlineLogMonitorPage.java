@@ -62,7 +62,12 @@ public class OnlineLogMonitorPage extends BasePage {
                         ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
                     }
                 }
-                holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())));
+                holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+                    @Override
+                    protected void onPostProcessTarget(AjaxRequestTarget target) {
+                        target.appendJavaScript("animateTableRow()");
+                    }
+                });
                 target.add(holderListView);
             }
         };
@@ -98,8 +103,13 @@ public class OnlineLogMonitorPage extends BasePage {
         listView.setOutputMarkupId(true);
         holderListView.add(listView);
 
-        //update panel
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())));
+//        //update panel
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+            @Override
+            protected void onPostProcessTarget(AjaxRequestTarget target) {
+                target.appendJavaScript("animateTableRow()");
+            }
+        });
     }
 
     public class FilterModel implements Serializable {

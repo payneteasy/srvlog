@@ -26,7 +26,7 @@ public class SrvlogUIApplication extends WebApplication{
 
         if (this.getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT) {
             List<IResourceFinder> resourceFinders = Lists.newArrayList();
-            resourceFinders.add(new WebApplicationPath(getServletContext(), "../srvlog-web/src/main/java"));
+            resourceFinders.add(new Path("../srvlog-web/src/main/java"));
             resourceFinders.addAll(getResourceSettings().getResourceFinders());
             getResourceSettings().setResourceFinders(resourceFinders);
         }
