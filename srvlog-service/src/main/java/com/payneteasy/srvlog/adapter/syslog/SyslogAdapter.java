@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
@@ -39,36 +40,36 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     private SyslogServerIF syslog4jInstance;
 
     @PostConstruct
-    public void init(){
-            LOG.info("  Starting syslog4j server....");
+    public void init() {
+        LOG.info("  Starting syslog4j server....");
 
-            // Stupid thing which needs to be done for integration tests. However it does not affect application performance anyhow
-            SyslogServer.shutdown();
-            SyslogServer.initialize();
-            // Now create a new instance of Syslog.
-            syslog4jInstance = SyslogServer.getInstance(logAdapterConfig.getSyslogProtocol());
-            syslog4jInstance.getConfig().setPort(logAdapterConfig.getSyslogPort());
-            syslog4jInstance.getConfig().addEventHandler(this);
-            syslog4jInstance.getConfig().setUseStructuredData(true);
+        // Stupid thing which needs to be done for integration tests. However it does not affect application performance anyhow
+        SyslogServer.shutdown();
+        SyslogServer.initialize();
+        // Now create a new instance of Syslog.
+        syslog4jInstance = SyslogServer.getInstance(logAdapterConfig.getSyslogProtocol());
+        syslog4jInstance.getConfig().setPort(logAdapterConfig.getSyslogPort());
+        syslog4jInstance.getConfig().addEventHandler(this);
+        syslog4jInstance.getConfig().setUseStructuredData(true);
 
-            LOG.info("  Trying to obtain threaded instance of syslog server....");
-            SyslogServer.getThreadedInstance(logAdapterConfig.getSyslogProtocol());
+        LOG.info("  Trying to obtain threaded instance of syslog server....");
+        SyslogServer.getThreadedInstance(logAdapterConfig.getSyslogProtocol());
 
-            LOG.info("  Waiting for syslog4j server to be run ...");
-            for(int i=0; i<10 && !syslog4jInstance.isStarted(); i++) {
+        LOG.info("  Waiting for syslog4j server to be run ...");
+        for (int i = 0; i < 10 && !syslog4jInstance.isStarted(); i++) {
 
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    LOG.error(" Can't run syslog4j server", e);
-                }
-                LOG.info("  Waiting for syslog4j server to be run. {} seconds passed ", i);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                LOG.error(" Can't run syslog4j server", e);
             }
+            LOG.info("  Waiting for syslog4j server to be run. {} seconds passed ", i);
+        }
     }
 
 
     @PreDestroy
-    public void destroy(){
+    public void destroy() {
         LOG.info("  Stopping syslog4j server ...");
 
         //syslog4jInstance.shutdown();
@@ -77,8 +78,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         SyslogServer.shutdown();
 
 
-
-        for(int i=0; i<5 && !syslog4jInstance.isStopped(); i++) {
+        for (int i = 0; i < 5 && !syslog4jInstance.isStopped(); i++) {
             LOG.info("  Waiting syslog4j server to be stop ...");
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -98,18 +98,18 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     @Override
     public void event(SyslogServerIF syslogServer, SocketAddress socketAddress, SyslogServerEventIF event) {
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Obtain message from syslog: {}", new String(event.getRaw()));
         }
         LogData log = new LogData();
         log.setDate(event.getDate());
 
-        log.setFacility(event.getFacility() == null ? LogFacility.local0.getValue() : (event.getFacility().getValue()>>3));
+        log.setFacility(event.getFacility() == null ? LogFacility.local0.getValue() : (event.getFacility().getValue() >> 3));
         log.setSeverity(event.getLevel() == null ? LogLevel.INFO.getValue() : (event.getLevel().getValue()));
 
         if (event instanceof StructuredSyslogServerEvent) { //rfc5424
             log.setHost(event.getHost());
-            log.setProgram(((StructuredSyslogServerEvent)event).getApplicationName());
+            log.setProgram(((StructuredSyslogServerEvent) event).getApplicationName());
             log.setMessage(event.getMessage());
         } else {  //rfc3164
             log.setHost(event.getHost());
@@ -118,21 +118,20 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
             int tagIdx = message.indexOf("[");
 
-            if (tagIdx == -1) {
-                tagIdx = message.indexOf(":");
-            }
+            int tagEndIdx = message.indexOf(":");
 
-            if (tagIdx > -1) {
+            if (tagIdx == -1) {
+                message = message.substring(tagEndIdx + 1);
+            } else if (tagIdx > -1) {
                 String hostAndTag = message.substring(0, tagIdx);
-                message = message.substring(tagIdx);
-                if (hostAndTag.length() <= 32 ) { //rfc 3164
+                if (hostAndTag.split(" ").length <= 2 && hostAndTag.length() <= 32) { //rfc 3164
+                    message = message.substring(tagIdx);
                     String[] hostAndTagSplited = hostAndTag.split(" ");
                     if (hostAndTagSplited.length > 1) {
                         log.setProgram(hostAndTagSplited[1]);
                     } else {
                         log.setProgram(hostAndTagSplited[0]);
                     }
-
                 }
             }
 

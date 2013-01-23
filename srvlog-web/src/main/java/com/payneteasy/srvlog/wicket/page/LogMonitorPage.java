@@ -49,7 +49,7 @@ public class LogMonitorPage extends BasePage {
 
         final FilterModel filterModel = new FilterModel();
 
-        Form<FilterModel> form = new Form<FilterModel>("form");
+        final Form<FilterModel> form = new Form<FilterModel>("form");
         add(form);
 
         //DATE RANGE FILTER
@@ -156,15 +156,19 @@ public class LogMonitorPage extends BasePage {
             @Override
             public Collection<LogData> load(int offset, int limit) {
                 try {
-                    return logCollector.search(
-                            filterModel.getDateRange().getFromDate()
-                            , filterModel.getDateRange().getToDate()
-                            , filterModel.getFacilityIds()
-                            , filterModel.getSeverityIds()
-                            , filterModel.getHostIds()
-                            , filterModel.getPattern()
-                            , offset
-                            , limit);
+                    if(form.hasError()){
+                        return Collections.emptyList();
+                    }else {
+                        return logCollector.search(
+                                filterModel.getDateRange().getFromDate()
+                                , filterModel.getDateRange().getToDate()
+                                , filterModel.getFacilityIds()
+                                , filterModel.getSeverityIds()
+                                , filterModel.getHostIds()
+                                , filterModel.getPattern()
+                                , offset
+                                , limit);
+                    }
                 } catch (IndexerServiceException e) {
                     error("Error while retrieving log data: " + e.getMessage()); //TODO fetch message from resource file
                     return Collections.emptyList();
@@ -181,6 +185,7 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
+                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClass(logLevel, item);
             }
@@ -216,7 +221,7 @@ public class LogMonitorPage extends BasePage {
             }
         };
         dateTextField.add(new DatePicker());
-        form.add(new DateRangeValidator(dateTextField, keyPrefix));
+        dateTextField.setRequired(true);
         return dateTextField;
     }
 
@@ -247,7 +252,7 @@ public class LogMonitorPage extends BasePage {
                 };
             }
         };
-        form.add(new DateRangeValidator(dateTimeField, keyPrefix));
+        dateTimeField.setRequired(true);
         return dateTimeField;
     }
 

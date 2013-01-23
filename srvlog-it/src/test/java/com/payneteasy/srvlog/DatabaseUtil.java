@@ -196,6 +196,7 @@ public class DatabaseUtil {
                     logData.setSeverity(i);
                     logData.setHost(hosts.get(j));
                     logData.setMessage("Big Log message from host " + hosts.get(j) + " for testing long messages on the UI");
+                    logData.setProgram("program");
                     logCollector.saveLog(logData);
                     System.out.println(logData);
                 }

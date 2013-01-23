@@ -90,6 +90,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
+                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClass(logLevel, item);
             }

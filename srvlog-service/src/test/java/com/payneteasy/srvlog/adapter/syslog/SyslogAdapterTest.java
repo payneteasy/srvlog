@@ -44,13 +44,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        String hostName = inetAddress.getHostName();
-        int j = hostName.indexOf('.');
-
-        if (j > -1) {
-            hostName = hostName.substring(0,j);
-        }
-        logData.setHost(hostName);
+        setHostName(inetAddress, logData);
 
         logData.setProgram("monit");
         logData.setMessage("[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
@@ -80,13 +74,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        String hostName = inetAddress.getHostName();
-        int j = hostName.indexOf('.');
-
-        if (j > -1) {
-            hostName = hostName.substring(0,j);
-        }
-        logData.setHost(hostName);
+        setHostName(inetAddress, logData);
 
         logData.setProgram("monit");
         logData.setMessage("[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
@@ -100,7 +88,7 @@ public class SyslogAdapterTest {
     }
 
     @Test
-    public void parseLongTag() throws UnknownHostException {
+    public void parseLogTagMore32() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getLocalHost();
         String syslogMessage = "<13>Dec 22 05:31:55 123456789012345678901234567890123456789monit[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]";
         adapter = new SyslogAdapter();
@@ -115,15 +103,9 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        String hostName = inetAddress.getHostName();
-        int j = hostName.indexOf('.');
+        setHostName(inetAddress, logData);
 
-        if (j > -1) {
-            hostName = hostName.substring(0,j);
-        }
-        logData.setHost(hostName);
-
-        logData.setMessage("[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
+        logData.setMessage("123456789012345678901234567890123456789monit[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
         mockLogCollector.saveLog(logData);
         EasyMock.expectLastCall();
         EasyMock.replay(mockLogCollector);
@@ -131,6 +113,18 @@ public class SyslogAdapterTest {
         adapter.event(null, null, new SyslogServerEvent(syslogMessage, InetAddress.getLocalHost()));
 
         EasyMock.verify(mockLogCollector);
+    }
+
+//      PRIVATE METHODS
+
+    private void setHostName(InetAddress inetAddress, LogData logData) {
+        String hostName = inetAddress.getHostName();
+        int j = hostName.indexOf('.');
+
+        if (j > -1) {
+            hostName = hostName.substring(0,j);
+        }
+        logData.setHost(hostName);
     }
 }
 

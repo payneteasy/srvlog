@@ -51,7 +51,7 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
     protected void startWebapps() throws Exception {
         server = WebContainerUtils.createServer();
 
-        WebAppContext webAppContext = WebContainerUtils.createWebApp( "", "", server, "../srvlog-web", "../srvlog-web/src/test/resources/jetty/jetty-env-ui.xml");
+        WebAppContext webAppContext = WebContainerUtils.createWebApp( "", "../srvlog-web/src/test/resources/jetty/override-ui-web.xml", server, "../srvlog-web", "../srvlog-web/src/test/resources/jetty/jetty-env-ui.xml");
 
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         contextHandlerCollection.setHandlers(new Handler[]{webAppContext});
