@@ -51,8 +51,16 @@
                     </tbody>
                 </table>
             </div>
-
     </div>
+
+    <script type="text/javascript">
+         function animateTableRow(){
+             $("tr").children("td").animate({ opacity: 0.5 }, 1000, function(){
+                 $(this).css({ opacity: 1 });
+             });
+         }
+
+    </script>
 
 </wicket:extend>
 </body>

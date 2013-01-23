@@ -15,6 +15,7 @@ source srvlog_logs_main
 
     sql_query_pre = SET NAMES utf8
     sql_query_pre = REPLACE INTO sph_counter SELECT 1, MAX(log_id) FROM logs
+    sql_query_pre = commit
 
 	sql_query		= \
 		SELECT log_id, UNIX_TIMESTAMP(log_date) AS log_date, facility, severity, host_id, message, program \
