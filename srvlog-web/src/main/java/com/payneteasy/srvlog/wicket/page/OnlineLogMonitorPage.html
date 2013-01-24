@@ -62,7 +62,6 @@
                 if(new Date(lastDateText) < new Date(dateText)){
                     hasMore = true;
                     var originColor = $(this).children("td:first").css("background-color");
-                    console.log(originColor);
                     $(this).children("td").animate({ backgroundColor: rgb2hex(originColor, 1)}, 1000,"linear", function () {
                         $(this).css("background-color", originColor);
                     });
