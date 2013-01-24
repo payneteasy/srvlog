@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.wicket.component.navigation.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,4 +25,9 @@ public class FakeDataLoaderService {
         }
         return result;
     }
+
+    public List getEmptyData() {
+        return Collections.emptyList();
+    }
+
 }
