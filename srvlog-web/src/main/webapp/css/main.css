@@ -1,9 +1,20 @@
-@import "bootstrap-responsive.min.css";
 @import "bootstrap.min.css";
+@import "bootstrap-responsive.min.css";
+
+
+.row-fluid .span3 {
+    width: 20%;
+}
+    .row-fluid .span3 select{
+        width: 90%;
+    }
+
+
 
 .main-input-append > input{
     height: 44px;
     font-size: 30px;
+    width: 90%;
 }
 
 .main-table{
@@ -37,55 +48,58 @@
 
 
 /*FILTER*/
-.main-filter-container select{
-    vertical-align: top;
+.main-filter-well{
+    padding: 5px 0px 0px 15px;
 }
-.main-filter-container select[multiple]{
-    height: 145px;
-}
-
-.main-filter-row{
-    border-top: 1px solid #cccccc ;
-}
-
-.main-filter-title, .main-filter-title-small{
-    font-size: 15px;
-    color: #808080;
-    font-weight: bold;
-    margin: 0px 5px 0px 8px;
-}
-    .main-filter-title-small{
-        font-size: 13px;
+    .main-filter-well select{
+        /*width: 170px;*/
     }
-    div.main-filter-title{
+    .main-filter-well select[multiple]{
+        height: 145px;
+    }
+
+    /*FILTER TITLE*/
+    .main-filter-title, .main-filter-title-small{
+        font-size: 15px;
+        color: #808080;
+        font-weight: bold;
         margin: 10px 0px 5px 0px;
     }
+        .main-filter-title-small{
+            font-size: 13px;
+        }
+        .main-filter-title:first-child, .main-filter-title-small:first-child{
+            margin-top: 0px;
+        }
+    /*FILTER DATE RANGE    */
+    .main-filter-dateRange{ line-height: 27px;}
 
-.main-inline-dateRange li{
-    vertical-align: top;
-}
+        .main-filter-dateRange input{
+            width: 60px;
+            font-size: 11px;
+            padding: 1px;
+        }
+        .main-filter-dateRange .main-filter-title-small{
+             display: inline-block;
+             width: 40px;
+        }
 
-.main-inline-dateRange input{
-    width: 60px;
-    font-size: 11px;
-    padding: 1px;
-}
+        /*TIME FIELD*/
+        .main-timeField, .main-timeField  span{
+            display: inline-block;
+            vertical-align: top;
+        }
+        .main-timeField input{
+            height: 27px;
+        }
+            .main-timeField input[name*=":minutes"],
+            .main-timeField input[name*=":hours"]{
+                width: 35px;
+            }
 
-.main-timeField, .main-timeField  span{
-    display: inline-block;
-    vertical-align: top;
-}
-.main-timeField span input{
-    height: 27px;
-}
-.main-fluid-span3{
-    width: 30%;
-}
+
 
 /*FEEDBACK PANEL*/
-.feedbackPanel li{
-    display: block;
-}
 .feedbackPanel {
     padding-top: 14px;
     padding-bottom: 14px;
@@ -101,9 +115,12 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
-.feedbackPanelERROR, .feedbackPanelFATAL, .feedbackPanelUNDEFINED, .feedbackPanelWARNING{
-    color: #b94a48;
-}
-.feedbackPanelINFO, .feedbackPanelDEBUG{
-    color: #2b8513;
-}
+    .feedbackPanel li{
+        display: block;
+    }
+    .feedbackPanelERROR, .feedbackPanelFATAL, .feedbackPanelUNDEFINED, .feedbackPanelWARNING{
+        color: #b94a48;
+    }
+    .feedbackPanelINFO, .feedbackPanelDEBUG{
+        color: #2b8513;
+    }

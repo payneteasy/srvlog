@@ -27,6 +27,7 @@ import org.springframework.security.access.annotation.Secured;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
@@ -65,7 +66,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
                     @Override
                     protected void onPostProcessTarget(AjaxRequestTarget target) {
-                        target.appendJavaScript("animateTableRow()");
+                        animateLastTableRow(target);
                     }
                 });
                 target.add(holderListView);
@@ -107,14 +108,19 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
-                target.appendJavaScript("animateTableRow()");
+                animateLastTableRow(target);
             }
         });
+    }
+
+    private void animateLastTableRow(AjaxRequestTarget target) {
+        target.appendJavaScript("animateLastTableRow()");
     }
 
     public class FilterModel implements Serializable {
         private Integer latestLogs = 25;
         private Integer timeDurationInSeconds=2;
+        private Date lastDate;
 
         public Integer getTimeDurationInSeconds() {
             return timeDurationInSeconds;
@@ -130,6 +136,14 @@ public class OnlineLogMonitorPage extends BasePage {
 
         public void setLatestLogs(Integer latestLogs) {
             this.latestLogs = latestLogs;
+        }
+
+        public Date getLastDate() {
+            return lastDate;
+        }
+
+        public void setLastDate(Date lastDate) {
+            this.lastDate = lastDate;
         }
     }
 }
