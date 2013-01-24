@@ -195,6 +195,13 @@ public class LogMonitorPage extends BasePage {
         final UncountablyPageableNavigator<LogData> pagingNavigator = new UncountablyPageableNavigator<LogData>("paging-navigator", listView);
         form.add(pagingNavigator);
 
+        form.add(new WebMarkupContainer("no-data"){
+            @Override
+            public boolean isVisible() {
+                return !listView.isVisible();
+            }
+        });
+
         ButtonGroupPanel buttonGroupPanel = new ButtonGroupPanel("item-perPage", Arrays.asList(25, 50, 100)){
             @Override
             protected void doOnClick(Integer currentIndex) {

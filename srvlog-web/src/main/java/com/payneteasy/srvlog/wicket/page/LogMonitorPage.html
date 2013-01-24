@@ -11,7 +11,7 @@
         <form wicket:id="form">
             <div class="row-fluid">
                 <!--FILTER PART-->
-                <div class="span3">
+                <div class="span3 main-span3">
                     <div class="well main-filter-well">
 
                         <div class="main-filter-title">Date range:</div>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <!--TABLE PART-->
-                <div class="span9">
+                <div class="span9 main-span9">
                     <div class="input-append main-input-append">
                         <input  id="appendedInputButton" wicket:id="pattern" type="text"/>
                         <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
@@ -79,7 +79,7 @@
 
                     <div class="row">
                         <div wicket:id="item-perPage" class="span3 pager"></div>
-                        <div wicket:id="paging-navigator" class="span7"></div>
+                        <div wicket:id="paging-navigator" class="span7 pull-right main-pager-holder"></div>
                     </div>
 
 
@@ -108,6 +108,7 @@
                             <td wicket:id="log-program">Program</td>
                             <td wicket:id="log-message">Message</td>
                         </tr>
+                        <tr wicket:id="no-data">No data found</tr>
                         </tbody>
                     </table>
                 </div>

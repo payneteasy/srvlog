@@ -2,15 +2,14 @@
 <body>
 <wicket:panel>
 
+    <ul class="inline main-pager-counter">
+        <li wicket:id="paging-from-row" class="pager-from badge"></li>
+        <li>-</li>
+        <li wicket:id="paging-to-row" class="pager-to badge" ></li>
+    </ul>
 
-    <div class="from-to">
-        <div class="pager-from" wicket:id="paging-from-row"></div>
-        -
-        <div class="pager-to" wicket:id="paging-to-row"></div>
-    </div>
 
-
-    <ul class="pager">
+    <ul class="pager main-pager">
         <li>
             <a href="#" wicket:id="paging-first" class="paging-a">First</a>
         </li>

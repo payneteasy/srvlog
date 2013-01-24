@@ -2,14 +2,15 @@
 @import "bootstrap-responsive.min.css";
 
 
-.row-fluid .span3 {
+.row-fluid .main-span3 {
     width: 20%;
 }
-    .row-fluid .span3 select{
+    .row-fluid .main-span3 select{
         width: 90%;
     }
-
-
+.row-fluid .main-span9{
+    width: 76%;
+}
 
 .main-input-append > input{
     height: 44px;
@@ -124,3 +125,15 @@
     .feedbackPanelINFO, .feedbackPanelDEBUG{
         color: #2b8513;
     }
+
+/*PAGER*/
+.main-pager-holder{
+    text-align: right;
+}
+.main-pager-counter, .main-pager{
+    width: 20%;
+    display: inline-block;
+}
+.main-pager{
+    width: 40%;
+}
