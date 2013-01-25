@@ -198,7 +198,7 @@ public class LogMonitorPage extends BasePage {
         form.add(new WebMarkupContainer("no-data"){
             @Override
             public boolean isVisible() {
-                return !listView.isVisible();
+                return !listView.isEmpty();
             }
         });
 

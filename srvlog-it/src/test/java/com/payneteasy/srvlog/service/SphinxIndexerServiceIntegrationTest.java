@@ -3,20 +3,19 @@ package com.payneteasy.srvlog.service;
 import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.util.DateRange;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
+import org.sphx.api.SphinxMatch;
 import org.sphx.api.SphinxResult;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.*;
@@ -99,6 +98,18 @@ public class SphinxIndexerServiceIntegrationTest {
 
     }
 
+    @Test
+    public void testQueryByDateAndGroupResultsDaily() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<Date, Long> results = indexerService.numberOfLogsByDate(from, to);
+        assertEquals("Epected 8 groups of date bucket", 10, results.size());
+    }
+
     @AfterClass
     public static void tearDown() {
         if (context !=null) {
@@ -109,12 +120,35 @@ public class SphinxIndexerServiceIntegrationTest {
         }
     }
 
-//    public static void main(String[] args) throws SphinxException {
-//        SphinxClient client = new SphinxClient();
-//        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
-//        client.SetLimits(0, 100);
-//        SphinxResult result = client.Query("@program \"host1program\"");
-//        System.out.println(result.matches.length + " results found");
-//    }
+    public static void main(String[] args) throws SphinxException {
+        SphinxClient client = new SphinxClient();
+        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
+        client.SetLimits(0, 100);
+        //client.SetSelect("@count as mycount, @group as mygroup");
+        //DateRange lastMonth = DateRange.lastMonth();
+        //client.SetFilterRange("log_date", (lastMonth.getFromDate().getTime()/1000), lastMonth.getToDate().getTime()/1000);
+        client.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
+        SphinxResult result = client.Query("");
+        System.out.println(result.warning);
+        System.out.println(result.error );
+
+        for (SphinxMatch sm: result.matches) {
+            System.out.println();
+            int i = 0;
+            for(Object o: sm.attrValues) {
+                if ("log_date".equalsIgnoreCase(result.attrNames[i])) {
+                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + new Date(((Long)o) * 1000) + ", " + o.getClass().getName());
+                } else {
+                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + o + ", " + o.getClass().getName());
+                }
+                i++;
+            }
+
+            //System.out.println("count = " + sm.attrValues.get(0)+ ",  group = " + sm.attrValues.get(1));
+
+        }
+
+        System.out.println(result.matches.length + " results found");
+    }
 
 }
