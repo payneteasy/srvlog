@@ -1,6 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.LogCount;
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
@@ -29,19 +29,19 @@ public class MainPageTest extends AbstractWicketTester {
         //after onclick
         DateRange lastMonth = DateRange.lastMonth();
         EasyMock.expect(indexerService.numberOfLogsByDate(lastMonth.getFromDate(), lastMonth.getToDate())).andReturn(new HashMap<Date, Long>());
-        EasyMock.expect(indexerService.numberOfSeveritiesByDate(lastMonth.getFromDate(), lastMonth.getToDate())).andReturn(new ArrayList<LogCount>());
+        EasyMock.expect(indexerService.numberOfLogsBySeverity(lastMonth.getFromDate(), lastMonth.getToDate())).andReturn(new HashMap<LogLevel, Long>());
 
         DateRange thisWeek = DateRange.thisWeek();
         EasyMock.expect(indexerService.numberOfLogsByDate(thisWeek.getFromDate(), thisWeek.getToDate())).andReturn(new HashMap<Date, Long>());
-        EasyMock.expect(indexerService.numberOfSeveritiesByDate(thisWeek.getFromDate(), thisWeek.getToDate())).andReturn(new ArrayList<LogCount>());
+        EasyMock.expect(indexerService.numberOfLogsBySeverity(thisWeek.getFromDate(), thisWeek.getToDate())).andReturn(new HashMap<LogLevel, Long>());
 
         DateRange lastWeek = DateRange.lastWeek();
         EasyMock.expect(indexerService.numberOfLogsByDate(lastWeek.getFromDate(), lastWeek.getToDate())).andReturn(new HashMap<Date, Long>());
-        EasyMock.expect(indexerService.numberOfSeveritiesByDate(lastWeek.getFromDate(), lastWeek.getToDate())).andReturn(new ArrayList<LogCount>());
+        EasyMock.expect(indexerService.numberOfLogsBySeverity(lastWeek.getFromDate(), lastWeek.getToDate())).andReturn(new HashMap<LogLevel, Long>());
 
         DateRange thisMonth = DateRange.thisMonth();
         EasyMock.expect(indexerService.numberOfLogsByDate(thisMonth.getFromDate(), thisMonth.getToDate())).andReturn(new HashMap<Date, Long>());
-        EasyMock.expect(indexerService.numberOfSeveritiesByDate(thisMonth.getFromDate(), thisMonth.getToDate())).andReturn(new ArrayList<LogCount>());
+        EasyMock.expect(indexerService.numberOfLogsBySeverity(thisMonth.getFromDate(), thisMonth.getToDate())).andReturn(new HashMap<LogLevel, Long>());
 
         EasyMock.replay(indexerService);
 
@@ -67,7 +67,7 @@ public class MainPageTest extends AbstractWicketTester {
     private void predefinedParameter() throws IndexerServiceException {
         DateRange dateRange = DateRange.thisMonth();
         EasyMock.expect(indexerService.numberOfLogsByDate(dateRange.getFromDate(), dateRange.getToDate())).andReturn(new HashMap<Date, Long>());
-        EasyMock.expect(indexerService.numberOfSeveritiesByDate(dateRange.getFromDate(), dateRange.getToDate())).andReturn(new ArrayList<LogCount>());
+        EasyMock.expect(indexerService.numberOfLogsBySeverity(dateRange.getFromDate(), dateRange.getToDate())).andReturn(new HashMap<LogLevel, Long>());
     }
 
 
