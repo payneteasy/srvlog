@@ -11,8 +11,8 @@
                     <li class="main-li-title">Logs statistics</li>
                     <li class="main-li-btn-group">
                         <div wicket:id="button-group-holder" class="btn-group">
-                            <a wicket:id="TODAY" class="btn btn-small">today</a>
-                            <a wicket:id="YESTERDAY" class="btn btn-small">yesterday</a>
+                            <a wicket:id="THIS_WEEK" class="btn btn-small">this week</a>
+                            <a wicket:id="LAST_WEEK" class="btn btn-small">last week</a>
                             <a wicket:id="THIS_MONTH" class="btn btn-small">this month</a>
                             <a wicket:id="LAST_MONTH" class="btn btn-small">last month</a>
                         </div>
@@ -73,7 +73,7 @@
 
                 tooltip: {
                     formatter: function() {
-                        var s = '<b>'+ Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'</b>';
+                        var s = '<b>'+ Highcharts.dateFormat('%Y-%m-%d', this.x) +'</b>';
                             s += '<br/>Count of logs = '+ this.y;
                         return s;
                     }
@@ -89,13 +89,13 @@
                 xAxis: {
                     type: 'datetime',
                     dateTimeLabelFormats: {
-                        second: '%Y-%m-%d<br/>%H:%M:%S',
-                        minute: '%Y-%m-%d<br/>%H:%M',
-                        hour: '%Y-%m-%d<br/>%H:%M',
-                        day: '%Y<br/>%m-%d',
-                        week: '%Y<br/>%m-%d',
-                        month: '%Y-%m',
-                        year: '%Y'
+                        second: '%Y-%m-%d',
+                        minute: '%Y-%m-%d',
+                        hour: '%Y-%m-%d',
+                        day: '%Y-%m-%d',
+                        week: '%Y-%m-%d',
+                        month: '%Y-%m-%d',
+                        year: '%Y-%m-%d'
                     },
                     gridLineColor: "#eae3e3",
                     gridLineWidth: 0.5

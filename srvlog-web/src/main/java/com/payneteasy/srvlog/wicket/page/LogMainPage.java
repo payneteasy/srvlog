@@ -44,7 +44,6 @@ public class LogMainPage extends BasePage {
 
     @SpringBean
     IIndexerService indexerService;
-    private Map<Date, Long> numberOfLogsByDate;
 
     public LogMainPage(PageParameters pageParameters) {
         super(pageParameters, LogMainPage.class);
@@ -94,13 +93,14 @@ public class LogMainPage extends BasePage {
         WebMarkupContainer buttonHolderContainer = new WebMarkupContainer("button-group-holder");
         buttonHolderContainer.setOutputMarkupId(true);
         add(buttonHolderContainer);
-        buttonHolderContainer.add(addButtonGroup(DateRangeType.TODAY, filterDate, listHolderContainer, buttonHolderContainer));
-        buttonHolderContainer.add(addButtonGroup(DateRangeType.YESTERDAY, filterDate, listHolderContainer, buttonHolderContainer));
+        buttonHolderContainer.add(addButtonGroup(DateRangeType.THIS_WEEK, filterDate, listHolderContainer, buttonHolderContainer));
+        buttonHolderContainer.add(addButtonGroup(DateRangeType.LAST_WEEK, filterDate, listHolderContainer, buttonHolderContainer));
         buttonHolderContainer.add(addButtonGroup(DateRangeType.THIS_MONTH, filterDate, listHolderContainer, buttonHolderContainer));
         buttonHolderContainer.add(addButtonGroup(DateRangeType.LAST_MONTH, filterDate, listHolderContainer, buttonHolderContainer));
     }
 
     private JSONArray getJsonArray(Date dateFrom, Date dateTo) {
+        Map<Date, Long> numberOfLogsByDate = null;
         try {
             numberOfLogsByDate = indexerService.numberOfLogsByDate(dateFrom, dateTo);
         } catch (IndexerServiceException e) {
@@ -127,11 +127,11 @@ public class LogMainPage extends BasePage {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 switch (type) {
-                    case TODAY:
-                        filterDate.setDateRange(DateRange.today(), DateRangeType.TODAY);
+                    case THIS_WEEK:
+                        filterDate.setDateRange(DateRange.thisWeek(), DateRangeType.THIS_WEEK);
                         break;
-                    case YESTERDAY:
-                        filterDate.setDateRange(DateRange.yesterday(), DateRangeType.YESTERDAY);
+                    case LAST_WEEK:
+                        filterDate.setDateRange(DateRange.lastWeek(), DateRangeType.LAST_WEEK);
                         break;
                     case THIS_MONTH:
                         filterDate.setDateRange(DateRange.thisMonth(), DateRangeType.THIS_MONTH);
@@ -167,7 +167,7 @@ public class LogMainPage extends BasePage {
         private DateRangeType dateRangeType;
 
         private FilterDate() {
-            this.dateRange = DateRange.lastMonth(); //by default
+            this.dateRange = DateRange.thisMonth(); //by default
             this.dateRangeType = DateRangeType.THIS_MONTH;
         }
 
