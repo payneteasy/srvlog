@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.LogCount;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;

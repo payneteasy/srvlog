@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.service;
 
-import com.payneteasy.srvlog.data.LogCount;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 
