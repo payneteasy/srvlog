@@ -162,18 +162,50 @@ public class SphinxIndexerService implements IIndexerService{
         return resultMap;
     }
 
+
+
     @Override
-    public List<LogCount> numberOfSeveritiesByDate(Date from, Date to) throws IndexerServiceException {
-        //TODO not implemented yet
-        List<LogCount> logCounts = new ArrayList<LogCount>();
-        for (LogLevel logLevel : LogLevel.values()) {
-            LogCount  logCount = new LogCount();
-            logCount.setName(logLevel.name());
-            logCount.setCount(300L);
-            logCounts.add(logCount);
+    public Map<LogLevel, Long> numberOfLogsBySeverity(Date from, Date to) throws IndexerServiceException {
+        SphinxClient sphinxClient = new SphinxClient();
+
+        setMatchMode(sphinxClient);
+
+        setDate(from, to, sphinxClient);
+
+        try {
+            sphinxClient.SetGroupBy("severity", SphinxClient.SPH_GROUPBY_ATTR);
+        } catch (SphinxException e) {
+            LOG.error("While trying to set group by severity", e);
+            throw new IndexerServiceException("While trying to set group by severity", e);
         }
 
-        return logCounts;
+        SphinxResult result = querySphinx("", sphinxClient);
+
+        if (errorOccuredWhileQuerying(sphinxClient, result)) return Collections.emptyMap();
+
+        reportWarningsIfAny(sphinxClient);
+
+        Map<LogLevel, Long> resultMap = new TreeMap<LogLevel, Long>();
+        for(SphinxMatch sm: result.matches) {
+            LogLevel level = null;
+            Long count     = null;
+
+            for (int i= 0; i < sm.attrValues.size(); i++) {
+                if ("@groupby".equalsIgnoreCase(result.attrNames[i])) {
+                    level = LogLevel.levelForValue(((Long)sm.attrValues.get(i)).intValue());
+                } else if ("@count".equalsIgnoreCase(result.attrNames[i])) {
+                    count = (Long) sm.attrValues.get(i);
+                }
+            }
+
+            if (level != null && count !=null) {
+                resultMap.put(level, count);
+            } else {
+                throw new IndexerServiceException("Cannot find group date or count value in the search result");
+            }
+        }
+
+        return resultMap;
     }
 
     private void setMatchMode(SphinxClient sphinxClient) throws IndexerServiceException {

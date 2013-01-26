@@ -99,16 +99,37 @@ public class SphinxIndexerServiceIntegrationTest {
     }
 
     @Test
-    public void testQueryByDateAndGroupResultsDaily() throws IndexerServiceException {
+    public void testQueryLogsCountAndGroupResultsDaily() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
         c.set(2012, 0, 2, 0, 0, 0);
         Date from = c.getTime();
+
         c.roll(Calendar.MONTH, 1);
         Date to = c.getTime();
 
         Map<Date, Long> results = indexerService.numberOfLogsByDate(from, to);
-        assertEquals("Epected 8 groups of date bucket", 10, results.size());
+        assertEquals("Should be 8 groups of date bucket in test data", 10, results.size());
+
+        c.setTime(from);
+        c.set(Calendar.MILLISECOND, 0);
+
+        assertNotNull(results.get(c.getTime())); //check the first date
+
     }
+
+    @Test
+    public void testQueryLogsCountGrouppedBySeverity() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
+        assertEquals("Should be 4 groups of severity buckets", 4, results.size());
+    }
+
 
     @AfterClass
     public static void tearDown() {

@@ -16,10 +16,12 @@ public enum LogLevel implements LogEnum{
 
     private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
     private static List<LogLevel> logLevelList = new ArrayList<LogLevel>();
+    private static Map<Integer, LogLevel> valueToLevel = new HashMap<Integer, LogLevel>();
 
     static {
         for (LogLevel ll: LogLevel.values()) {
             valueToName.put(ll.getValue(), ll.name());
+            valueToLevel.put(ll.getValue(), ll);
             logLevelList.add(ll);
         }
     }
@@ -41,5 +43,9 @@ public enum LogLevel implements LogEnum{
 
     public static String forValue(Integer value) {
         return valueToName.get(value);
+    }
+
+    public static LogLevel levelForValue(Integer value) {
+        return valueToLevel.get(value);
     }
 }

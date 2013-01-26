@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogCount;
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
@@ -31,10 +32,7 @@ import org.springframework.security.access.annotation.Secured;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Date: 16.01.13 Time: 13:03
@@ -62,12 +60,12 @@ public class LogMainPage extends BasePage {
             }
         });
 
-        IModel<List<LogCount>> logCountModel = new LoadableDetachableModel<List<LogCount>>() {
+        IModel<List<Map.Entry<LogLevel, Long>>> logCountModel = new LoadableDetachableModel<List<Map.Entry<LogLevel, Long>>>() {
             @Override
-            protected List<LogCount> load() {
+            protected List<Map.Entry<LogLevel, Long>> load() {
                 try {
                     final DateRange dateRange = filterDate.getDateRange();
-                    return indexerService.numberOfSeveritiesByDate(dateRange.getFromDate(), dateRange.getToDate());
+                    return new LinkedList<Map.Entry<LogLevel, Long>>(indexerService.numberOfLogsBySeverity(dateRange.getFromDate(), dateRange.getToDate()).entrySet());
                 } catch (IndexerServiceException e) {
                     error("Error while retrieving log data: " + e.getMessage());
                     return Collections.emptyList();
@@ -78,14 +76,14 @@ public class LogMainPage extends BasePage {
         listHolderContainer.setOutputMarkupId(true);
         add(listHolderContainer);
 
-        ListView<LogCount> listView = new ListView<LogCount>("list-severity", logCountModel) {
+        ListView<Map.Entry<LogLevel, Long>> listView = new ListView<Map.Entry<LogLevel, Long>>("list-severity", logCountModel) {
             @Override
-            protected void populateItem(ListItem<LogCount> item) {
-                LogCount logCount = item.getModelObject();
-                Label labelName = new Label("name", logCount.getName());
-                LogDataTableUtil.setHighlightCssClassBySeverity(logCount.getName(), labelName);
+            protected void populateItem(ListItem<Map.Entry<LogLevel, Long>> item) {
+                Map.Entry<LogLevel, Long> logCount = item.getModelObject();
+                Label labelName = new Label("name", logCount.getKey().name());
+                LogDataTableUtil.setHighlightCssClassBySeverity(logCount.getKey().name(), labelName);
                 item.add(labelName);
-                item.add(new Label("count", logCount.getCount()));
+                item.add(new Label("count", logCount.getValue()));
             }
         };
         listHolderContainer.add(listView);
