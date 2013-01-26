@@ -1,0 +1,122 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div class="container-fluid">
+        <div wicket:id="feedbackPanel"></div>
+
+        <div class="main-dashboard">
+            <div class="main-dashboard-header">
+                <ul class="inline">
+                    <li class="main-li-icon"><i class="icon-folder-close"></i></li>
+                    <li class="main-li-title">Logs statistics</li>
+                    <li class="main-li-btn-group">
+                        <div wicket:id="button-group-holder" class="btn-group">
+                            <a wicket:id="TODAY" class="btn btn-small">today</a>
+                            <a wicket:id="YESTERDAY" class="btn btn-small">yesterday</a>
+                            <a wicket:id="THIS_MONTH" class="btn btn-small">this month</a>
+                            <a wicket:id="LAST_MONTH" class="btn btn-small">last month</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="main-dashboard-content">
+                <ul class="inline">
+                    <li class="main-list-severities">
+                        <div class="main-dashboard-header  main-dashboard-header-small">
+                            <ul class="inline">
+                                <li class="main-li-icon"><i class="icon-list"></i></li>
+                                <li class="main-li-title">Counts of severities</li>
+                            </ul>
+                        </div>
+                        <div wicket:id="list-severity-holder" class="main-dashboard-box">
+                            <div wicket:id="list-severity" class="main-dashboard-list">
+                                <span wicket:id="name"></span>
+                                <span wicket:id="count" class="pull-right label"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="main-chart-holder">
+                        <div class="main-dashboard-header  main-dashboard-header-small">
+                            <ul class="inline">
+                                <li class="main-li-icon"><i class="icon-signal"></i></li>
+                                <li class="main-li-title">Number of logs by date</li>
+                            </ul>
+                        </div>
+                        <!--CHART-->
+                        <div class="main-chart-box">
+                            <div id="container" style="width: 98%"></div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/highstock.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function drawChart(map){
+            var jsonObj = JSON && JSON.parse(map) || $.parseJSON(map);
+            console.log(jsonObj);
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container'
+                },
+                scrollbar:{ enabled:false },
+                rangeSelector: { enabled:false },
+                navigator:{ enabled:false},
+                credits:{enabled: false},
+                title: { text: null },
+
+                tooltip: {
+                    formatter: function() {
+                        var s = '<b>'+ Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'</b>';
+                            s += '<br/>Count of logs = '+ this.y;
+                        return s;
+                    }
+                },
+                legend:{
+                    enabled: false
+                },
+                plotOptions:{
+                    line: {
+                        lineWidth:0.5
+                    }
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        second: '%Y-%m-%d<br/>%H:%M:%S',
+                        minute: '%Y-%m-%d<br/>%H:%M',
+                        hour: '%Y-%m-%d<br/>%H:%M',
+                        day: '%Y<br/>%m-%d',
+                        week: '%Y<br/>%m-%d',
+                        month: '%Y-%m',
+                        year: '%Y'
+                    },
+                    gridLineColor: "#eae3e3",
+                    gridLineWidth: 0.5
+                },
+                yAxis: {
+                    title: {
+                        text: null
+                    },
+                    gridLineWidth: 0
+
+                },
+                series: [{
+                    name : "count",
+                    data: jsonObj,
+                    color: "#faa732",
+                    type: "line"
+                }]
+            });
+        }
+     </script>
+
+</wicket:extend>
+</body>
+</html>

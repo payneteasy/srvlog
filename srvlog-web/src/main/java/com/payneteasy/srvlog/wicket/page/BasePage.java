@@ -13,18 +13,18 @@ import org.springframework.security.access.annotation.Secured;
  * Date: 21.12.12 Time: 15:53
  */
 @Secured("ROLE_ADMIN")
-public class BasePage extends WebPage{
+public class BasePage extends WebPage {
     private Class<? extends Page> pageClass;
 
     public BasePage() {
-        this(null, MainPage.class);
+        this(null, LogMainPage.class);
     }
 
     public BasePage(PageParameters pageParameters, Class<? extends Page> pageClass) {
         this.pageClass = pageClass;
 
         //BAR MENU
-        addBarLink("main", MainPage.class);
+        addBarLink("main", LogMainPage.class);
         addBarLink("logs", LogMonitorPage.class);
         addBarLink("online-logs", OnlineLogMonitorPage.class);
     }

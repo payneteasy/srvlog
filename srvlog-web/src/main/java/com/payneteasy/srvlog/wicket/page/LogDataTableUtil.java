@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogLevel;
+import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -10,10 +11,10 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class LogDataTableUtil {
 
-    public static void setHighlightCssClass(String logLevel, ListItem listItem) {
+    public static void setHighlightCssClassBySeverity(String logLevel, Component component) {
         switch (LogLevel.valueOf(logLevel)) {
             case WARN:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "warning";
@@ -21,7 +22,7 @@ public class LogDataTableUtil {
                 }));
                 break;
             case ERROR:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "error";
@@ -29,7 +30,7 @@ public class LogDataTableUtil {
                 }));
                 break;
             case EMERGENCY:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "main-emergency";
@@ -37,7 +38,7 @@ public class LogDataTableUtil {
                 }));
                 break;
             case CRITICAL:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "main-critical";
@@ -45,7 +46,7 @@ public class LogDataTableUtil {
                 }));
                 break;
             case ALERT:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "warning";
@@ -53,14 +54,13 @@ public class LogDataTableUtil {
                 }));
                 break;
             case INFO:
-                listItem.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
                         return "info";
                     }
                 }));
                 break;
-
         }
     }
 }

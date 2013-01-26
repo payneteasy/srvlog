@@ -6,7 +6,6 @@ import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
-import com.payneteasy.srvlog.wicket.component.validator.DateRangeValidator;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -15,9 +14,6 @@ import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import com.payneteasy.srvlog.wicket.component.navigation.PageableDataProvider;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableListView;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableNavigator;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,8 +21,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -34,7 +28,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
+import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClassBySeverity;
 
 /**
  * Date: 11.01.13
@@ -187,7 +181,7 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-host", logData.getHost()));
                 item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
-                setHighlightCssClass(logLevel, item);
+                setHighlightCssClassBySeverity(logLevel, item);
             }
         };
         form.add(listView);
@@ -198,7 +192,7 @@ public class LogMonitorPage extends BasePage {
         form.add(new WebMarkupContainer("no-data"){
             @Override
             public boolean isVisible() {
-                return !listView.isEmpty();
+                return listView.isEmpty();
             }
         });
 

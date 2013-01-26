@@ -218,6 +218,13 @@
                 <version>5.1.22-3</version>
             </dependency>
 
+            <!--json-->
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+
             <!--commons dbcp-->
             <dependency>
                 <groupId>commons-dbcp</groupId>

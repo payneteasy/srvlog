@@ -137,3 +137,102 @@
 .main-pager{
     width: 40%;
 }
+
+/*CHART*/
+.main-dashboard{
+    width: 100%;
+
+}
+    .main-dashboard-header{
+        height: 35px;
+        line-height: 35px;
+        font-size: 15px;
+        border: 1px solid #ddd;
+        -webkit-border-radius: 2px 2px 0px 0px;
+        -moz-border-radius: 2px 2px 0px 0px;
+        border-radius: 2px 2px 0px 0px;
+        color: #646464;
+
+        /*background*/
+        background-color: #fafafa;
+        background-image: -moz-linear-gradient(top, #fafafa, #efefef);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#efefef));
+        background-image: -webkit-linear-gradient(top, #fafafa, #efefef);
+        background-image: -o-linear-gradient(top, #fafafa, #efefef);
+        background-image: linear-gradient(to bottom, #fafafa, #efefef);
+        filter: progid:dximagetransform.microsoft.gradient(startColorstr='#fafafa', endColorstr='#efefef', GradientType=0);
+    }
+        .main-dashboard-header-small{
+            line-height: 30px;
+            height: 30px;
+            font-size: 13px;
+        }
+
+    .main-dashboard-header ul{
+        margin: 0;
+        line-height: 35px;
+        height: 35px;
+    }
+        .main-dashboard-header .main-li-icon{
+            width: 1%;
+        }
+        .main-dashboard-header .main-li-title{
+            width: 30%;
+        }
+        .main-dashboard-header .main-li-btn-group{
+            width: 61%;
+            text-align: right;
+        }
+
+
+    .main-dashboard-content{
+        margin-top: -1px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        background: #fcfcfc;
+        -webkit-border-radius: 0px 0px 2px 2px;
+        -moz-border-radius: 0px 0px 2px 2px;
+        border-radius: 0px 0px 2px 2px;
+    }
+
+        .main-dashboard-content > ul > li{
+            vertical-align: top;
+        }
+
+        .main-dashboard-content .main-list-severities{ width: 29%; }
+            .main-list-severities .main-li-icon { width: 2%;}
+            .main-list-severities .main-li-title{ width: 60%;}
+
+        .main-dashboard-content .main-chart-holder{ width: 67%; }
+
+        .main-dashboard-box, .main-chart-box{
+            margin-top: -1px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fcfcfc;
+            -webkit-border-radius: 0px 0px 2px 2px;
+            -moz-border-radius: 0px 0px 2px 2px;
+            border-radius: 0px 0px 2px 2px;
+            -webkit-box-shadow: 0 1px 0px rgba(255, 255, 255, .6);
+            -moz-box-shadow: 0 1px 0px rgba(255, 255, 255, .6);
+            box-shadow: 0 1px 0px rgba(255, 255, 255, .6);
+        }
+            .main-dashboard-list{
+                border-top: none;
+                border-bottom: 1px solid #EBEBEB;
+                padding: 13.3px 5px;
+                font-size: 16px;
+            }
+                .main-dashboard-list:last-child{
+                    border-bottom: none;
+                }
+
+                .main-dashboard-list .label{
+                    font-size: 17px;
+                    padding: 4px;;
+                }
+
+
+        .main-chart-box{
+            padding: 0;
+        }

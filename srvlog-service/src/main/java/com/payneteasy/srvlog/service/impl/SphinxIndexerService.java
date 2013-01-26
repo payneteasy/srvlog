@@ -1,5 +1,8 @@
 package com.payneteasy.srvlog.service.impl;
 
+import com.payneteasy.srvlog.data.LogCount;
+import com.payneteasy.srvlog.data.LogFacility;
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +119,6 @@ public class SphinxIndexerService implements IIndexerService{
 
         setDate(from, to, sphinxClient);
 
-
         try {
             sphinxClient.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
         } catch (SphinxException e) {
@@ -130,7 +132,7 @@ public class SphinxIndexerService implements IIndexerService{
 
         reportWarningsIfAny(sphinxClient);
 
-        Map<Date, Long> resultMap = new HashMap<Date,Long>();
+        Map<Date, Long> resultMap = new TreeMap<Date, Long>();
         DateFormat df = new SimpleDateFormat("yyyyMMdd");
         for(SphinxMatch sm: result.matches) {
             Date groupDate = null;
@@ -140,6 +142,7 @@ public class SphinxIndexerService implements IIndexerService{
                 if ("@groupby".equalsIgnoreCase(result.attrNames[i])) {
                     try {
                         groupDate = df.parse((String.valueOf(sm.attrValues.get(i))));
+//                        groupDate = new Date((Long) sm.attrValues.get(0) * 1000);   //TODO attribute return milliseconds
                     } catch (ParseException e) {
                         LOG.error("While parsing group date", e);
                         throw new IndexerServiceException("While parsing group date", e);
@@ -157,6 +160,20 @@ public class SphinxIndexerService implements IIndexerService{
         }
 
         return resultMap;
+    }
+
+    @Override
+    public List<LogCount> numberOfSeveritiesByDate(Date from, Date to) throws IndexerServiceException {
+        //TODO not implemented yet
+        List<LogCount> logCounts = new ArrayList<LogCount>();
+        for (LogLevel logLevel : LogLevel.values()) {
+            LogCount  logCount = new LogCount();
+            logCount.setName(logLevel.name());
+            logCount.setCount(300L);
+            logCounts.add(logCount);
+        }
+
+        return logCounts;
     }
 
     private void setMatchMode(SphinxClient sphinxClient) throws IndexerServiceException {
