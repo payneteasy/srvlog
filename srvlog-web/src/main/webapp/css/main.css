@@ -30,22 +30,39 @@
         background-image: linear-gradient(to bottom,#fff,#e6e6e6);
     }
 
-.table tbody tr.main-emergency td{
-    background-color: #ff3019;
-    color: #ffffff;
-}
-    .table tbody tr.main-emergency:hover td{
-        background-color: #e54739;
-    }
+/*SEVERITY COLOR*/
+.LEVEL-WARN{ color: #ff9900;}
+.table tbody tr.LEVEL-WARN td{ background-color: #ff9900; color: #ffffff; }
+    .table tbody tr.LEVEL-WARN:hover td{ background-color: #e28904; }
 
-.table tbody tr.main-critical td{
-    background-color: #cc0000;
-    color: #ffffff;
-}
+.LEVEL-ERROR{ color: #fa603d;}
+.table tbody tr.LEVEL-ERROR td{ background-color: #fa603d; color: #ffffff; }
+    .table tbody tr.LEVEL-ERROR:hover td{ background-color: #e55839; }
 
-    .table tbody tr.main-critical:hover td{
-        background-color: #bc1414;
-    }
+.LEVEL-EMERGENCY{ color: #ff5454;}
+.table tbody tr.LEVEL-EMERGENCY td{ background-color: #ff5454; color: #ffffff; }
+    .table tbody tr.LEVEL-EMERGENCY:hover td{ background-color: #d84545; }
+
+.LEVEL-CRITICAL{ color: #ba1e20;}
+.table tbody tr.LEVEL-CRITICAL td{ background-color: #ba1e20; color: #ffffff; }
+    .table tbody tr.LEVEL-CRITICAL:hover td{ background-color: #961919; }
+
+.LEVEL-ALERT{ color: #c09853;}
+.table tbody tr.LEVEL-ALERT td{ background-color: #c09853; color: #ffffff; }
+    .table tbody tr.LEVEL-ALERT:hover td{ background-color: #a58248; }
+
+.LEVEL-INFO{ color: #bce8f1;}
+.table tbody tr.LEVEL-INFO td{ background-color: #bce8f1; color: #000000; }
+    .table tbody tr.LEVEL-INFO:hover td{ background-color: #9bc1c9; }
+
+.LEVEL-NOTICE{ color: #000000;}
+.table tbody tr.LEVEL-NOTICE td{ background-color: #ffffff; color: #000000; }
+    .table tbody tr.LEVEL-NOTICE:hover td{ background-color: #e5e3e3; }
+
+.LEVEL-DEBUG{ color: #86b76e;}
+.table tbody tr.LEVEL-DEBUG td{ background-color: #86b76e; color: #ffffff; }
+    .table tbody tr.LEVEL-DEBUG:hover td{ background-color: #6b9357; }
+
 
 
 /*FILTER*/
@@ -206,6 +223,7 @@
         .main-dashboard-content .main-chart-holder{ width: 67%; }
 
         .main-dashboard-box, .main-chart-box{
+            position: relative;
             margin-top: -1px;
             padding: 10px;
             border: 1px solid #ddd;
@@ -220,19 +238,33 @@
             .main-dashboard-list{
                 border-top: none;
                 border-bottom: 1px solid #EBEBEB;
-                padding: 13.3px 5px;
+                /*padding: 13.3px 5px;*/
                 font-size: 16px;
             }
                 .main-dashboard-list:last-child{
                     border-bottom: none;
                 }
 
+                .main-dashboard-list a{
+                    text-decoration: none;
+                    padding: 12.3px 5px;
+                    display: block;
+                }
+                    .main-dashboard-list a:hover{
+                        background-color: #eeeeee;
+                    }
+
                 .main-dashboard-list .label{
                     font-size: 17px;
                     padding: 4px;;
                 }
 
-
+            .main-chart-box #noDataContainer{
+                position: absolute;
+                width: 50%;
+                top: 40%;
+                right: 20%;
+            }
         .main-chart-box{
             padding: 0;
         }

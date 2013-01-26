@@ -1,0 +1,145 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div class="container-fluid">
+        <div wicket:id="feedbackPanel"></div>
+
+        <div class="main-dashboard">
+            <div class="main-dashboard-header">
+                <ul class="inline">
+                    <li class="main-li-icon"><i class="icon-folder-close"></i></li>
+                    <li class="main-li-title">Logs statistics</li>
+                    <li class="main-li-btn-group">
+                        <div wicket:id="button-group-holder" class="btn-group">
+                            <a wicket:id="THIS_WEEK" class="btn btn-small">this week</a>
+                            <a wicket:id="LAST_WEEK" class="btn btn-small">last week</a>
+                            <a wicket:id="THIS_MONTH" class="btn btn-small">this month</a>
+                            <a wicket:id="LAST_MONTH" class="btn btn-small">last month</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="main-dashboard-content">
+                <ul class="inline">
+                    <li class="main-list-severities">
+                        <div class="main-dashboard-header  main-dashboard-header-small">
+                            <ul class="inline">
+                                <li class="main-li-icon"><i class="icon-list"></i></li>
+                                <li class="main-li-title">Number of logs by severity</li>
+                            </ul>
+                        </div>
+                        <div wicket:id="list-severity-holder" class="main-dashboard-box">
+                            <div wicket:id="list-severity" class="main-dashboard-list">
+                                <a href="" wicket:id="link">
+                                    <span wicket:id="name"></span>
+                                    <span wicket:id="count" class="pull-right label"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="main-chart-holder">
+                        <div class="main-dashboard-header  main-dashboard-header-small">
+                            <ul class="inline">
+                                <li class="main-li-icon"><i class="icon-signal"></i></li>
+                                <li class="main-li-title">Number of logs by date</li>
+                            </ul>
+                        </div>
+                        <!--CHART-->
+                        <div class="main-chart-box">
+                            <div id="container" style="width: 98%; height: 400px;"></div>
+                            <div id="noDataContainer" class="alert alert-block " style="display: none;">No data for this period</div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/highstock.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function drawChart(map){
+            var jsonObj = JSON && JSON.parse(map) || $.parseJSON(map);
+            if($.isEmptyObject(jsonObj)){
+               $("#noDataContainer").show();
+               $("#container").children().remove();
+            }else{
+                $("#noDataContainer").hide();
+                doChart();
+            }
+
+            function doChart() {
+                var chart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'container'
+                    },
+                    scrollbar: { enabled: false },
+                    rangeSelector: { enabled: false },
+                    navigator: { enabled: false},
+                    credits: {enabled: false},
+                    title: { text: null },
+
+                    tooltip: {
+                        formatter: function () {
+                            var s = '<div style="color: #eae8e8; display: block; border-bottom: 1px solid  #9d9d9d; text-align: center; margin-bottom: 5px;">' + Highcharts.dateFormat('%Y-%m-%d', this.x) + '</div>';
+                                s += '<span style="font-weight: bold;color:'+this.series.color+';">Count of logs = ' + this.y+'</span><br/>';
+                            console.log(this);
+                            return s;
+                        },
+                        useHTML: true,
+                        borderColor : '#999',
+                        borderWidth : 1,
+                        borderRadius: 4,
+                        backgroundColor: "rgba(08,80,80,80)",
+                        shadow: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        line: {
+                            lineWidth: 0.5
+                        }
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: {
+                            second: '%Y-%m-%d',
+                            minute: '%Y-%m-%d',
+                            hour: '%Y-%m-%d',
+                            day: '%Y-%m-%d',
+                            week: '%Y-%m-%d',
+                            month: '%Y-%m-%d',
+                            year: '%Y-%m-%d'
+                        },
+                        gridLineColor: "#eae3e3",
+                        gridLineWidth: 0.5,
+                        tickInterval: 24 * 3600 * 1000
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        },
+                        gridLineWidth: 0
+
+                    },
+                    series: [
+                        {
+                            name: "count",
+                            data: jsonObj,
+                            color: "#faa732",
+                            type: "line"
+                        }
+                    ]
+                });
+            }
+
+        }
+     </script>
+
+</wicket:extend>
+</body>
+</html>

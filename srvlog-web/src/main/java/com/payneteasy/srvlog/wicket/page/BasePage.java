@@ -17,14 +17,14 @@ public class BasePage extends WebPage {
     private Class<? extends Page> pageClass;
 
     public BasePage() {
-        this(null, LogMainPage.class);
+        this(null, DashboardPage.class);
     }
 
     public BasePage(PageParameters pageParameters, Class<? extends Page> pageClass) {
         this.pageClass = pageClass;
 
         //BAR MENU
-        addBarLink("main", LogMainPage.class);
+        addBarLink("dashboard", DashboardPage.class);
         addBarLink("logs", LogMonitorPage.class);
         addBarLink("online-logs", OnlineLogMonitorPage.class);
     }

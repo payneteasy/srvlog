@@ -127,9 +127,23 @@ public class SphinxIndexerServiceIntegrationTest {
         Date to = c.getTime();
 
         Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
-        assertEquals("Should be 4 groups of severity buckets", 4, results.size());
+        assertEquals("Should be 8 groups of severity buckets", 8, results.size());
     }
 
+    public void testForZeroQueryLogsCountGrouppedBySeverity() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2000, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
+        assertEquals("Should be 8 groups of severity buckets", 8, results.size());
+
+        List<Map.Entry<LogLevel, Long>> list = new ArrayList<Map.Entry<LogLevel, Long>>(results.entrySet());
+        assertEquals("Should be 8 groups of severity buckets", 8, list.size());
+    }
 
     @AfterClass
     public static void tearDown() {

@@ -24,11 +24,12 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.*;
 
 import java.io.Serializable;
 import java.util.*;
 
-import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClassBySeverity;
+import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
 
 /**
  * Date: 11.01.13
@@ -42,6 +43,13 @@ public class LogMonitorPage extends BasePage {
         add(feedbackPanel);
 
         final FilterModel filterModel = new FilterModel();
+
+        if(!pageParameters.isEmpty()){
+            String severityValue = pageParameters.get(DashboardPage.SEVERITY).toString();
+            String dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE).toString();
+            filterModel.setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
+            filterModel.setSeverities(Collections.<LogLevel>singletonList(LogLevel.valueOf(severityValue)));
+        }
 
         final Form<FilterModel> form = new Form<FilterModel>("form");
         add(form);

@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClassBySeverity;
+import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
 
 /**
  * Date: 09.01.13

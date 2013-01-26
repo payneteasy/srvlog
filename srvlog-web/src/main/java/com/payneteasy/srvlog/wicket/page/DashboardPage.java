@@ -5,18 +5,17 @@ import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
-import org.apache.wicket.AttributeModifier;
+import com.payneteasy.srvlog.utils.LogDataTableUtil;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -27,23 +26,22 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.json.simple.JSONArray;
 import org.springframework.security.access.annotation.Secured;
+import sun.awt.image.ImageWatched;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * Date: 16.01.13 Time: 13:03
  */
 @Secured("ROLE_ADMIN")
-public class LogMainPage extends BasePage {
+public class DashboardPage extends BasePage {
 
     @SpringBean
     IIndexerService indexerService;
 
-    public LogMainPage(PageParameters pageParameters) {
-        super(pageParameters, LogMainPage.class);
+    public DashboardPage(final PageParameters pageParameters) {
+        super(pageParameters, DashboardPage.class);
 
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackPanel");
         add(feedbackPanel);
@@ -63,7 +61,9 @@ public class LogMainPage extends BasePage {
             protected List<Map.Entry<LogLevel, Long>> load() {
                 try {
                     final DateRange dateRange = filterDate.getDateRange();
-                    return new LinkedList<Map.Entry<LogLevel, Long>>(indexerService.numberOfLogsBySeverity(dateRange.getFromDate(), dateRange.getToDate()).entrySet());
+                    Map<LogLevel, Long> logLevelLongMap = indexerService.numberOfLogsBySeverity(dateRange.getFromDate(), dateRange.getToDate());
+                    List<Map.Entry<LogLevel, Long>> entries = new ArrayList<Map.Entry<LogLevel, Long>>(logLevelLongMap.entrySet());
+                    return entries;
                 } catch (IndexerServiceException e) {
                     error("Error while retrieving log data: " + e.getMessage());
                     return Collections.emptyList();
@@ -77,15 +77,25 @@ public class LogMainPage extends BasePage {
         ListView<Map.Entry<LogLevel, Long>> listView = new ListView<Map.Entry<LogLevel, Long>>("list-severity", logCountModel) {
             @Override
             protected void populateItem(ListItem<Map.Entry<LogLevel, Long>> item) {
-                Map.Entry<LogLevel, Long> logCount = item.getModelObject();
-                Label labelName = new Label("name", logCount.getKey().name());
+                final Map.Entry<LogLevel, Long> logCount = item.getModelObject();
+                final String name =  logCount.getKey().name();
+                Link<Void> link = new Link<Void>("link") {
+                    @Override
+                    public void onClick() {
+                        PageParameters parameters = new PageParameters();
+                        parameters.add(DATE_RANGE_TYPE, filterDate.getDateRangeType());
+                        parameters.add(SEVERITY, name);
+                        setResponsePage(LogMonitorPage.class, parameters);
+                    }
+                };
+                item.add(link);
+                Label labelName = new Label("name", name);
                 LogDataTableUtil.setHighlightCssClassBySeverity(logCount.getKey().name(), labelName);
-                item.add(labelName);
-                item.add(new Label("count", logCount.getValue()));
+                link.add(labelName);
+                link.add(new Label("count", logCount.getValue()));
             }
         };
         listHolderContainer.add(listView);
-
 
         WebMarkupContainer buttonHolderContainer = new WebMarkupContainer("button-group-holder");
         buttonHolderContainer.setOutputMarkupId(true);
@@ -185,5 +195,8 @@ public class LogMainPage extends BasePage {
             this.dateRangeType = dateRangeType;
         }
     }
+
+    public static String SEVERITY = "SEVERITY";
+    public static String DATE_RANGE_TYPE = "DATE_RANGE_TYPE";
 
 }

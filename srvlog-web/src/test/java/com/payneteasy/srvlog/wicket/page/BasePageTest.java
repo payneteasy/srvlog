@@ -41,7 +41,7 @@ public class BasePageTest extends AbstractWicketTester{
         EasyMock.verify(logCollector);
 
         wicketTester.clickLink("main-container:main");
-        wicketTester.assertRenderedPage(LogMainPage.class);
+        wicketTester.assertRenderedPage(DashboardPage.class);
 
     }
 }

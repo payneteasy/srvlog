@@ -180,11 +180,11 @@ public class SphinxIndexerService implements IIndexerService{
 
         SphinxResult result = querySphinx("", sphinxClient);
 
-        if (errorOccuredWhileQuerying(sphinxClient, result)) return Collections.emptyMap();
+        Map<LogLevel, Long> resultMap = initTreeMapNumberOfLogsBySeverity();
+        if (errorOccuredWhileQuerying(sphinxClient, result)) return resultMap;
 
         reportWarningsIfAny(sphinxClient);
 
-        Map<LogLevel, Long> resultMap = new TreeMap<LogLevel, Long>();
         for(SphinxMatch sm: result.matches) {
             LogLevel level = null;
             Long count     = null;
@@ -203,7 +203,14 @@ public class SphinxIndexerService implements IIndexerService{
                 throw new IndexerServiceException("Cannot find group date or count value in the search result");
             }
         }
+        return resultMap;
+    }
 
+    private  Map<LogLevel, Long> initTreeMapNumberOfLogsBySeverity(){
+        Map<LogLevel, Long> resultMap = new TreeMap<LogLevel, Long>();
+        for (LogLevel logLevel : LogLevel.values()) {
+            resultMap.put(logLevel, 0L);
+        }
         return resultMap;
     }
 

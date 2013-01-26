@@ -1,15 +1,13 @@
 package com.payneteasy.srvlog.wicket;
 
 import com.google.common.collect.Lists;
-import com.payneteasy.srvlog.wicket.page.LogMainPage;
+import com.payneteasy.srvlog.wicket.page.DashboardPage;
 import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
 import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -38,7 +36,7 @@ public class SrvlogUIApplication extends WebApplication{
 
         addSpringComponentInjector();
         //PAGES
-        mountPage("main", LogMainPage.class);
+        mountPage("main", DashboardPage.class);
         mountPage("logs", LogMonitorPage.class);
         mountPage("online-logs", OnlineLogMonitorPage.class);
 
@@ -51,7 +49,7 @@ public class SrvlogUIApplication extends WebApplication{
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return LogMainPage.class;
+        return DashboardPage.class;
     }
 
 }

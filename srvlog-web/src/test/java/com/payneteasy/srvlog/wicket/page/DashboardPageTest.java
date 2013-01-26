@@ -2,23 +2,19 @@ package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
-import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Date: 16.01.13 Time: 13:07
  */
-public class MainPageTest extends AbstractWicketTester {
+public class DashboardPageTest extends AbstractWicketTester {
     private IIndexerService indexerService;
 
     @Test
@@ -45,7 +41,7 @@ public class MainPageTest extends AbstractWicketTester {
 
         EasyMock.replay(indexerService);
 
-        wicketTester.startPage(LogMainPage.class);
+        wicketTester.startPage(DashboardPage.class);
 
         wicketTester.clickLink("button-group-holder:LAST_MONTH");
         wicketTester.clickLink("button-group-holder:THIS_WEEK");

@@ -1,4 +1,4 @@
-package com.payneteasy.srvlog.wicket.page;
+package com.payneteasy.srvlog.utils;
 
 import com.payneteasy.srvlog.data.LogLevel;
 import org.apache.wicket.Component;
@@ -17,7 +17,7 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "warning";
+                        return "LEVEL-WARN";
                     }
                 }));
                 break;
@@ -25,7 +25,7 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "error";
+                        return "LEVEL-ERROR";
                     }
                 }));
                 break;
@@ -33,7 +33,7 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "main-emergency";
+                        return "LEVEL-EMERGENCY";
                     }
                 }));
                 break;
@@ -41,7 +41,7 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "main-critical";
+                        return "LEVEL-CRITICAL";
                     }
                 }));
                 break;
@@ -49,7 +49,7 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "warning";
+                        return "LEVEL-ALERT";
                     }
                 }));
                 break;
@@ -57,7 +57,23 @@ public class LogDataTableUtil {
                 component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
                     @Override
                     public Object getObject() {
-                        return "info";
+                        return "LEVEL-INFO";
+                    }
+                }));
+                break;
+            case NOTICE:
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                    @Override
+                    public Object getObject() {
+                        return "LEVEL-NOTICE";
+                    }
+                }));
+                break;
+            case DEBUG:
+                component.add(new AttributeAppender("class", new AbstractReadOnlyModel<Object>() {
+                    @Override
+                    public Object getObject() {
+                        return "LEVEL-DEBUG";
                     }
                 }));
                 break;
