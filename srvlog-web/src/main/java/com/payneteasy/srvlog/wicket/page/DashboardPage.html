@@ -122,14 +122,17 @@
                         },
                         gridLineColor: "#eae3e3",
                         gridLineWidth: 0.5,
-                        tickInterval: 24 * 3600 * 1000
+                        tickInterval: 24 * 3600 * 1000,
+                        labels:{
+                            overflow: "justify"
+                        }
                     },
                     yAxis: {
                         title: {
                             text: null
                         },
-                        gridLineWidth: 0
-
+                        gridLineWidth: 0,
+                        showFirstLabel: false
                     },
                     series: [
                         {
