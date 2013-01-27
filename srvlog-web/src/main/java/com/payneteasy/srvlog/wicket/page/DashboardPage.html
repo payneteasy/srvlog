@@ -72,6 +72,12 @@
             }
 
             function doChart() {
+                Highcharts.setOptions({
+                    global: {
+                        useUTC: false
+                    }
+                });
+
                 var chart = new Highcharts.Chart({
                     chart: {
                         renderTo: 'container'
@@ -86,7 +92,6 @@
                         formatter: function () {
                             var s = '<div style="color: #eae8e8; display: block; border-bottom: 1px solid  #9d9d9d; text-align: center; margin-bottom: 5px;">' + Highcharts.dateFormat('%Y-%m-%d', this.x) + '</div>';
                                 s += '<span style="font-weight: bold;color:'+this.series.color+';">Count of logs = ' + this.y+'</span><br/>';
-                            console.log(this);
                             return s;
                         },
                         useHTML: true,
