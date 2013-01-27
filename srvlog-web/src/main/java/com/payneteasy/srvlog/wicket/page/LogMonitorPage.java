@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -48,10 +49,10 @@ public class LogMonitorPage extends BasePage {
             String severityValue = pageParameters.get(DashboardPage.SEVERITY).toString();
             String dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE).toString();
             filterModel.setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
-            filterModel.setSeverities(Collections.<LogLevel>singletonList(LogLevel.valueOf(severityValue)));
+            filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(LogLevel.valueOf(severityValue))));
         }
 
-        final Form<FilterModel> form = new Form<FilterModel>("form");
+        final Form<FilterModel> form = new Form<FilterModel>("form", Model.of(filterModel));
         add(form);
 
         //DATE RANGE FILTER

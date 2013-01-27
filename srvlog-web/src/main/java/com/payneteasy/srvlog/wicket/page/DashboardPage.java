@@ -111,7 +111,8 @@ public class DashboardPage extends BasePage {
         try {
             numberOfLogsByDate = indexerService.numberOfLogsByDate(dateFrom, dateTo);
         } catch (IndexerServiceException e) {
-            error("Error while retrieving log data: " + e.getMessage());
+//            error("Error while retrieving log data: " + e.getMessage()); //TODO method will be called on before render the page
+            return new JSONArray();
         }
 
         final JSONArray jsonArrayEntry = new JSONArray();
