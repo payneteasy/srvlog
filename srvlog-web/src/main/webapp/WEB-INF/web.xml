@@ -17,15 +17,25 @@
         </param-value>
     </context-param>
 
+    <context-param>
+        <param-name>skipSpringSecurity</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
 
+    <!--<filter>-->
+        <!--<filter-name>springSecurityFilterChain</filter-name>-->
+        <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+    <!--</filter>-->
+
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-class>com.payneteasy.srvlog.servlet.CustomDelegationFilterProxy</filter-class>
     </filter>
 
     <filter-mapping>

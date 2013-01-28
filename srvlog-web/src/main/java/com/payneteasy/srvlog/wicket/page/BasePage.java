@@ -27,6 +27,8 @@ public class BasePage extends WebPage {
         addBarLink("dashboard", DashboardPage.class);
         addBarLink("logs", LogMonitorPage.class);
         addBarLink("online-logs", OnlineLogMonitorPage.class);
+
+
     }
 
     private void addBarLink(String linkId, Class<? extends Page> pageClass){

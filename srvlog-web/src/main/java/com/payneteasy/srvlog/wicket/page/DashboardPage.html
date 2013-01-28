@@ -80,7 +80,8 @@
 
                 var chart = new Highcharts.Chart({
                     chart: {
-                        renderTo: 'container'
+                        renderTo: 'container',
+                        animation: false
                     },
                     scrollbar: { enabled: false },
                     rangeSelector: { enabled: false },
@@ -106,7 +107,8 @@
                     },
                     plotOptions: {
                         line: {
-                            lineWidth: 0.5
+                            lineWidth: 0.5,
+                            animation: false
                         }
                     },
                     xAxis: {

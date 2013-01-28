@@ -32,7 +32,10 @@ public class SrvlogUIApplication extends WebApplication{
             getResourceSettings().setResourceFinders(resourceFinders);
         }
 
-        getSecuritySettings().setAuthorizationStrategy(new SrvlogAuthorizationStrategy());
+        String skipSpringSecurity = getServletContext().getInitParameter("skipSpringSecurity");
+        if(skipSpringSecurity!=null && !isTrue(skipSpringSecurity)){
+            getSecuritySettings().setAuthorizationStrategy(new SrvlogAuthorizationStrategy());
+        }
 
         addSpringComponentInjector();
         //PAGES
@@ -50,6 +53,10 @@ public class SrvlogUIApplication extends WebApplication{
     @Override
     public Class<? extends Page> getHomePage() {
         return DashboardPage.class;
+    }
+
+    private boolean isTrue(String type){
+        return "true".equals(type);
     }
 
 }
