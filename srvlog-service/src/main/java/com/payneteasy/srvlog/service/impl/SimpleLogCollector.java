@@ -63,6 +63,17 @@ public class SimpleLogCollector implements ILogCollector {
         }
     }
 
+    @Override
+    public Long getNumberUnprocessedHosts() {
+        return logDao.getNumberUnprocessedHosts();
+    }
+
+    @Override
+    public void saveUnprocessedHosts() {
+        logDao.saveUnprocessedLogs();
+    }
+
+
     public void setIndexerService(IIndexerService indexerService) {
         this.indexerService = indexerService;
     }

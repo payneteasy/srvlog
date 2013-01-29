@@ -116,12 +116,4 @@ public class DashboardPageTest extends AbstractWicketTester {
     }
 
 
-    private Map<LogLevel, Long> getDefaultLogsBySeverityMap(){
-        Map<LogLevel, Long> map = new TreeMap<LogLevel, Long>();
-        for (LogLevel logLevel : LogLevel.values()) {
-            map.put(logLevel, 1L);
-        }
-        return map;
-    }
-
 }

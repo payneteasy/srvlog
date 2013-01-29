@@ -10,6 +10,7 @@ import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
+import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
@@ -140,7 +141,36 @@ public class SimpleLogCollectorTest {
         logCollector.search(from, to, facilities, severities, host, pattern, offset, limit);
 
         verify(mockLogDao, mockIndexerService);
+    }
 
+    @Test
+    public void testSaveUnprocessedHosts(){
+        SimpleLogCollector simpleLogCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        simpleLogCollector.setLogDao(logDao);
+
+        logDao.saveUnprocessedLogs();
+        replay(logDao);
+
+        simpleLogCollector.saveUnprocessedHosts();
+
+        verify(logDao);
+    }
+
+    @Test
+    public void testGetNumberUnprocessedHosts(){
+        SimpleLogCollector simpleLogCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        simpleLogCollector.setLogDao(logDao);
+
+        EasyMock.expect(logDao.getNumberUnprocessedHosts()).andReturn(1L);
+        replay(logDao);
+
+        simpleLogCollector.getNumberUnprocessedHosts();
+
+        verify(logDao);
     }
 
 
