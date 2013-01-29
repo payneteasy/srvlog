@@ -145,32 +145,26 @@ public class SimpleLogCollectorTest {
 
     @Test
     public void testSaveUnprocessedHosts(){
-        SimpleLogCollector simpleLogCollector = new SimpleLogCollector();
+        ILogCollector simpleLogCollector = createMock(ILogCollector.class);
 
-        ILogDao logDao = createMock(ILogDao.class);
-        simpleLogCollector.setLogDao(logDao);
-
-        logDao.saveUnprocessedLogs();
-        replay(logDao);
+        simpleLogCollector.saveUnprocessedHosts();
+        replay(simpleLogCollector);
 
         simpleLogCollector.saveUnprocessedHosts();
 
-        verify(logDao);
+        verify(simpleLogCollector);
     }
 
     @Test
     public void testGetNumberUnprocessedHosts(){
-        SimpleLogCollector simpleLogCollector = new SimpleLogCollector();
+        ILogCollector logCollector = createMock(ILogCollector.class);
 
-        ILogDao logDao = createMock(ILogDao.class);
-        simpleLogCollector.setLogDao(logDao);
+        EasyMock.expect(logCollector.getNumberUnprocessedHosts()).andReturn(1L);
+        replay(logCollector);
 
-        EasyMock.expect(logDao.getNumberUnprocessedHosts()).andReturn(1L);
-        replay(logDao);
+        logCollector.getNumberUnprocessedHosts();
 
-        simpleLogCollector.getNumberUnprocessedHosts();
-
-        verify(logDao);
+        verify(logCollector);
     }
 
 
