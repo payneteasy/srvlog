@@ -29,6 +29,9 @@
         background-image: -o-linear-gradient(top,#fff,#e6e6e6);
         background-image: linear-gradient(to bottom,#fff,#e6e6e6);
     }
+    .main-table  .log-date{
+        font-size: 10px;
+    }
 
 /*SEVERITY COLOR*/
 .LEVEL-WARN{ color: #ff9900;}
