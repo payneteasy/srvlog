@@ -6,7 +6,8 @@ main_sql:
      select h.host_id,
             h.hostname,
             h.ip
-       from hosts h;
+       from hosts h
+      order by h.hostname;
   end
 $$
 delimiter ;
