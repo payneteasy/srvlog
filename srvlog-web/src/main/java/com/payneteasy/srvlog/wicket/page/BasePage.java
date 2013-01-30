@@ -34,6 +34,7 @@ public class BasePage extends WebPage {
         addBarLink("dashboard", DashboardPage.class);
         addBarLink("logs", LogMonitorPage.class);
         addBarLink("online-logs", OnlineLogMonitorPage.class);
+        addBarLink("add-hosts", AddHostsPage.class);
 
         //SHOW WARNINGS
         final Long numberUnprocessedHosts =  logCollector.getNumberUnprocessedHosts();
@@ -49,7 +50,6 @@ public class BasePage extends WebPage {
                 return numberUnprocessedHosts > 0;
             }
         };
-        warningsLink.add(new Label("warnings-label", numberUnprocessedHosts));
         add(warningsLink);
     }
 

@@ -168,6 +168,33 @@ public class SimpleLogCollectorTest {
     }
 
 
+    @Test
+    public void testAddHosts(){
+        ILogCollector logCollector = createMock(ILogCollector.class);
+        String hosts = "host1;12.12.12.13\nhost2;12.12.12.13\nhost3;12.12.12.13\nhost4;12.12.12.13\nhost5;12.12.12.13\n";
+        logCollector.addHosts(hosts);
+
+        EasyMock.replay(logCollector);
+
+
+
+        replay(logCollector);
+
+
+    }
+
+    public static void main(String[] args) {
+        String hosts = "host1;12.12.12.13,host2;12.12.12.13,host3;12.12.12.13,host4;12.12.12.13,host5;12.12.12.13";
+        String[] arrayHosts = hosts.split(",");
+        for (String arrayHost : arrayHosts) {
+            System.out.println(arrayHost);
+
+            String[] currentHost = arrayHost.split(";");
+
+            System.out.println("Host="+currentHost[0]);
+            System.out.println("ip="+currentHost[1]);
+        }
+    }
 
     private List<Long> getIds() {
         return Arrays.asList(1L, 2L, 3L);

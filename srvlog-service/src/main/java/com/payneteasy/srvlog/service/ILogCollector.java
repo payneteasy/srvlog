@@ -28,4 +28,6 @@ public interface ILogCollector {
     Long getNumberUnprocessedHosts();
 
     void saveUnprocessedHosts();
+
+    void addHosts(String hosts);
 }

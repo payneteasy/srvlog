@@ -74,6 +74,11 @@ public class SimpleLogCollector implements ILogCollector {
 //        logDao.saveUnprocessedLogs();
     }
 
+    @Override
+    public void addHosts(String hosts) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 
     public void setIndexerService(IIndexerService indexerService) {
         this.indexerService = indexerService;
