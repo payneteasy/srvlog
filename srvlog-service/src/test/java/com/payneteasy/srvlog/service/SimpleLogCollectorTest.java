@@ -11,7 +11,6 @@ import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
@@ -144,27 +143,40 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testSaveUnprocessedHosts(){
-        ILogCollector simpleLogCollector = createMock(ILogCollector.class);
+    public void testSaveUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
-        simpleLogCollector.saveUnprocessedHosts();
-        replay(simpleLogCollector);
+        ILogDao logDao = createMock(ILogDao.class);
 
-        simpleLogCollector.saveUnprocessedHosts();
+        logCollector.setLogDao(logDao);
 
-        verify(simpleLogCollector);
+        logDao.saveUnprocessedLogs();
+
+        expectLastCall();
+
+        replay(logDao);
+
+        logCollector.saveUnprocessedLogs();
+
+        verify(logDao);
     }
 
     @Test
-    public void testGetNumberUnprocessedHosts(){
-        ILogCollector logCollector = createMock(ILogCollector.class);
+    public void testHasUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
-        EasyMock.expect(logCollector.getNumberUnprocessedHosts()).andReturn(1L);
-        replay(logCollector);
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
 
-        logCollector.getNumberUnprocessedHosts();
+        EasyMock.expect(logDao.loadUnprocessed(1)).andReturn(Arrays.asList(new LogData()));
 
-        verify(logCollector);
+        replay(logDao);
+
+        boolean hasUnprocessedLogs = logCollector.hasUnprocessedLogs();
+
+        verify(logDao);
+
+        assertTrue("Should return unprocessed logs exist", hasUnprocessedLogs);
     }
 
 

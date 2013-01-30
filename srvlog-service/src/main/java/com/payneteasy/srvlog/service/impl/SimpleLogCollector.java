@@ -64,14 +64,13 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public Long getNumberUnprocessedHosts() {
-//        return logDao.getNumberUnprocessedHosts();
-        return 10L;
+    public void saveUnprocessedLogs() {
+         logDao.saveUnprocessedLogs();
     }
 
     @Override
-    public void saveUnprocessedHosts() {
-//        logDao.saveUnprocessedLogs();
+    public boolean hasUnprocessedLogs() {
+        return (logDao.loadUnprocessed(1).size() > 0);
     }
 
 

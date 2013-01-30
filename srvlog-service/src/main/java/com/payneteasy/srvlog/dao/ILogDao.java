@@ -36,9 +36,10 @@ public interface ILogDao {
     @AStoredProcedure(name="get_logs_by_ids")
     List<LogData> getLogsByIds(String logIds);
 
-//    //TODO need implement
-//    void saveUnprocessedLogs();
+    @AStoredProcedure(name="get_unprocessed_logs")
+    List<LogData> loadUnprocessed(int count);
 
-//    //TODO need implement
-//    Long getNumberUnprocessedHosts();
+    @AStoredProcedure(name="save_unprocessed")
+    void saveUnprocessedLogs();
+
 }

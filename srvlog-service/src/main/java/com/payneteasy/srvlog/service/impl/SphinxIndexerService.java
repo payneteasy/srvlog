@@ -141,7 +141,6 @@ public class SphinxIndexerService implements IIndexerService{
                 if ("@groupby".equalsIgnoreCase(result.attrNames[i])) {
                     try {
                         groupDate = df.parse((String.valueOf(sm.attrValues.get(i))));
-//                        groupDate = new Date((Long) sm.attrValues.get(0) * 1000);   //TODO attribute return milliseconds
                     } catch (ParseException e) {
                         LOG.error("While parsing group date", e);
                         throw new IndexerServiceException("While parsing group date", e);

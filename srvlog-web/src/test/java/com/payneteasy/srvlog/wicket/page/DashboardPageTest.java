@@ -10,6 +10,7 @@ import com.payneteasy.srvlog.util.DateRange;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
@@ -21,12 +22,18 @@ public class DashboardPageTest extends AbstractWicketTester {
     private IIndexerService indexerService;
     private ILogCollector logCollector;
 
+    @Before
+    public void setUp() {
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+    }
+
     @Test
     public void renderPageTest() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
+
         predefinedParameter();
 
-        EasyMock.replay(indexerService);
+        EasyMock.replay(indexerService, logCollector);
 
         wicketTester.startPage(DashboardPage.class);
 
@@ -71,6 +78,7 @@ public class DashboardPageTest extends AbstractWicketTester {
        WicketTester wicketTester = getWicketTester();
        predefinedParameter();
 
+
         //after onclick
         DateRange lastMonth = DateRange.lastMonth();
         EasyMock.expect(indexerService.numberOfLogsByDate(lastMonth.getFromDate(), lastMonth.getToDate())).andReturn(new HashMap<Date, Long>());
@@ -88,7 +96,7 @@ public class DashboardPageTest extends AbstractWicketTester {
         EasyMock.expect(indexerService.numberOfLogsByDate(thisMonth.getFromDate(), thisMonth.getToDate())).andReturn(new HashMap<Date, Long>());
         EasyMock.expect(indexerService.numberOfLogsBySeverity(thisMonth.getFromDate(), thisMonth.getToDate())).andReturn(getDefaultLogsBySeverityMap());
 
-        EasyMock.replay(indexerService);
+        EasyMock.replay(indexerService, logCollector);
 
         wicketTester.startPage(DashboardPage.class);
 

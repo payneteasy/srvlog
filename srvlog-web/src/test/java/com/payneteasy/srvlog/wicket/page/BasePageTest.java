@@ -6,15 +6,12 @@ import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Date: 16.01.13 Time: 13:10
@@ -53,27 +50,29 @@ public class BasePageTest extends AbstractWicketTester{
 
     @Test
     public void testForWarnings() throws IndexerServiceException {
+
         WicketTester wicketTester = getWicketTester();
 
-        EasyMock.expect(logCollector.getNumberUnprocessedHosts()).andReturn(3L);
-        logCollector.saveUnprocessedHosts();
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+
+        logCollector.saveUnprocessedLogs();
 
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(BasePage.class);
 
-        wicketTester.clickLink("warnings-link");
-
         wicketTester.assertRenderedPage(BasePage.class);
+
+        wicketTester.clickLink("warnings-link");
 
         EasyMock.verify(logCollector);
     }
 
     @Test
-    public void testCheckInVisibleWarnings(){
+    public void testCheckInvisibleWarnings(){
         WicketTester wicketTester = getWicketTester();
 
-        EasyMock.expect(logCollector.getNumberUnprocessedHosts()).andReturn(0L);
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.FALSE).anyTimes();
 
         EasyMock.replay(logCollector);
 

@@ -25,7 +25,7 @@ public interface ILogCollector {
 
     List<LogData> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int offset, int limit) throws IndexerServiceException;
 
-    Long getNumberUnprocessedHosts();
+    void saveUnprocessedLogs();
 
-    void saveUnprocessedHosts();
+    boolean hasUnprocessedLogs();
 }
