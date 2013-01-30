@@ -5,6 +5,7 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
@@ -32,18 +33,25 @@ public class AddHostsPage extends BasePage{
         final Form<FormModel> form = new Form<FormModel>("form", new CompoundPropertyModel<FormModel>(new FormModel()));
         add(form);
 
-        RequiredTextField<String> hostTextField = new RequiredTextField<String>("hosts");
-        form.add(hostTextField);
+        TextArea<String> textArea = new TextArea<String>("hosts");
+        textArea.setRequired(true);
+        form.add(textArea);
 
         form.add(new Button("button"){
             @Override
             public void onSubmit() {
                 FormModel formModel = form.getModelObject();
-                if (parseHosts(formModel.getHosts())){
-                    info(new ResourceModel("addHost.info").getObject());
-                }else{
-                    error(new ResourceModel("addHost.error").getObject());
+                try{
+                    if (parseHosts(formModel.getHosts())){
+                        info(new ResourceModel("addHost.info").getObject());
+                        setResponsePage(LogMonitorPage.class);
+                    }else{
+                        error(new ResourceModel("addHost.error").getObject());
+                    }
+                }catch (RuntimeException e){
+                     error(new ResourceModel("addHost.duplicateError").getObject());
                 }
+
             }
         });
     }
@@ -60,14 +68,15 @@ public class AddHostsPage extends BasePage{
         }
     }
 
-    private boolean parseHosts(String value){
-        String[] hostsDataArray = value.split(",");
+    private boolean parseHosts(String originValue){
+        String value = originValue.trim();
+        String[] hostsDataArray = value.split(";");
         if(hostsDataArray.length <= 0){
             return false;
         }
         List<HostData> hostDataList = new ArrayList<HostData>();
         for (String hostDataString : hostsDataArray) {
-            String[] host = hostDataString.split(";");
+            String[] host = hostDataString.split(",");
             if(host.length!=2){
                return false;
             }
@@ -75,6 +84,7 @@ public class AddHostsPage extends BasePage{
             HostData hostData = new HostData();
             hostData.setHostname(host[0]);
             hostData.setIpAddress(host[1]);
+            hostDataList.add(hostData);
         }
         logCollector.saveHosts(hostDataList);
         return true;

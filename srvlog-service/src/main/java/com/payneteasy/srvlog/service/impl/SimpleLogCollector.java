@@ -7,6 +7,7 @@ import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -50,7 +51,7 @@ public class SimpleLogCollector implements ILogCollector {
     @Override
     public void saveHosts(List<HostData> hostDataList) {
         for (HostData hostData : hostDataList) {
-            logDao.saveHost(hostData);
+             logDao.saveHost(hostData);
         }
     }
 

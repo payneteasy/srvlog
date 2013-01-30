@@ -3,6 +3,7 @@ package com.payneteasy.srvlog.dao;
 import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

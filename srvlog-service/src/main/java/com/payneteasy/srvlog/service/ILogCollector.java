@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.service;
 
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Date;
 import java.util.List;

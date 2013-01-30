@@ -1,12 +1,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <div wicket:id="feedbackPanel"></div>
-    <form wicket:id="form">
-        <input type="text" wicket:id="hosts"/>
+    <div class="container-fluid">
+        <div wicket:id="feedbackPanel"></div>
+        <div class="span9 offset1">
+            <form wicket:id="form">
+                <fieldset>
+                    <label>Hosts:</label>
 
-        <button wicket:id="button"></button>
-    </form>
+                    <textarea wicket:id="hosts" style="width: 40%; height: 20%;"></textarea>
+
+                    <div class="controls">
+                        <button wicket:id="button" class="btn btn-primary">Add hosts</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 </wicket:extend>
 </body>
 </html>

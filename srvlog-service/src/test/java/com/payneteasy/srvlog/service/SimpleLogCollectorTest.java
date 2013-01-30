@@ -213,11 +213,11 @@ public class SimpleLogCollectorTest {
     }
 
     private static List<HostData> getHostDataList(){
-        String hosts = "host1;12.12.12.13,host2;12.12.12.13";
-        String[] arrayHosts = hosts.split(",");
+        String hosts = "host1,12.12.12.13;host2,12.12.12.13";
+        String[] arrayHosts = hosts.split(";");
         List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length-1);
         for (String arrayHost : arrayHosts) {
-            String[] currentHost = arrayHost.split(";");
+            String[] currentHost = arrayHost.split(",");
             HostData hostData = new HostData();
             hostData.setHostname(currentHost[0]);
             hostData.setIpAddress(currentHost[1]);
