@@ -25,6 +25,7 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
     protected void setupTest() {
         logCollector = EasyMock.createMock(ILogCollector.class);
         addBean("logCollector", logCollector);
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
     }
 
     @Test

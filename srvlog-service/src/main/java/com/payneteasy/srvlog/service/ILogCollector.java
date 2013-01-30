@@ -21,13 +21,14 @@ public interface ILogCollector {
 
     void saveHost(HostData hostData);
 
+    void saveHosts(List<HostData> hostDataList);
+
     List<HostData> loadHosts();
 
     List<LogData> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, int offset, int limit) throws IndexerServiceException;
 
-    Long getNumberUnprocessedHosts();
+    void saveUnprocessedLogs();
 
-    void saveUnprocessedHosts();
+    boolean hasUnprocessedLogs();
 
-    void addHosts(String hosts);
 }

@@ -48,6 +48,13 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
+    public void saveHosts(List<HostData> hostDataList) {
+        for (HostData hostData : hostDataList) {
+            logDao.saveHost(hostData);
+        }
+    }
+
+    @Override
     public List<HostData> loadHosts() {
         return logDao.loadHosts();
     }
@@ -64,21 +71,14 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public Long getNumberUnprocessedHosts() {
-//        return logDao.getNumberUnprocessedHosts();
-        return 10L;
+    public void saveUnprocessedLogs() {
+         logDao.saveUnprocessedLogs();
     }
 
     @Override
-    public void saveUnprocessedHosts() {
-//        logDao.saveUnprocessedLogs();
+    public boolean hasUnprocessedLogs() {
+        return (logDao.loadUnprocessed(1).size() > 0);
     }
-
-    @Override
-    public void addHosts(String hosts) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
 
     public void setIndexerService(IIndexerService indexerService) {
         this.indexerService = indexerService;

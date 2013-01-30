@@ -7,11 +7,11 @@ import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import com.payneteasy.srvlog.dao.ILogDao;
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
@@ -144,56 +144,63 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testSaveUnprocessedHosts(){
-        ILogCollector simpleLogCollector = createMock(ILogCollector.class);
+    public void testSaveUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
-        simpleLogCollector.saveUnprocessedHosts();
-        replay(simpleLogCollector);
+        ILogDao logDao = createMock(ILogDao.class);
 
-        simpleLogCollector.saveUnprocessedHosts();
+        logCollector.setLogDao(logDao);
 
-        verify(simpleLogCollector);
+        logDao.saveUnprocessedLogs();
+
+        expectLastCall();
+
+        replay(logDao);
+
+        logCollector.saveUnprocessedLogs();
+
+        verify(logDao);
     }
 
     @Test
-    public void testGetNumberUnprocessedHosts(){
-        ILogCollector logCollector = createMock(ILogCollector.class);
+    public void testHasUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
-        EasyMock.expect(logCollector.getNumberUnprocessedHosts()).andReturn(1L);
-        replay(logCollector);
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
 
-        logCollector.getNumberUnprocessedHosts();
+        EasyMock.expect(logDao.loadUnprocessed(1)).andReturn(Arrays.asList(new LogData()));
 
-        verify(logCollector);
+        replay(logDao);
+
+        boolean hasUnprocessedLogs = logCollector.hasUnprocessedLogs();
+
+        verify(logDao);
+
+        assertTrue("Should return unprocessed logs exist", hasUnprocessedLogs);
     }
 
 
     @Test
-    public void testAddHosts(){
-        ILogCollector logCollector = createMock(ILogCollector.class);
-        String hosts = "host1;12.12.12.13\nhost2;12.12.12.13\nhost3;12.12.12.13\nhost4;12.12.12.13\nhost5;12.12.12.13\n";
-        logCollector.addHosts(hosts);
+    public void testSaveHosts(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
-        EasyMock.replay(logCollector);
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
 
+        List<HostData> hosts = getHostDataList();
 
+        logCollector.saveHosts(hosts);
 
-        replay(logCollector);
+        EasyMock.replay(logDao);
 
-
-    }
-
-    public static void main(String[] args) {
-        String hosts = "host1;12.12.12.13,host2;12.12.12.13,host3;12.12.12.13,host4;12.12.12.13,host5;12.12.12.13";
-        String[] arrayHosts = hosts.split(",");
-        for (String arrayHost : arrayHosts) {
-            System.out.println(arrayHost);
-
-            String[] currentHost = arrayHost.split(";");
-
-            System.out.println("Host="+currentHost[0]);
-            System.out.println("ip="+currentHost[1]);
+        for (HostData host : hosts) {
+            logDao.saveHost(host);
         }
+
+        EasyMock.verify(logDao);
+
+
     }
 
     private List<Long> getIds() {
@@ -205,5 +212,17 @@ public class SimpleLogCollectorTest {
         return new ArrayList<LogData>();
     }
 
-
+    private static List<HostData> getHostDataList(){
+        String hosts = "host1;12.12.12.13,host2;12.12.12.13";
+        String[] arrayHosts = hosts.split(",");
+        List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length-1);
+        for (String arrayHost : arrayHosts) {
+            String[] currentHost = arrayHost.split(";");
+            HostData hostData = new HostData();
+            hostData.setHostname(currentHost[0]);
+            hostData.setIpAddress(currentHost[1]);
+            hostDataList.add(hostData);
+        }
+        return hostDataList;
+    }
 }

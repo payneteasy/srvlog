@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
@@ -19,7 +20,11 @@ import org.springframework.security.access.annotation.Secured;
  */
 @Secured("ROLE_ADMIN")
 public class BasePage extends WebPage {
+
     private Class<? extends Page> pageClass;
+
+    private Boolean showWarning;
+
     @SpringBean
     private ILogCollector logCollector;
 
@@ -36,21 +41,33 @@ public class BasePage extends WebPage {
         addBarLink("online-logs", OnlineLogMonitorPage.class);
         addBarLink("add-hosts", AddHostsPage.class);
 
+        IModel<Boolean> model = new LoadableDetachableModel<Boolean>() {
+            @Override
+            protected Boolean load() {
+                return logCollector.hasUnprocessedLogs();
+            }
+        };
+
         //SHOW WARNINGS
-        final Long numberUnprocessedHosts =  logCollector.getNumberUnprocessedHosts();
-        Link<Void> warningsLink = new Link<Void>("warnings-link") {
+        Link<Boolean> warningsLink = new Link<Boolean>("warnings-link", model) {
             @Override
             public void onClick() {
-                logCollector.saveUnprocessedHosts();
+                logCollector.saveUnprocessedLogs();
                 setResponsePage(getPage());
             }
 
             @Override
             public boolean isVisible() {
-                return numberUnprocessedHosts > 0;
+                return getModel().getObject();
             }
         };
         add(warningsLink);
+    }
+
+    @Override
+    protected void onRender() {
+        showWarning = logCollector.hasUnprocessedLogs();
+        super.onRender();
     }
 
     private void addBarLink(String linkId, Class<? extends Page> pageClass){
