@@ -7,6 +7,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class AddHostsPageTest extends AbstractWicketTester{
     }
 
     @Test
+    @Ignore
     public void testFormPage(){
         WicketTester wicketTester = getWicketTester();
 
@@ -45,10 +47,9 @@ public class AddHostsPageTest extends AbstractWicketTester{
         formTester.submit("button");
 
         AddHostsPage.FormModel formModel = (AddHostsPage.FormModel)formTester.getForm().getModelObject();
-        Assert.assertEquals(getHostsValue(), formModel.getHosts()); ;
-        System.out.println(getHostsValue());
+        Assert.assertEquals(getHostsValue(), formModel.getHosts());
 
-//        wicketTester.assertInfoMessages(new ResourceModel("addHost.info").getObject());
+        wicketTester.assertInfoMessages(new ResourceModel("addHost.info").getObject());
 
         EasyMock.verify(logCollector);
     }
