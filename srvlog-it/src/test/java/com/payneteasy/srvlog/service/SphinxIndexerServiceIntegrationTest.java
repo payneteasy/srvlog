@@ -68,6 +68,12 @@ public class SphinxIndexerServiceIntegrationTest {
         assertEquals("10 logs should be found by the host and the severity", 10, idList.size());
     }
 
+    @Test
+    public void testQueryByPatternWithStarr() throws Exception {
+        List<Long> idList = indexerService.search(null, null, null, null, null, "mes*", 0, 30);
+
+        assertEquals("30 logs should be found by pattern", 30, idList.size());
+    }
 
     @Test
     public void testQueryByDates() throws IndexerServiceException {

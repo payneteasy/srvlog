@@ -43,4 +43,6 @@ public interface ILogDao {
     @AStoredProcedure(name="save_unprocessed")
     void saveUnprocessedLogs();
 
+    @AStoredProcedure(name="get_unprocessed_hosts_name")
+    List<String> getUnprocessedHostsName();
 }

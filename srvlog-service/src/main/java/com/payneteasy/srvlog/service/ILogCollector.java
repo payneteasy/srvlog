@@ -32,4 +32,6 @@ public interface ILogCollector {
 
     boolean hasUnprocessedLogs();
 
+    List<String> getUnprocessedHostsName();
+
 }

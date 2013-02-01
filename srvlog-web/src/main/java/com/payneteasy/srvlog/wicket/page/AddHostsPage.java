@@ -14,6 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,7 +31,23 @@ public class AddHostsPage extends BasePage{
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackPanel");
         add(feedbackPanel);
 
-        final Form<FormModel> form = new Form<FormModel>("form", new CompoundPropertyModel<FormModel>(new FormModel()));
+        FormModel formModel = new FormModel();
+
+        if(!pageParameters.isEmpty() && pageParameters.getNamedKeys().contains(BasePage.HAS_UNPROCESSED_HOSTS_PARAMETER)){
+            LinkedList<String> unprocessedHosts = new LinkedList<String>(logCollector.getUnprocessedHostsName());
+            if(unprocessedHosts.isEmpty()) return;
+            StringBuilder resultString = new StringBuilder();
+            for (String unprocessedHost : unprocessedHosts) {
+                resultString.append(unprocessedHost);
+                if(!unprocessedHosts.getLast().equals(unprocessedHost)){
+                    resultString.append(";");
+                }
+            }
+            formModel.setHosts(resultString.toString());
+        }
+
+
+        final Form<FormModel> form = new Form<FormModel>("form", new CompoundPropertyModel<FormModel>(formModel));
         add(form);
 
         TextArea<String> textArea = new TextArea<String>("hosts");
@@ -77,13 +94,20 @@ public class AddHostsPage extends BasePage{
         List<HostData> hostDataList = new ArrayList<HostData>();
         for (String hostDataString : hostsDataArray) {
             String[] host = hostDataString.split(",");
-            if(host.length!=2){
+            if(host.length > 2){
                return false;
             }
 
-            HostData hostData = new HostData();
-            hostData.setHostname(host[0]);
-            hostData.setIpAddress(host[1]);
+            HostData hostData;
+            if(host.length == 1){
+                hostData = new HostData();
+                hostData.setHostname(host[0]);
+                hostData.setIpAddress("");
+            }else {
+                hostData = new HostData();
+                hostData.setHostname(host[0]);
+                hostData.setIpAddress(host[1]);
+            }
             hostDataList.add(hostData);
         }
         logCollector.saveHosts(hostDataList);

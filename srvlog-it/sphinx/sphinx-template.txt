@@ -45,6 +45,8 @@ index srvlog_index_main
 	path			= @SPHINX_DIR@/data/srvlog_index_main
 	docinfo			= extern
 	charset_type	= sbcs
+	enable_star = 1
+    min_infix_len = 3
 }
 
 index srvlog_index_delta: srvlog_index_main
@@ -53,6 +55,8 @@ index srvlog_index_delta: srvlog_index_main
 	path			= @SPHINX_DIR@/data/srvlog_index_delta
 	docinfo			= extern
 	charset_type	= sbcs
+	enable_star = 1
+    min_infix_len = 3
 }
 
 

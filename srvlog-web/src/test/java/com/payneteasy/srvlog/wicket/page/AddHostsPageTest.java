@@ -65,7 +65,7 @@ public class AddHostsPageTest extends AbstractWicketTester{
         wicketTester.startPage(AddHostsPage.class);
 
         FormTester formTester = wicketTester.newFormTester("form");
-        formTester.setValue("hosts", "sdfsdfdfsdf");
+        formTester.setValue("hosts", "sdfsdfdfsdf, sdfsdf, sdfsfdsfd");
         formTester.submit("button");
 
         wicketTester.assertErrorMessages(new ResourceModel("addHost.error").getObject());

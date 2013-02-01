@@ -5,7 +5,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -22,6 +21,7 @@ import org.springframework.security.access.annotation.Secured;
 public class BasePage extends WebPage {
 
     private Class<? extends Page> pageClass;
+    public final static String HAS_UNPROCESSED_HOSTS_PARAMETER = "has-unpr-host";
 
     private Boolean showWarning;
 
@@ -53,7 +53,7 @@ public class BasePage extends WebPage {
             @Override
             public void onClick() {
                 logCollector.saveUnprocessedLogs();
-                setResponsePage(getPage());
+                setResponsePage(getPageClass());
             }
 
             @Override
@@ -62,6 +62,16 @@ public class BasePage extends WebPage {
             }
         };
         add(warningsLink);
+
+        Link<Void> showUnprocessedHostsName = new Link<Void>("show-unprocessed-hosts-link") {
+            @Override
+            public void onClick() {
+                PageParameters newPageParameter = new PageParameters();
+                newPageParameter.add(HAS_UNPROCESSED_HOSTS_PARAMETER, HAS_UNPROCESSED_HOSTS_PARAMETER);
+                setResponsePage(AddHostsPage.class, newPageParameter);
+            }
+        };
+        add(showUnprocessedHostsName);
     }
 
     @Override

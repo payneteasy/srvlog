@@ -7,7 +7,6 @@ import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -79,6 +78,11 @@ public class SimpleLogCollector implements ILogCollector {
     @Override
     public boolean hasUnprocessedLogs() {
         return (logDao.loadUnprocessed(1).size() > 0);
+    }
+
+    @Override
+    public List<String> getUnprocessedHostsName() {
+        return logDao.getUnprocessedHostsName();
     }
 
     public void setIndexerService(IIndexerService indexerService) {

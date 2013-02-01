@@ -58,7 +58,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
 
     @Test
     public void testRetrieveAndSaveSyslogMessage() throws InterruptedException {
-        syslogClient.getConfig().setHost("localhost");
+//        syslogClient.getConfig().setHost("localhost");
         syslogClient.info("A test info message");
         syslogClient.flush();
         int numberOfLogs = 25;

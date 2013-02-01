@@ -12,6 +12,7 @@ import org.springframework.dao.DuplicateKeyException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
             logData.setDate(new Date());
             logData.setFacility(1);
             logData.setSeverity(1);
-            logData.setHost("127.0.0.1");
+            logData.setHost("localhost");
             logData.setMessage("Log message " + i);
             logData.setProgram("program");
             logCollector.saveLog(logData);
@@ -72,6 +73,13 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
         List<HostData> afterHostDataList = logCollector.loadHosts();
 
         assertEquals("loadHosts() should load hosts size equal before host size + new host size",beforeHostDataList.size()+newHostDataList.size(), afterHostDataList.size());
+    }
+
+    @Test
+    public void testGetUnprocessedHostsName(){
+        List<String> unprocessedHostsName = logCollector.getUnprocessedHostsName();
+
+        assertEquals("Collection of hosts name should be empty",Collections.emptyList(), unprocessedHostsName);
     }
 
     private static List<HostData> getHostDataList(){

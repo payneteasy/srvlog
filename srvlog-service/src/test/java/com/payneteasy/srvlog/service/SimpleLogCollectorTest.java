@@ -199,8 +199,22 @@ public class SimpleLogCollectorTest {
         }
 
         EasyMock.verify(logDao);
+    }
 
+    @Test
+    public void testGetUnprocessedHostsName(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
 
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        EasyMock.expect(logDao.getUnprocessedHostsName()).andReturn(new ArrayList<String>());
+
+        EasyMock.replay(logDao);
+
+        logCollector.getUnprocessedHostsName();
+
+        EasyMock.verify(logDao);
     }
 
     private List<Long> getIds() {

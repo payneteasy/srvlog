@@ -20,6 +20,7 @@ import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -70,8 +71,11 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         wicketTester.assertVisible("form:holder-exactly-dateRange:dateFrom-field");
         wicketTester.assertVisible("form:holder-exactly-dateRange:dateTo-field");
 
-        formTester.setValue("holder-exactly-dateRange:dateFrom-field", "1.1.2013");
-        formTester.setValue("holder-exactly-dateRange:dateTo-field", "1.2.2013");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+        simpleDateFormat.applyPattern("dd.MM.yyyy");
+
+        formTester.setValue("holder-exactly-dateRange:dateFrom-field", simpleDateFormat.format(exactly.getFromDate()));
+        formTester.setValue("holder-exactly-dateRange:dateTo-field", simpleDateFormat.format(exactly.getToDate()));
 
         formTester.select("date-range-type", 6); //6 - date, 7 - time
 
