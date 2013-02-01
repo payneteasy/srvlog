@@ -247,8 +247,13 @@ public class DatabaseUtil {
     public static void addLocalhostToHostList(ILogDao logDao) {
         HostData hostData = new HostData();
         hostData.setHostname("localhost");
-        hostData.setIpAddress("127.0.0.1");
+
         logDao.saveHost(hostData);
+
+        HostData localhostAsIp = new HostData(); //trick for W7
+        localhostAsIp = new HostData();
+        localhostAsIp.setHostname("127.0.0.1");
+        logDao.saveHost(localhostAsIp);
 
 
     }
