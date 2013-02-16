@@ -3,7 +3,7 @@ delimiter $$
 create procedure get_latest(i_num_of_logs int(10), i_host_id int(10))
  main_sql:
   begin
-    if i_host_id is null then
+    if i_host_id is not null then
       select   l.log_id,
                l.log_date,
                h.hostname host,
