@@ -10,7 +10,9 @@ create table logs(
   host_id             int(10),
   message             text,
   program             varchar(60),
-  index pk_log(log_id)
+  index pk_log(log_id),
+  index idx_logs_host_log_date(host_id, log_date),
+  index idx_logs_log_date(log_date)
 )
 engine = innodb
 partition by range (logs_partition_key)(
