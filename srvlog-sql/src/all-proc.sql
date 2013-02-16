@@ -33,5 +33,7 @@ engine = innodb;
 \. get/get_logs_by_ids.sql
 \. get/get_firewall_drop.sql
 \. get/get_firewall_alerts.sql
+\. get/get_unprocessed_logs.sql
+\. get/get_unprocessed_hosts_name.sql
 
 commit;

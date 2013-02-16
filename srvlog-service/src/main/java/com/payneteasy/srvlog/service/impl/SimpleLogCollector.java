@@ -48,6 +48,13 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
+    public void saveHosts(List<HostData> hostDataList) {
+        for (HostData hostData : hostDataList) {
+             logDao.saveHost(hostData);
+        }
+    }
+
+    @Override
     public List<HostData> loadHosts() {
         return logDao.loadHosts();
     }
@@ -61,6 +68,21 @@ public class SimpleLogCollector implements ILogCollector {
         }else {
             return Collections.<LogData>emptyList();
         }
+    }
+
+    @Override
+    public void saveUnprocessedLogs() {
+         logDao.saveUnprocessedLogs();
+    }
+
+    @Override
+    public boolean hasUnprocessedLogs() {
+        return (logDao.loadUnprocessed(1).size() > 0);
+    }
+
+    @Override
+    public List<String> getUnprocessedHostsName() {
+        return logDao.getUnprocessedHostsName();
     }
 
     public void setIndexerService(IIndexerService indexerService) {

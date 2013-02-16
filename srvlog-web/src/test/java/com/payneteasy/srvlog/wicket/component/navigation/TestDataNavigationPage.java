@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.wicket.component.navigation;
 
 import com.payneteasy.srvlog.wicket.component.navigation.service.FakeData;
 import com.payneteasy.srvlog.wicket.component.navigation.service.FakeDataLoaderService;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -24,7 +25,7 @@ public class TestDataNavigationPage extends WebPage {
 
     public TestDataNavigationPage() {
 
-        UncountablyPageableListView<FakeData> listView = new UncountablyPageableListView<FakeData>("data-panel", new PageableDataProvider<FakeData>() {
+        final UncountablyPageableListView<FakeData> listView = new UncountablyPageableListView<FakeData>("data-panel", new PageableDataProvider<FakeData>() {
 
             public Collection<FakeData> load(int offset, int limit) {
                 return loaderService.loadFakePageableList(offset, limit);
@@ -38,6 +39,13 @@ public class TestDataNavigationPage extends WebPage {
             }
         };
         add(listView);
+
+        add(new WebMarkupContainer("no-data") {
+            @Override
+            public boolean isVisible() {
+                return listView.isEmpty();
+            }
+        });
 
         add(new UncountablyPageableNavigator<FakeData>("paging-navigator", listView));
     }

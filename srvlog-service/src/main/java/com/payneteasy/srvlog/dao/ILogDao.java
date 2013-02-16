@@ -3,6 +3,7 @@ package com.payneteasy.srvlog.dao;
 import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,4 +37,12 @@ public interface ILogDao {
     @AStoredProcedure(name="get_logs_by_ids")
     List<LogData> getLogsByIds(String logIds);
 
+    @AStoredProcedure(name="get_unprocessed_logs")
+    List<LogData> loadUnprocessed(int count);
+
+    @AStoredProcedure(name="save_unprocessed")
+    void saveUnprocessedLogs();
+
+    @AStoredProcedure(name="get_unprocessed_hosts_name")
+    List<String> getUnprocessedHostsName();
 }

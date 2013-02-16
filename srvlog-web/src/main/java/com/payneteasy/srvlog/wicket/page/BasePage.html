@@ -1,11 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
-<head>
-    <title>Accounting of servers</title>
-    <link href="css/main.css" rel="stylesheet">
-</head>
+    <wicket:head>
+        <title>Srvlog log collector</title>
+        <link href="css/main.css" rel="stylesheet">
+    </wicket:head>
 <body>
-
-<div class="container">
+<div class="container-fluid">
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
 
@@ -13,8 +12,8 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li wicket:id="main-container">
-                        <a href="#" wicket:id="main">Main</a>
+                    <li wicket:id="dashboard-container">
+                        <a href="#" wicket:id="dashboard">Dashboard</a>
                     </li>
                     <li wicket:id="logs-container">
                         <a href="#" wicket:id="logs">Logs</a>
@@ -22,6 +21,11 @@
                     <li wicket:id="online-logs-container">
                         <a href="#" wicket:id="online-logs">Online Logs</a>
                     </li>
+
+                    <li wicket:id="add-hosts-container">
+                        <a href="#" wicket:id="add-hosts">Add hosts</a>
+                    </li>
+
                 </ul>
 
                 <div class="navbar-form pull-right">
@@ -31,7 +35,24 @@
             </div>
         </div>
     </div>
+
+    <wicket:enclosure child="warnings-link">
+        <div class="alert alert-block fade in">
+            <button type="button" class="close" data-dismiss="alert">Close</button>
+            <h4>Warnings!</h4>
+            <p>There are logs with unresolved hosts. Please add required hosts and press "Process unresolved logs"?</p>
+            <a href="#"  wicket:id="warnings-link" class="btn btn-primary">Process unresolved logs</a>
+            <a href="" wicket:id="show-unprocessed-hosts-link" class="btn btn-primary">Show unprocessed hosts</a>
+        </div>
+    </wicket:enclosure>
+
 </div>
+
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(".alert").alert();
+</script>
 
 <wicket:child/>
 </body>

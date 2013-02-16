@@ -7,9 +7,11 @@ import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import com.payneteasy.srvlog.dao.ILogDao;
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
-import org.junit.Ignore;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
@@ -40,14 +42,15 @@ public class SimpleLogCollectorTest {
         syslogAdapter.setLogCollector(logCollector);
 
         mockLogDao.saveLog(getTestLogData());
+
         replay(mockLogDao);
         boolean messageRetrieved = false;
         AssertionError verificationError = null;
         try {
             syslogAdapter.init();
             SyslogIF udpSyslogClient = createSyslog4jClient(testSyslogConfig);
-            udpSyslogClient.info("message");
-            for (int i = 1; i <= 5; i++) {
+            udpSyslogClient.info("program[1234]:message"); //log level 6
+            for (int i = 1; i <= 3; i++) {
                 try {
                    verify(mockLogDao);
                    messageRetrieved = true;
@@ -63,17 +66,20 @@ public class SimpleLogCollectorTest {
         } finally {
             syslogAdapter.destroy();
         }
-        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError.getMessage()), messageRetrieved);
+        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError !=null ? verificationError.getMessage(): null), messageRetrieved);
 
 
     }
 
     private LogData getTestLogData() {
         LogData logData = new LogData();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MILLISECOND, 0);
         logData.setDate(new Date());
-        logData.setSeverity(1);
-        logData.setFacility(1);
-        logData.setMessage("message");
+        logData.setSeverity(6);
+        logData.setFacility(LogFacility.alert.getValue());
+        logData.setMessage("[1234]:message");
+        logData.setProgram("program");
         return logData;
     }
 
@@ -81,9 +87,10 @@ public class SimpleLogCollectorTest {
         SyslogIF udpSyslogClient = Syslog.getInstance(mockLogAdapterConfig.getSyslogProtocol());
 
         udpSyslogClient.getConfig().setSendLocalName(false);
+        udpSyslogClient.getConfig().setSendLocalTimestamp(false);
         udpSyslogClient.getConfig().setPort(mockLogAdapterConfig.getSyslogPort());
 
-        udpSyslogClient.getConfig().setFacility(SyslogFacility.forValue(1));
+        udpSyslogClient.getConfig().setFacility(SyslogFacility.alert);
 
         return udpSyslogClient;
     }
@@ -134,10 +141,81 @@ public class SimpleLogCollectorTest {
         logCollector.search(from, to, facilities, severities, host, pattern, offset, limit);
 
         verify(mockLogDao, mockIndexerService);
+    }
 
+    @Test
+    public void testSaveUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+
+        logCollector.setLogDao(logDao);
+
+        logDao.saveUnprocessedLogs();
+
+        expectLastCall();
+
+        replay(logDao);
+
+        logCollector.saveUnprocessedLogs();
+
+        verify(logDao);
+    }
+
+    @Test
+    public void testHasUnprocessedLogs(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        EasyMock.expect(logDao.loadUnprocessed(1)).andReturn(Arrays.asList(new LogData()));
+
+        replay(logDao);
+
+        boolean hasUnprocessedLogs = logCollector.hasUnprocessedLogs();
+
+        verify(logDao);
+
+        assertTrue("Should return unprocessed logs exist", hasUnprocessedLogs);
     }
 
 
+    @Test
+    public void testSaveHosts(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        List<HostData> hosts = getHostDataList();
+
+        logCollector.saveHosts(hosts);
+
+        EasyMock.replay(logDao);
+
+        for (HostData host : hosts) {
+            logDao.saveHost(host);
+        }
+
+        EasyMock.verify(logDao);
+    }
+
+    @Test
+    public void testGetUnprocessedHostsName(){
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        EasyMock.expect(logDao.getUnprocessedHostsName()).andReturn(new ArrayList<String>());
+
+        EasyMock.replay(logDao);
+
+        logCollector.getUnprocessedHostsName();
+
+        EasyMock.verify(logDao);
+    }
 
     private List<Long> getIds() {
         return Arrays.asList(1L, 2L, 3L);
@@ -148,5 +226,17 @@ public class SimpleLogCollectorTest {
         return new ArrayList<LogData>();
     }
 
-
+    private static List<HostData> getHostDataList(){
+        String hosts = "host1,12.12.12.13;host2,12.12.12.13";
+        String[] arrayHosts = hosts.split(";");
+        List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length-1);
+        for (String arrayHost : arrayHosts) {
+            String[] currentHost = arrayHost.split(",");
+            HostData hostData = new HostData();
+            hostData.setHostname(currentHost[0]);
+            hostData.setIpAddress(currentHost[1]);
+            hostDataList.add(hostData);
+        }
+        return hostDataList;
+    }
 }

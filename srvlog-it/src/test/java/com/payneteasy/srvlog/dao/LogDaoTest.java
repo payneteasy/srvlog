@@ -28,11 +28,6 @@ public class LogDaoTest extends CommonIntegrationTest {
         logDao = context.getBean(ILogDao.class);
     }
 
-//    @Override
-//    protected void createDatabase() throws IOException, InterruptedException {
-//
-//    }
-
     @Test
     public void testSaveHost() {
         addLocalhostToHostList();
@@ -49,6 +44,7 @@ public class LogDaoTest extends CommonIntegrationTest {
         logData.setFacility(1);
         logData.setMessage("message");
         logData.setHost("unknown.host");
+        logData.setProgram("program");
 
         logDao.saveLog(logData);
 
@@ -63,15 +59,12 @@ public class LogDaoTest extends CommonIntegrationTest {
     @Test
     public void testSaveLog(){
         addLocalhostToHostList();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MILLISECOND,0);
+        Date date = calendar.getTime();
 
-        LogData logData = new LogData();
-        logData.setSeverity(1);
-        logData.setDate(new Date());
-        logData.setFacility(1);
-        logData.setMessage("message");
-        logData.setHost("localhost");
+        LogData logData = saveTestLog(1, date);
 
-        logDao.saveLog(logData);
         assertNotNull("ID must be assigned to logData entity", logData.getId());
 
         LogData persistedLogData = logDao.load(logData.getId());
@@ -89,23 +82,17 @@ public class LogDaoTest extends CommonIntegrationTest {
     public void testLoadLatest() {
         addLocalhostToHostList();
 
-        DateRange dateRange = DateRange.thisMonth();
+        DateRange dateRange = DateRange.lastMonth();
 
         Calendar start = Calendar.getInstance();
         start.setTime(dateRange.getFromDate());
         Calendar end = Calendar.getInstance();
         end.setTime(dateRange.getToDate());
+        end.add(Calendar.DATE, -3);
 
         for (; !start.after(end); start.add(Calendar.DATE, 1)) {
             Date current = start.getTime();
-            System.out.println(current);
-            LogData logData = new LogData();
-            logData.setDate(current);
-            logData.setFacility(1);
-            logData.setSeverity(1);
-            logData.setHost("localhost");
-            logData.setMessage("Log message ");
-            logDao.saveLog(logData);
+            saveTestLog(1, current);
         }
 
         List<LogData> logDataList = logDao.loadLatest(5);
@@ -122,17 +109,56 @@ public class LogDaoTest extends CommonIntegrationTest {
         addLocalhostToHostList();
 
         for (int i = 0; i < 11; i++) {
-            LogData logData = new LogData();
-            logData.setDate(new Date());
-            logData.setFacility(1);
-            logData.setSeverity(1);
-            logData.setHost("localhost");
-            logData.setMessage("Log message " + i);
-            logDao.saveLog(logData);
+            Date date = new Date();
+            saveTestLog(i, date);
         }
 
         List<LogData> logDataList = logDao.getLogsByIds("1,2,3,4,5");
         assertEquals("getLogsByIds should return 5 log entries.", 5, logDataList.size());
+
+    }
+
+    private LogData saveTestLog(int i, Date date) {
+        LogData logData = new LogData();
+        logData.setDate(date);
+        logData.setFacility(1);
+        logData.setSeverity(1);
+        logData.setHost("localhost");
+        logData.setMessage("Log message " + i);
+        logDao.saveLog(logData);
+        return logData;
+    }
+
+    @Test
+    public void testGetUnprocessedLogs() {
+        saveTestLog(1, new Date());
+
+        List<LogData> logDataList = logDao.loadUnprocessed(1);
+
+        assertTrue("Should return one unprocessed log", logDataList.size() == 1);
+    }
+
+    @Test
+    public void testSaveUnprocessedLogs() {
+        saveTestLog(1, new Date());
+
+        List<LogData> unprocessedLogs = logDao.loadUnprocessed(1);
+
+        assertTrue("Should return one unprocessed log", unprocessedLogs.size() == 1);
+
+        addLocalhostToHostList();
+
+        logDao.saveUnprocessedLogs();
+
+        unprocessedLogs = logDao.loadUnprocessed(1);
+
+        assertTrue("Should return zero unprocessed logs when saveUnprocessedLogs has been invoked", unprocessedLogs.size() == 0);
+
+
+        List<LogData> processedLogs = logDao.loadLatest(1);
+
+        assertTrue("Should returne one processed logs when saveUnprocessedLogs has been invoked", processedLogs.size() == 1);
+
 
     }
 

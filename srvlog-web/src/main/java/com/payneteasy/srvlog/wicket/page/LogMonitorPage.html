@@ -4,113 +4,124 @@
 </head>
 <body>
 <wicket:extend>
-    <div class="container">
 
-           <div wicket:id="feedback-panel"></div>
+    <div class="container-fluid">
+        <div wicket:id="feedback-panel"></div>
+        <!--FORM-->
+        <form wicket:id="form">
+            <div class="row-fluid">
 
-            <form wicket:id="form">
-
-                <div class="input-append main-input-append">
-                    <input class="span11" id="appendedInputButton" wicket:id="pattern" type="text"/>
-                    <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
-                </div>
-
-                <div class="well main-filter-container">
-                        <ul class="inline main-inline-dateRange">
-                            <li>
-                                <span class="main-filter-title">Date range:</span>
-                            </li>
-                            <li>
-                                <select wicket:id="date-range-type">
-                                    <option id="TODAY">TODAY</option>
-                                </select>
-                            </li>
-                            <li>
-                                <div wicket:id="holder-exactly-dateRange">
-                                    <!--date range-->
-                                    <wicket:enclosure child="dateFrom-field">
-                                        <span class="main-filter-title-small">From:</span>
-                                        <input class="input-mini" wicket:id="dateFrom-field" />
-                                    </wicket:enclosure>
-                                    <wicket:enclosure child="dateTo-field">
-                                        <span class="main-filter-title-small">To:</span>
-                                        <input class="input-mini" wicket:id="dateTo-field" />
-                                    </wicket:enclosure>
-
-                                    <!--time range-->
-                                    <wicket:enclosure child="timeFrom-field">
-                                        <span class="main-filter-title-small">From:</span>
-                                        <span wicket:id="timeFrom-field" class="main-timeField"></span>
-                                    </wicket:enclosure>
-                                    <wicket:enclosure child="timeTo-field">
-                                        <span class="main-filter-title-small">To:</span>
-                                        <span wicket:id="timeTo-field" class="main-timeField"></span>
-                                    </wicket:enclosure>
-                                </div>
-                            </li>
-                        </ul>
-
-                    <div class="row-fluid main-filter-row">
-                        <div class="span3">
-                            <div class="main-filter-title">Severity:</div>
-                            <select wicket:id="severity-choice">
-                                <option id="ALERT">ALERT</option>
-                            </select>
-                        </div>
-                        <div class="span3">
-                            <div class="main-filter-title">Facility:</div>
-                            <select wicket:id="facility-choice">
-                                <option id="kern">ALERT</option>
-                            </select>
-                        </div>
-                        <div class="span3">
-                            <div class="main-filter-title">Host:</div>
-                            <select wicket:id="hostData-choice">
-                                <option id="localhost">localhost</option>
-                            </select>
-                        </div>
+       <!--TABLE PART               -->
+                <div class="span9 main-span9">
+                    <div class="input-append main-input-append">
+                        <input  id="appendedInputButton" wicket:id="pattern" type="text"/>
+                        <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
                     </div>
 
+                    <div class="row">
+                        <div wicket:id="item-perPage" class="span3 pager"></div>
+                        <div wicket:id="paging-navigator" class="span7 pull-right main-pager-holder"></div>
+                    </div>
+
+
+                    <table class="table table-bordered table-striped table-hover main-table">
+                        <colgroup>
+                            <col width="120px" />
+                            <col width="100px" />
+                            <col width="100px" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Facility</th>
+                            <th>Severity</th>
+                            <th>Host</th>
+                            <th>Program</th>
+                            <th>Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr wicket:id="list-log-data">
+                            <td wicket:id="log-date" class="log-date">Date</td>
+                            <td wicket:id="log-facility">Facility</td>
+                            <td wicket:id="log-severity">Severity</td>
+                            <td wicket:id="log-host">Host</td>
+                            <td wicket:id="log-program">Program</td>
+                            <td wicket:id="log-message">Message</td>
+                        </tr>
+                        <tr wicket:id="no-data"><td colspan="6">No data found</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
 
-                <div class="row">
-                    <div wicket:id="item-perPage" class="span3 pager"></div>
-                    <div wicket:id="paging-navigator" class="span7"></div>
+        <!--FILTER PART         -->
+                <div class="span3 main-span3">
+                    <div class="well main-filter-well">
+
+                        <div class="main-filter-title">Date range:</div>
+                        <select wicket:id="date-range-type">
+                            <option id="TODAY">TODAY</option>
+                        </select>
+
+                        <div wicket:id="holder-exactly-dateRange" class="main-filter-dateRange">
+                            <!--date range-->
+                            <wicket:enclosure child="dateFrom-field">
+                                <div class="main-filter-dateRange-row">
+                                    <span class="main-filter-title-small">From:</span>
+                                    <input class="input-mini" wicket:id="dateFrom-field" />
+                                </div>
+                            </wicket:enclosure>
+
+                            <wicket:enclosure child="dateTo-field">
+                                <div class="main-filter-dateRange-row">
+                                    <span class="main-filter-title-small" >To:</span>
+                                    <input class="input-mini" wicket:id="dateTo-field" />
+                                </div>
+                            </wicket:enclosure>
+
+                            <!--time range-->
+                            <wicket:enclosure child="timeFrom-field">
+                                <div class="main-filter-dateRange-row">
+                                    <span class="main-filter-title-small">From:</span>
+                                    <span wicket:id="timeFrom-field" class="main-timeField"></span>
+                                </div>
+                            </wicket:enclosure>
+                            <wicket:enclosure child="timeTo-field">
+                                <div class="main-filter-dateRange-row">
+                                    <span class="main-filter-title-small">To:</span>
+                                    <span wicket:id="timeTo-field" class="main-timeField"></span>
+                                </div>
+                            </wicket:enclosure>
+                        </div>
+
+
+                        <div class="main-filter-title">Severity:</div>
+                        <select wicket:id="severity-choice">
+                            <option id="ALERT">ALERT</option>
+                        </select>
+
+
+                        <div class="main-filter-title">Facility:</div>
+                        <select wicket:id="facility-choice">
+                            <option id="kern">ALERT</option>
+                        </select>
+
+
+                        <div class="main-filter-title">Host:</div>
+                        <select wicket:id="hostData-choice">
+                            <option id="localhost">localhost</option>
+                        </select>
+
+                    </div>
                 </div>
-
-
-                <table class="table table-bordered table-striped table-hover main-table">
-                    <colgroup>
-                        <col width="220px" />
-                        <col width="100px" />
-                        <col width="100px" />
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Facility</th>
-                        <th>Severity</th>
-                        <th>Host</th>
-                        <th>Message</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr wicket:id="list-log-data">
-                        <td wicket:id="log-date">Date</td>
-                        <td wicket:id="log-facility">Facility</td>
-                        <td wicket:id="log-severity">Severity</td>
-                        <td wicket:id="log-host">Host</td>
-                        <td wicket:id="log-message">Message</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-
-            </form>
-
-
+            </div>
+        </form>
     </div>
+
+    <script type="text/javascript">
+        $("#appendedInputButton").focus();
+    </script>
 </wicket:extend>
 </body>
 </html>

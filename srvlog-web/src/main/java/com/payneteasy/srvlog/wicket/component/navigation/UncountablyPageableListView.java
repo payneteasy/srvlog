@@ -19,6 +19,7 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
     private int currentPage;
     private int itemsPerPage = Integer.MAX_VALUE;
     private boolean hasNextPage;
+    private int itemsFetched;
 
     public UncountablyPageableListView(String id, PageableDataProvider<T> pageableDataProvider) {
         this(id, pageableDataProvider, DEFAULT_NUM_ROWS);
@@ -37,7 +38,8 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
     protected Iterator<IModel<T>> getItemModels() {
         int offset = getCurrentPage() * itemsPerPage;
         Collection<T> collection = pageableDataProvider.load(offset, itemsPerPage + 1);
-        hasNextPage = collection.size() - itemsPerPage > 0;
+        itemsFetched = collection.size();
+        hasNextPage = (itemsFetched - itemsPerPage) > 0;
         Iterator<IModel<T>> iterator = new ModelIterator<T>(collection, itemsPerPage);
         return iterator;
     }
@@ -69,9 +71,23 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
     }
 
     @Override
+    public int getFromRow() {
+        return (currentPage * itemsPerPage + 1);
+    }
+
+    @Override
+    public int getToRow() {
+        return (getFromRow() - 1) + Math.min(itemsFetched, itemsPerPage);
+    }
+
+    @Override
     protected void onDetach() {
         pageableDataProvider.detach();
         super.onDetach();
+    }
+
+    public boolean isEmpty() {
+        return !(getToRow() > 0);
     }
 
     private static final class ModelIterator<T extends Serializable> implements Iterator<IModel<T>> {

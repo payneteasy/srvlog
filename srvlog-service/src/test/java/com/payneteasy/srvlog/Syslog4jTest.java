@@ -10,6 +10,7 @@ import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.printstream.FileSyslogServerEventHandler;
 import com.nesscomputing.syslog4j.server.impl.event.printstream.PrintStreamSyslogServerEventHandler;
+import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -30,7 +31,7 @@ import static junit.framework.Assert.assertNotNull;
 @Ignore
 public class Syslog4jTest {
 
-    private static final String PROTOCOL = "udp";
+    private static final String PROTOCOL = "tcp";
     private static final int PORT = 1514;
     public static final String HELLO_SYSLOG = "Hello Syslog!!";
     private SyslogServerIF udpSyslogInstance;

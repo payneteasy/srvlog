@@ -6,7 +6,6 @@ import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
-import com.payneteasy.srvlog.wicket.component.validator.DateRangeValidator;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -15,9 +14,6 @@ import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import com.payneteasy.srvlog.wicket.component.navigation.PageableDataProvider;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableListView;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableNavigator;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,16 +21,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.*;
 
 import java.io.Serializable;
 import java.util.*;
 
-import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
+import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
 
 /**
  * Date: 11.01.13
@@ -49,7 +45,14 @@ public class LogMonitorPage extends BasePage {
 
         final FilterModel filterModel = new FilterModel();
 
-        Form<FilterModel> form = new Form<FilterModel>("form");
+        if(!pageParameters.isEmpty()){
+            String severityValue = pageParameters.get(DashboardPage.SEVERITY).toString();
+            String dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE).toString();
+            filterModel.setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
+            filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(LogLevel.valueOf(severityValue))));
+        }
+
+        final Form<FilterModel> form = new Form<FilterModel>("form", Model.of(filterModel));
         add(form);
 
         //DATE RANGE FILTER
@@ -156,15 +159,19 @@ public class LogMonitorPage extends BasePage {
             @Override
             public Collection<LogData> load(int offset, int limit) {
                 try {
-                    return logCollector.search(
-                            filterModel.getDateRange().getFromDate()
-                            , filterModel.getDateRange().getToDate()
-                            , filterModel.getFacilityIds()
-                            , filterModel.getSeverityIds()
-                            , filterModel.getHostIds()
-                            , filterModel.getPattern()
-                            , offset
-                            , limit);
+                    if(form.hasError()){
+                        return Collections.emptyList();
+                    }else {
+                        return logCollector.search(
+                                filterModel.getDateRange().getFromDate()
+                                , filterModel.getDateRange().getToDate()
+                                , filterModel.getFacilityIds()
+                                , filterModel.getSeverityIds()
+                                , filterModel.getHostIds()
+                                , filterModel.getPattern()
+                                , offset
+                                , limit);
+                    }
                 } catch (IndexerServiceException e) {
                     error("Error while retrieving log data: " + e.getMessage()); //TODO fetch message from resource file
                     return Collections.emptyList();
@@ -181,14 +188,22 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
+                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
-                setHighlightCssClass(logLevel, item);
+                setHighlightCssClassBySeverity(logLevel, item);
             }
         };
         form.add(listView);
 
         final UncountablyPageableNavigator<LogData> pagingNavigator = new UncountablyPageableNavigator<LogData>("paging-navigator", listView);
         form.add(pagingNavigator);
+
+        form.add(new WebMarkupContainer("no-data"){
+            @Override
+            public boolean isVisible() {
+                return listView.isEmpty();
+            }
+        });
 
         ButtonGroupPanel buttonGroupPanel = new ButtonGroupPanel("item-perPage", Arrays.asList(25, 50, 100)){
             @Override
@@ -216,7 +231,7 @@ public class LogMonitorPage extends BasePage {
             }
         };
         dateTextField.add(new DatePicker());
-        form.add(new DateRangeValidator(dateTextField, keyPrefix));
+        dateTextField.setRequired(true);
         return dateTextField;
     }
 
@@ -247,7 +262,7 @@ public class LogMonitorPage extends BasePage {
                 };
             }
         };
-        form.add(new DateRangeValidator(dateTimeField, keyPrefix));
+        dateTimeField.setRequired(true);
         return dateTimeField;
     }
 

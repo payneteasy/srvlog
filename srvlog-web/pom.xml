@@ -115,6 +115,12 @@
             <artifactId>spring-security-config</artifactId>
         </dependency>
 
+        <!--json-->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+
         <!--our artifacts-->
         <dependency>
             <groupId>com.payneteasy.srvlog</groupId>

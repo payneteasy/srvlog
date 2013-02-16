@@ -20,6 +20,7 @@ import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,58 +36,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     protected void setupTest() {
         logCollector = EasyMock.createMock(ILogCollector.class);
         addBean("logCollector", logCollector);
-    }
-
-    @Test
-    public void testDateRangeFilter() throws IndexerServiceException {
-        WicketTester wicketTester = getWicketTester();
-
-        DateRange today = DateRange.today();
-        List<LogData> searchLogData = getTestLogData();
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
-        DateRange thisMonth = DateRange.thisMonth();
-        EasyMock.expect(logCollector.search(thisMonth.getFromDate(), thisMonth.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(),new ArrayList<Integer>(), null, 0, 26)).andReturn(searchLogData);
-        EasyMock.replay(logCollector);
-
-        wicketTester.startPage(LogMonitorPage.class);
-
-        //TODO add check for default load page
-
-        FormTester formTester = wicketTester.newFormTester("form");
-        formTester.select("date-range-type", 4);
-
-        formTester.submit("search-button");
-
-        EasyMock.verify(logCollector);
-    }
-
-    @Test
-    public void testDateRangeValidation() throws IndexerServiceException {
-        WicketTester wicketTester = getWicketTester();
-
-        DateRange today = DateRange.today();
-        List<LogData> searchLogData = getTestLogData();
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
-        EasyMock.expect(logCollector.search(null, null, null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.replay(logCollector);
-
-        wicketTester.startPage(LogMonitorPage.class);
-
-        wicketTester.assertNoErrorMessage();
-
-        FormTester formTester = wicketTester.newFormTester("form");
-        formTester.select("date-range-type", 6);
-        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
-
-        formTester.select("date-range-type", 6);
-        formTester.submit("search-button");
-
-        wicketTester.assertErrorMessages("Date from is required", "Date to is required");
-
-        EasyMock.verify(logCollector);
-
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
     }
 
     @Test
@@ -121,8 +71,11 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         wicketTester.assertVisible("form:holder-exactly-dateRange:dateFrom-field");
         wicketTester.assertVisible("form:holder-exactly-dateRange:dateTo-field");
 
-        formTester.setValue("holder-exactly-dateRange:dateFrom-field", "1.1.2013");
-        formTester.setValue("holder-exactly-dateRange:dateTo-field", "1.2.2013");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+        simpleDateFormat.applyPattern("dd.MM.yyyy");
+
+        formTester.setValue("holder-exactly-dateRange:dateFrom-field", simpleDateFormat.format(exactly.getFromDate()));
+        formTester.setValue("holder-exactly-dateRange:dateTo-field", simpleDateFormat.format(exactly.getToDate()));
 
         formTester.select("date-range-type", 6); //6 - date, 7 - time
 

@@ -8,7 +8,8 @@ main_sql:
                  h.hostname host,
                  l.severity,
                  l.facility,
-                 l.message
+                 l.message,
+                 l.program
        from logs l
        join hosts h on l.host_id = h.host_id
       order by l.log_date desc
@@ -23,6 +24,7 @@ call save_routine_information('get_latest',
                                         'host varchar',
                                         'severity int',
                                         'facility int',
-                                        'message varchar'
+                                        'message varchar',
+                                        'program varchar'
                                        )
                              );

@@ -47,17 +47,39 @@ public class NewPagingNavigaiontTest  {
         tester.assertDisabled("paging-navigator:paging-first");
         tester.assertDisabled("paging-navigator:paging-previous");
         tester.assertEnabled("paging-navigator:paging-next");
+        tester.assertModelValue("paging-navigator:paging-from-row", 1);
+        tester.assertModelValue("paging-navigator:paging-to-row", 10);
+        tester.assertInvisible("no-data");
+
 
         tester.clickLink("paging-navigator:paging-next");
         tester.assertDisabled("paging-navigator:paging-next");
         tester.assertEnabled("paging-navigator:paging-previous");
         tester.assertEnabled("paging-navigator:paging-first");
+        tester.assertModelValue("paging-navigator:paging-from-row", 11);
+        tester.assertModelValue("paging-navigator:paging-to-row", 15);
+
 
         tester.clickLink("paging-navigator:paging-previous");
         tester.assertDisabled("paging-navigator:paging-previous");
         tester.assertDisabled("paging-navigator:paging-first");
+        tester.assertModelValue("paging-navigator:paging-from-row", 1);
+        tester.assertModelValue("paging-navigator:paging-to-row", 10);
 
         EasyMock.verify();
+    }
+
+    @Test
+    public void testNoData() {
+        FakeDataLoaderService service = EasyMock.createMock(FakeDataLoaderService.class);
+        context.putBean("loaderService", service);
+
+        EasyMock.expect(service.loadFakePageableList(0, 11)).andReturn(realService.getEmptyData());
+        EasyMock.replay(service);
+        tester.startPage(TestDataNavigationPage.class);
+        tester.assertRenderedPage(TestDataNavigationPage.class);
+        tester.assertInvisible("paging-navigator");
+        tester.assertVisible("no-data");
 
     }
 

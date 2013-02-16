@@ -8,15 +8,11 @@ import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -25,11 +21,11 @@ import org.apache.wicket.util.time.Duration;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-import static com.payneteasy.srvlog.wicket.page.LogDataTableUtil.setHighlightCssClass;
+import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
 
 /**
  * Date: 09.01.13
@@ -62,7 +58,12 @@ public class OnlineLogMonitorPage extends BasePage {
                         ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
                     }
                 }
-                holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())));
+                holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+                    @Override
+                    protected void onPostProcessTarget(AjaxRequestTarget target) {
+                        animateLastTableRow(target);
+                    }
+                });
                 target.add(holderListView);
             }
         };
@@ -90,20 +91,31 @@ public class OnlineLogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
+                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
-                setHighlightCssClass(logLevel, item);
+                setHighlightCssClassBySeverity(logLevel, item);
             }
         };
         listView.setOutputMarkupId(true);
         holderListView.add(listView);
 
-        //update panel
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())));
+//        //update panel
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+            @Override
+            protected void onPostProcessTarget(AjaxRequestTarget target) {
+                animateLastTableRow(target);
+            }
+        });
+    }
+
+    private void animateLastTableRow(AjaxRequestTarget target) {
+        target.appendJavaScript("animateLastTableRow()");
     }
 
     public class FilterModel implements Serializable {
         private Integer latestLogs = 25;
         private Integer timeDurationInSeconds=2;
+        private Date lastDate;
 
         public Integer getTimeDurationInSeconds() {
             return timeDurationInSeconds;
@@ -119,6 +131,14 @@ public class OnlineLogMonitorPage extends BasePage {
 
         public void setLatestLogs(Integer latestLogs) {
             this.latestLogs = latestLogs;
+        }
+
+        public Date getLastDate() {
+            return lastDate;
+        }
+
+        public void setLastDate(Date lastDate) {
+            this.lastDate = lastDate;
         }
     }
 }

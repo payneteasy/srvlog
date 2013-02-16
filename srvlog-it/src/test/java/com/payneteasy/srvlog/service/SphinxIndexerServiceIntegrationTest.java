@@ -3,18 +3,19 @@ package com.payneteasy.srvlog.service;
 import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.util.DateRange;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
+import org.sphx.api.SphinxMatch;
+import org.sphx.api.SphinxResult;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.*;
@@ -68,6 +69,13 @@ public class SphinxIndexerServiceIntegrationTest {
     }
 
     @Test
+    public void testQueryByPatternWithStarr() throws Exception {
+        List<Long> idList = indexerService.search(null, null, null, null, null, "mes*", 0, 30);
+
+        assertEquals("30 logs should be found by pattern", 30, idList.size());
+    }
+
+    @Test
     public void testQueryByDates() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
         c.set(2012, 0, 2, 0, 0, 0);
@@ -80,6 +88,69 @@ public class SphinxIndexerServiceIntegrationTest {
         assertEquals("8 logs should be found by date range specified", 8, idList.size());
     }
 
+    @Test
+    public void testQueryByPattern() throws IndexerServiceException {
+        List<Long> idList = indexerService.search(null, null, null, null, null, "host", 0, 100);
+        assertEquals(80, idList.size());
+
+        idList = indexerService.search(null, null, null, null, null, "host1", 0, 100);
+        assertEquals(40, idList.size());
+
+        idList = indexerService.search(null, null, null, null, null, "@message \"host1\"", 0, 100);
+        assertEquals("@message \"host1\" should return 40 elements", 40, idList.size());
+
+        idList = indexerService.search(null, null, null, null, null, " @program \"host1program\" ", 0, 100);
+        assertEquals("'@program \"host1program\"' should return 40 elements", 40, idList.size());
+
+    }
+
+    @Test
+    public void testQueryLogsCountAndGroupResultsDaily() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<Date, Long> results = indexerService.numberOfLogsByDate(from, to);
+        assertEquals("Should be 8 groups of date bucket in test data", 10, results.size());
+
+        c.setTime(from);
+        c.set(Calendar.MILLISECOND, 0);
+
+        assertNotNull(results.get(c.getTime())); //check the first date
+
+    }
+
+    @Test
+    public void testQueryLogsCountGrouppedBySeverity() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
+        assertEquals("Should be 8 groups of severity buckets", 8, results.size());
+    }
+
+    public void testForZeroQueryLogsCountGrouppedBySeverity() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2000, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.MONTH, 1);
+        Date to = c.getTime();
+
+        Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
+        assertEquals("Should be 8 groups of severity buckets", 8, results.size());
+
+        List<Map.Entry<LogLevel, Long>> list = new ArrayList<Map.Entry<LogLevel, Long>>(results.entrySet());
+        assertEquals("Should be 8 groups of severity buckets", 8, list.size());
+    }
+
     @AfterClass
     public static void tearDown() {
         if (context !=null) {
@@ -88,6 +159,37 @@ public class SphinxIndexerServiceIntegrationTest {
         if (sphinxDaemonProcess != null) {
             sphinxDaemonProcess.destroy();
         }
+    }
+
+    public static void main(String[] args) throws SphinxException {
+        SphinxClient client = new SphinxClient();
+        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
+        client.SetLimits(0, 100);
+        //client.SetSelect("@count as mycount, @group as mygroup");
+        //DateRange lastMonth = DateRange.lastMonth();
+        //client.SetFilterRange("log_date", (lastMonth.getFromDate().getTime()/1000), lastMonth.getToDate().getTime()/1000);
+        client.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
+        SphinxResult result = client.Query("");
+        System.out.println(result.warning);
+        System.out.println(result.error );
+
+        for (SphinxMatch sm: result.matches) {
+            System.out.println();
+            int i = 0;
+            for(Object o: sm.attrValues) {
+                if ("log_date".equalsIgnoreCase(result.attrNames[i])) {
+                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + new Date(((Long)o) * 1000) + ", " + o.getClass().getName());
+                } else {
+                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + o + ", " + o.getClass().getName());
+                }
+                i++;
+            }
+
+            //System.out.println("count = " + sm.attrValues.get(0)+ ",  group = " + sm.attrValues.get(1));
+
+        }
+
+        System.out.println(result.matches.length + " results found");
     }
 
 }

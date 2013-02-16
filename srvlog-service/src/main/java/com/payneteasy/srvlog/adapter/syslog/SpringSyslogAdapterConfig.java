@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
  * Date: 04.01.13
  */
 @Service
-public class SpringSyslogAdapterConfig implements ISyslogAdapterConfig {
+public class SpringSyslogAdapterConfig implements ISyslogAdapterConfig{
+
     @Override
     public String getSyslogProtocol() {
         return syslog4jProtocol;

@@ -1,12 +1,13 @@
 package com.payneteasy.srvlog.wicket;
 
 import com.google.common.collect.Lists;
+import com.payneteasy.srvlog.wicket.page.DashboardPage;
 import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
-import com.payneteasy.srvlog.wicket.page.MainPage;
 import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -20,18 +21,25 @@ import java.util.List;
 public class SrvlogUIApplication extends WebApplication{
     @Override
     protected void init() {
+        super.init();
+
         getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-        List<IResourceFinder> resourceFinders = Lists.newArrayList();
-        resourceFinders.add(new Path("../srvlog-web/src/main/java"));
-        resourceFinders.addAll(getResourceSettings().getResourceFinders());
-        getResourceSettings().setResourceFinders(resourceFinders);
+        if (this.getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT) {
+            List<IResourceFinder> resourceFinders = Lists.newArrayList();
+            resourceFinders.add(new Path("../srvlog-web/src/main/java"));
+            resourceFinders.addAll(getResourceSettings().getResourceFinders());
+            getResourceSettings().setResourceFinders(resourceFinders);
+        }
 
-        getSecuritySettings().setAuthorizationStrategy(new SrvlogAuthorizationStrategy());
+        String skipSpringSecurity = getServletContext().getInitParameter("skipSpringSecurity");
+        if(skipSpringSecurity!=null && !isTrue(skipSpringSecurity)){
+            getSecuritySettings().setAuthorizationStrategy(new SrvlogAuthorizationStrategy());
+        }
 
         addSpringComponentInjector();
         //PAGES
-        mountPage("main", MainPage.class);
+        mountPage("main", DashboardPage.class);
         mountPage("logs", LogMonitorPage.class);
         mountPage("online-logs", OnlineLogMonitorPage.class);
 
@@ -44,7 +52,11 @@ public class SrvlogUIApplication extends WebApplication{
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return MainPage.class;
+        return DashboardPage.class;
+    }
+
+    private boolean isTrue(String type){
+        return "true".equals(type);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
+import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.wicket.SrvlogUIApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Date: 09.01.13
@@ -70,6 +73,14 @@ public abstract class AbstractWicketTester {
 
     protected void clearSecurityContextHolderMock(){
         SecurityContextHolder.clearContext();
+    }
+
+    protected Map<LogLevel, Long> getDefaultLogsBySeverityMap(){
+        Map<LogLevel, Long> map = new TreeMap<LogLevel, Long>();
+        for (LogLevel logLevel : LogLevel.values()) {
+            map.put(logLevel, 1L);
+        }
+        return map;
     }
 
 }

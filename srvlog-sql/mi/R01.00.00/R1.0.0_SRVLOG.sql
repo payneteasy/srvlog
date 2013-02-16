@@ -9,6 +9,7 @@ create table logs(
   severity            int(3),
   host_id             int(10),
   message             text,
+  program             varchar(60),
   index pk_log(log_id)
 )
 engine = innodb
@@ -24,7 +25,8 @@ create table unprocessed_logs(
   facility         int(3),
   severity         int(3),
   host             varchar(60),
-  message      text,
+  message          text,
+  program          varchar(60),
   primary key pk_log(log_id)
 )
 engine = innodb;

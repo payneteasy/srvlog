@@ -58,7 +58,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
 
     @Test
     public void testRetrieveAndSaveSyslogMessage() throws InterruptedException {
-        syslogClient.getConfig().setHost("localhost");
+//        syslogClient.getConfig().setHost("localhost");
         syslogClient.info("A test info message");
         syslogClient.flush();
         int numberOfLogs = 25;
@@ -72,7 +72,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
             }
         }
 
-        assertTrue("Logs should exist in defined time interval", logDataList.size() > 0);
+        assertTrue("Logs should be created in defined time interval", logDataList.size() > 0);
     }
 
 
@@ -97,7 +97,9 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
                 return 1514;
             }
         });
-        syslog4jClient.getConfig().setHost("localhost");
+        //syslog4jClient.getConfig().setHost("localhost");
+        syslog4jClient.getConfig().setHost("176.9.227.251");
+
         try {
             DatabaseUtil.generateTestLogsThroughSyslogClient(syslog4jClient);
             syslog4jClient.flush();

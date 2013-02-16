@@ -96,13 +96,17 @@ create procedure check_monthly_partitions(i_table_name              varchar(128)
 $$
 delimiter ;
 
-call check_monthly_partitions('logs', date(now()), 999);
+call check_monthly_partitions('logs', date_add(now(), interval 1 day), 999);
 
 drop event if exists ev_check_log_partitions;
 
 create event ev_check_log_partitions
     on schedule every 1 day starts now()
     comment 'Check log table partitions'
-    do call check_monthly_partitions('logs', date(now()), 999);
+    do call check_monthly_partitions('logs', date_add(now(), interval 1 day), 999);
+
+insert into hosts(hostname, ip)
+  value ("host1", ""),
+        ("host2", "");
 
 commit;
