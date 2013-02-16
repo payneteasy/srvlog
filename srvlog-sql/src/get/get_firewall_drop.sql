@@ -81,6 +81,7 @@ call save_routine_information('get_firewall_drop',
                                         'destination_ip varchar',
                                         'source_port varchar',
                                         'destination_port varchar',
-                                        'protocol varchar'
+                                        'protocol varchar',
+                                        'drop_count int'
                                        )
                              );
