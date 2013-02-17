@@ -57,9 +57,8 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
             logData.setProgram("program");
             logCollector.saveLog(logData);
         }
-
-        List<LogData> logDataList = logCollector.loadLatest(10);
-        assertEquals("loadLatest(numOfLogs) should load logs not more than specified numOfLogs", 10, logDataList.size());
+        List<LogData> logDataList = logCollector.loadLatest(10, null);
+        assertEquals("loadLatest(numOfLogs, hostId) should load logs not more than specified numOfLogs", 10, logDataList.size());
     }
 
     @Test

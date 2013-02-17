@@ -95,11 +95,11 @@ public class LogDaoTest extends CommonIntegrationTest {
             saveTestLog(1, current);
         }
 
-        List<LogData> logDataList = logDao.loadLatest(5);
+        List<LogData> logDataList = logDao.loadLatest(5, null);
 
         assertEquals("loadLatest should return the numOfLogs log entries.", 5, logDataList.size());
 
-        logDataList = logDao.loadLatest(7);
+        logDataList = logDao.loadLatest(7, null);
 
         assertEquals("loadLatest should return the numOfLogs log entries.", 7, logDataList.size());
     }
@@ -155,7 +155,7 @@ public class LogDaoTest extends CommonIntegrationTest {
         assertTrue("Should return zero unprocessed logs when saveUnprocessedLogs has been invoked", unprocessedLogs.size() == 0);
 
 
-        List<LogData> processedLogs = logDao.loadLatest(1);
+        List<LogData> processedLogs = logDao.loadLatest(1, null);
 
         assertTrue("Should returne one processed logs when saveUnprocessedLogs has been invoked", processedLogs.size() == 1);
 

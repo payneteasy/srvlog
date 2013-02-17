@@ -38,8 +38,8 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public List<LogData> loadLatest(int numberOfLogs) {
-        return logDao.loadLatest(numberOfLogs);
+    public List<LogData> loadLatest(int numberOfLogs, Integer hostId) {
+        return logDao.loadLatest(numberOfLogs, hostId);
     }
 
     @Override

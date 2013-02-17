@@ -73,7 +73,7 @@ public class OnlineLogMonitorPage extends BasePage {
         IModel<List<LogData>> logDataModel = new LoadableDetachableModel<List<LogData>>() {
             @Override
             protected List<LogData> load() {
-                return logCollector.loadLatest(filterModel.getLatestLogs());
+                return logCollector.loadLatest(filterModel.getLatestLogs(), null);
             }
         };
 
