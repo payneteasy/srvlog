@@ -33,7 +33,7 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
         WicketTester wicketTester = getWicketTester();
 
         List<LogData> testLogData25 = getTestLogData(25);
-        EasyMock.expect(logCollector.loadLatest(25)).andReturn(testLogData25);
+        EasyMock.expect(logCollector.loadLatest(25, null)).andReturn(testLogData25);
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(OnlineLogMonitorPage.class);

@@ -18,7 +18,7 @@ public interface ILogCollector {
      */
     void saveLog(LogData logData);
 
-    List<LogData> loadLatest(int number_of_logs);
+    List<LogData> loadLatest(int number_of_logs, Integer hostId);
 
     void saveHost(HostData hostData);
 

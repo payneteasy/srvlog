@@ -66,7 +66,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         List<LogData> logDataList = null;
         for (int i = 0; i < numOfTries ; i++) {
             TimeUnit.SECONDS.sleep(2);
-            logDataList = logCollector.loadLatest(numberOfLogs);
+            logDataList = logCollector.loadLatest(numberOfLogs, null);
             if (logDataList.size() > 0) {
                  break;
             }

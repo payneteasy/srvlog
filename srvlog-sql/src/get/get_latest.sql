@@ -14,7 +14,7 @@ create procedure get_latest(i_num_of_logs int(10), i_host_id int(10))
           from logs l force index ( idx_logs_host_log_date ) join hosts h on l.host_id = h.host_id
          where l.host_id = i_host_id
       order by l.log_date desc
-         limit 1;
+         limit i_num_of_logs;
     else
       select   l.log_id,
                l.log_date,
@@ -25,7 +25,7 @@ create procedure get_latest(i_num_of_logs int(10), i_host_id int(10))
                l.program
           from logs l force index ( idx_logs_log_date ) join hosts h on l.host_id = h.host_id
       order by l.log_date desc
-         limit 1;
+         limit i_num_of_logs;
     end if;
   end
 $$

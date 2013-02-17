@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Date: 04.01.13
  */
-@Ignore
+
 public class LogDataTest {
 
     @Test
@@ -60,5 +60,11 @@ public class LogDataTest {
         logData1.setProgram("program2");
 
         Assert.assertNotSame(logData1, logData2);
+    }
+
+    @Test
+    public void testDate() {
+        Long date = 20130124L;
+        System.out.println(new Date(date * 12 * 60 * 60 * 1000));
     }
 }
