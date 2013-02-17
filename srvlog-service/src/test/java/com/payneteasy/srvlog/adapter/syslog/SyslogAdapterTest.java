@@ -60,6 +60,36 @@ public class SyslogAdapterTest {
     }
 
     @Test
+    public void testParseMessageWithHostnameWithoutPID() throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+
+        String syslogMessage = "<132>Feb 17 13:50:21 log-1 ossec: Alert Level: 2; Rule: 1002 - Unknown problem somewhere in the system.; Location: (sso) 10.0.1.7->/var/log/messages; Feb 17 13:50:19 sso syslog-ng[8332]: Connection failed; server='AF_INET(10.0.1.4:2514)', error='Connection refused (111)', time_reopen='10'";
+        adapter = new SyslogAdapter();
+        ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
+        adapter.setLogCollector(mockLogCollector);
+        LogData logData = new LogData();
+        Calendar c = Calendar.getInstance();
+        c.set(2013, 01, 17, 13, 50, 21);
+        c.set(Calendar.MILLISECOND, 0);
+
+        logData.setDate(c.getTime());
+        logData.setFacility(LogFacility.local0.getValue());
+        logData.setSeverity(LogLevel.WARN.getValue());
+
+        setHostName(inetAddress, logData);
+
+        logData.setProgram("ossec");
+        logData.setMessage(": Alert Level: 2; Rule: 1002 - Unknown problem somewhere in the system.; Location: (sso) 10.0.1.7->/var/log/messages; Feb 17 13:50:19 sso syslog-ng[8332]: Connection failed; server='AF_INET(10.0.1.4:2514)', error='Connection refused (111)', time_reopen='10'");
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockLogCollector);
+
+        adapter.event(null, null, new SyslogServerEvent(syslogMessage, InetAddress.getLocalHost()));
+
+        EasyMock.verify(mockLogCollector);
+    }
+
+    @Test
     public void parseLogMessageWithoutHostName() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getLocalHost();
         String syslogMessage = "<13>Dec 22 05:31:55 monit[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]";

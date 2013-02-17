@@ -124,17 +124,10 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
             if (tagIdx == -1) {
                 message = message.substring(tagEndIdx + 1);
+            } else if (tagEndIdx > -1 && tagEndIdx < tagIdx) {
+                message = parseProgramField(log, message, tagEndIdx);
             } else if (tagIdx > -1) {
-                String hostAndTag = message.substring(0, tagIdx);
-                if (hostAndTag.split(" ").length <= 2 && hostAndTag.length() <= 32) { //rfc 3164
-                    message = message.substring(tagIdx);
-                    String[] hostAndTagSplited = hostAndTag.split(" ");
-                    if (hostAndTagSplited.length > 1) {
-                        log.setProgram(hostAndTagSplited[1]);
-                    } else {
-                        log.setProgram(hostAndTagSplited[0]);
-                    }
-                }
+                message = parseProgramField(log, message, tagIdx);
             }
 
             log.setMessage(message);
@@ -144,6 +137,20 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             LOG.debug("Saving log: " + log);
         }
         logCollector.saveLog(log);
+    }
+
+    private String parseProgramField(LogData log, String message, int tagTerminationIdx) {
+        String hostAndTag = message.substring(0, tagTerminationIdx);
+        if (hostAndTag.split(" ").length <= 2 && hostAndTag.length() <= 32) { //rfc 3164
+            message = message.substring(tagTerminationIdx);
+            String[] hostAndTagSplited = hostAndTag.split(" ");
+            if (hostAndTagSplited.length > 1) {
+                log.setProgram(hostAndTagSplited[1]);
+            } else {
+                log.setProgram(hostAndTagSplited[0]);
+            }
+        }
+        return message;
     }
 
     @Override
