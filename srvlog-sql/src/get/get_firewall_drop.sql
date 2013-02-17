@@ -40,7 +40,10 @@ create procedure get_firewall_drop(i_drop_date datetime)
                protocol,
              count(1) drop_count
         from logs l, hosts h
-       where log_date > date(now()) and h.host_id = l.host_id and h.hostname = 'firewall' and l.program is null
+       where     log_date >= date(i_alert_date)
+             and log_date < date_add(date(i_alert_date), interval 1 day)
+             and h.host_id = l.host_id
+             and h.hostname = 'firewall' and l.program is null
     group by case
                when l.message like '%Drop % packet:%' then
                  substring_index(substring_index(l.message, ' SRC=', -1), ' ', 1)
