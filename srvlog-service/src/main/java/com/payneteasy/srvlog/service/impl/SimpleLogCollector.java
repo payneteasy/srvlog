@@ -1,8 +1,7 @@
 package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.dao.ILogDao;
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
@@ -83,6 +82,21 @@ public class SimpleLogCollector implements ILogCollector {
     @Override
     public List<String> getUnprocessedHostsName() {
         return logDao.getUnprocessedHostsName();
+    }
+
+    @Override
+    public List<FirewallAlertData> getFirewallAlertData(Date date) {
+        return logDao.getFirewallAlertData(date);
+    }
+
+    @Override
+    public List<FirewallDropData> getFirewallDropData(Date date) {
+        return logDao.getFirewallDropData(date);
+    }
+
+    @Override
+    public List<OssecAlertData> getOssecAlertData(Date data) {
+        return logDao.getOssecAlertData(data);
     }
 
     public void setIndexerService(IIndexerService indexerService) {

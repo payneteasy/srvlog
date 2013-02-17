@@ -1,7 +1,7 @@
 package com.payneteasy.srvlog.service;
 
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
+import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
+import com.payneteasy.srvlog.data.*;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Date;
@@ -33,5 +33,11 @@ public interface ILogCollector {
     boolean hasUnprocessedLogs();
 
     List<String> getUnprocessedHostsName();
+
+    List<FirewallAlertData> getFirewallAlertData(Date date);
+
+    List<FirewallDropData> getFirewallDropData(Date date);
+
+    List<OssecAlertData> getOssecAlertData(Date data);
 
 }

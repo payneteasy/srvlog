@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="well sidebar-nav">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Detailed logs</li>
+                        <li wicket:id="firewall-alert-container">
+                            <a href="#" wicket:id="firewall-alert">Firewall alert data</a>
+                        </li>
+                        <li wicket:id="firewall-drop-container">
+                            <a href="#" wicket:id="firewall-drop">Firewall drop data</a>
+                        </li>
+                        <li wicket:id="ossec-alert-container">
+                            <a href="#" wicket:id="ossec-alert">Ossec alert data</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span9">
+        <wicket:child/>
+    </div>
+</wicket:extend>
+</body>
+</html>

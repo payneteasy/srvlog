@@ -7,9 +7,7 @@ import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.adapter.syslog.ISyslogAdapterConfig;
 import com.payneteasy.srvlog.adapter.syslog.SyslogAdapter;
 import com.payneteasy.srvlog.dao.ILogDao;
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.data.LogFacility;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.impl.SimpleLogCollector;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -213,6 +211,57 @@ public class SimpleLogCollectorTest {
         EasyMock.replay(logDao);
 
         logCollector.getUnprocessedHostsName();
+
+        EasyMock.verify(logDao);
+    }
+
+    @Test
+    public void testFirewallAlertData() throws Exception {
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        Date now = new Date();
+        EasyMock.expect(logDao.getFirewallAlertData(now)).andReturn(Collections.<FirewallAlertData>emptyList());
+
+        EasyMock.replay(logDao);
+
+        logCollector.getFirewallAlertData(now);
+
+        EasyMock.verify(logDao);
+    }
+
+    @Test
+    public void testFirewallDropData() throws Exception {
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        Date now = new Date();
+        EasyMock.expect(logDao.getFirewallDropData(now)).andReturn(Collections.<FirewallDropData>emptyList());
+
+        EasyMock.replay(logDao);
+
+        logCollector.getFirewallDropData(now);
+
+        EasyMock.verify(logDao);
+    }
+
+    @Test
+    public void testOssecAlertData() throws Exception {
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        ILogDao logDao = createMock(ILogDao.class);
+        logCollector.setLogDao(logDao);
+
+        Date now = new Date();
+        EasyMock.expect(logDao.getOssecAlertData(now)).andReturn(Collections.<OssecAlertData>emptyList());
+
+        EasyMock.replay(logDao);
+
+        logCollector.getOssecAlertData(now);
 
         EasyMock.verify(logDao);
     }

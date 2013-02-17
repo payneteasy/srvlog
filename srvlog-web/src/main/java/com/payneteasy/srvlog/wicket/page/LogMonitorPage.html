@@ -10,14 +10,16 @@
         <!--FORM-->
         <form wicket:id="form">
             <div class="row-fluid">
+                <!--INPUT FIELD             -->
+                <div class="input-append main-input-append">
+                    <input  id="appendedInputButton" wicket:id="pattern" type="text"/>
+                    <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
+                </div>
+            </div>
 
+            <div class="row-fluid">
        <!--TABLE PART               -->
                 <div class="span9 main-span9">
-                    <div class="input-append main-input-append">
-                        <input  id="appendedInputButton" wicket:id="pattern" type="text"/>
-                        <button class="btn btn-large btn-info" type="submit" wicket:id="search-button">Search</button>
-                    </div>
-
                     <div class="row">
                         <div wicket:id="item-perPage" class="span3 pager"></div>
                         <div wicket:id="paging-navigator" class="span7 pull-right main-pager-holder"></div>
