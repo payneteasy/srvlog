@@ -23,7 +23,7 @@ public interface ILogDao {
     LogData load(Long id);
 
     @AStoredProcedure(name="get_latest")
-    List<LogData> loadLatest(int numberOfLogs, Integer hostId);
+    List<LogData> loadLatest(int numberOfLogs, Long hostId);
 
     @AStoredProcedure(name="save_host")
     void saveHost(HostData hostData);

@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -8,13 +9,19 @@ import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
@@ -69,15 +76,39 @@ public class OnlineLogMonitorPage extends BasePage {
         };
         add(timeDurationGroupButtonPanel);
 
+        Form<FilterModel> hostChoiceForm = new Form<FilterModel>("hostChoice-form");
+        add(hostChoiceForm);
+        DropDownChoice<HostData> hostChoices = new DropDownChoice<HostData>("choices-host",new PropertyModel<HostData>(filterModel, "hostData"), new LoadableDetachableModel<List<HostData>>() {
+            @Override
+            protected List<HostData> load() {
+                return logCollector.loadHosts();
+            }
+        }, new IChoiceRenderer<HostData>() {
+            @Override
+            public Object getDisplayValue(HostData object) {
+                return object.getHostname();
+            }
+
+            @Override
+            public String getIdValue(HostData object, int index) {
+                return object.getHostname();
+            }
+        });
+        hostChoices.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(holderListView);
+            }
+        });
+        hostChoices.setNullValid(true);
+        hostChoiceForm.add(hostChoices);
 
         IModel<List<LogData>> logDataModel = new LoadableDetachableModel<List<LogData>>() {
             @Override
             protected List<LogData> load() {
-                return logCollector.loadLatest(filterModel.getLatestLogs(), null);
+                return logCollector.loadLatest(filterModel.getLatestLogs(), checkForNullHost(filterModel.getHostData()));
             }
         };
-
-
         holderListView = new WebMarkupContainer("holder-search-log-data");
         holderListView.setOutputMarkupId(true);
         add(holderListView);
@@ -112,10 +143,15 @@ public class OnlineLogMonitorPage extends BasePage {
         target.appendJavaScript("animateLastTableRow()");
     }
 
+    private Long checkForNullHost(HostData hostData) {
+        return hostData!=null?hostData.getId():null;
+    }
+
     public class FilterModel implements Serializable {
         private Integer latestLogs = 25;
         private Integer timeDurationInSeconds=2;
         private Date lastDate;
+        private HostData hostData;
 
         public Integer getTimeDurationInSeconds() {
             return timeDurationInSeconds;
@@ -139,6 +175,14 @@ public class OnlineLogMonitorPage extends BasePage {
 
         public void setLastDate(Date lastDate) {
             this.lastDate = lastDate;
+        }
+
+        public HostData getHostData() {
+            return hostData;
+        }
+
+        public void setHostData(HostData hostData) {
+            this.hostData = hostData;
         }
     }
 }

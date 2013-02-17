@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
+import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import junit.framework.Assert;
@@ -26,12 +27,12 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
         logCollector = EasyMock.createMock(ILogCollector.class);
         addBean("logCollector", logCollector);
         EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(logCollector.loadHosts()).andReturn(getHosts()).anyTimes();
     }
 
     @Test
     public void renderPage(){
         WicketTester wicketTester = getWicketTester();
-
         List<LogData> testLogData25 = getTestLogData(25);
         EasyMock.expect(logCollector.loadLatest(25, null)).andReturn(testLogData25);
         EasyMock.replay(logCollector);
@@ -41,7 +42,21 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
         EasyMock.verify(logCollector);
     }
 
+    @Test
+    public void testChoiceHost() throws Exception {
+        WicketTester wicketTester = getWicketTester();
 
+        List<LogData> testLogData25 = getTestLogData(25);
+        EasyMock.expect(logCollector.loadLatest(25, null)).andReturn(testLogData25);
+
+        EasyMock.expect(logCollector.loadLatest(25, 1L)).andReturn(testLogData25);
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(OnlineLogMonitorPage.class);
+        FormTester formTester = wicketTester.newFormTester("hostChoice-form");
+        formTester.select("choices-host", 1);
+
+    }
 
     public static List<LogData> getTestLogData(Integer limit) {
         ArrayList<LogData> listData = new ArrayList<LogData>();
@@ -55,5 +70,17 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
             listData.add(logData);
         }
         return listData;
+    }
+
+    public static List<HostData> getHosts(){
+        List<HostData> hosts = new ArrayList<HostData>();
+        for (int i = 0; i < 5; i++) {
+            HostData hostData = new HostData();
+            hostData.setId(Long.valueOf(i));
+            hostData.setIpAddress("");
+            hostData.setHostname("host"+i);
+            hosts.add(hostData);
+        }
+        return hosts;
     }
 }
