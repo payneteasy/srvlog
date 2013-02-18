@@ -40,52 +40,6 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     }
 
     @Test
-    public void testExactlyDateRangeFilter() throws IndexerServiceException {
-        WicketTester wicketTester = getWicketTester();
-        DateRange today = DateRange.today();
-        List<LogData> searchLogData = getTestLogData();
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
-
-        DateRange exactly = DateRange.thisMonth();
-        EasyMock.expect(logCollector.search(exactly.getFromDate(), exactly.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), null, 0, 26)).andReturn(searchLogData);
-        EasyMock.replay(logCollector);
-
-        wicketTester.startPage(LogMonitorPage.class);
-        wicketTester.assertInvisible("form:holder-exactly-dateRange");
-
-        FormTester formTester = wicketTester.newFormTester("form");
-        formTester.select("date-range-type", 7); //6 - date, 7 - time
-
-        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
-
-        wicketTester.assertVisible("form:holder-exactly-dateRange");
-        wicketTester.assertVisible("form:holder-exactly-dateRange:timeFrom-field");
-        wicketTester.assertVisible("form:holder-exactly-dateRange:timeTo-field");
-
-        formTester.select("date-range-type", 6); //6 - date, 7 - time
-
-        wicketTester.executeAjaxEvent("form:date-range-type", "onchange");
-
-        wicketTester.assertVisible("form:holder-exactly-dateRange");
-        wicketTester.assertVisible("form:holder-exactly-dateRange:dateFrom-field");
-        wicketTester.assertVisible("form:holder-exactly-dateRange:dateTo-field");
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
-        simpleDateFormat.applyPattern("dd.MM.yyyy");
-
-        formTester.setValue("holder-exactly-dateRange:dateFrom-field", simpleDateFormat.format(exactly.getFromDate()));
-        formTester.setValue("holder-exactly-dateRange:dateTo-field", simpleDateFormat.format(exactly.getToDate()));
-
-        formTester.select("date-range-type", 6); //6 - date, 7 - time
-
-        formTester.submit("search-button");
-
-        EasyMock.verify(logCollector);
-
-    }
-
-    @Test
     public void testSearchForPattern() throws IndexerServiceException {
         WicketTester wicketTester = getWicketTester();
         DateRange today = DateRange.today();

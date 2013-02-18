@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.srvlog.wicket.page.detailed.FirewallAlertDataPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;

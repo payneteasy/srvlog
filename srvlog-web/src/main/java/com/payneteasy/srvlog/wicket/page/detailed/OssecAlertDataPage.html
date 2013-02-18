@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <table class="table table-bordered table-striped table-hover main-table">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="list-view">
+            <td wicket:id="type">Alert</td>
+            <td wicket:id="count">10</td>
+        </tr>
+        <tr wicket:id="no-data"><td colspan="2">No data found</td></tr>
+        </tbody>
+    </table>
+</wicket:extend>
+</body>
+</html>

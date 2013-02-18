@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <table class="table table-bordered table-striped table-hover main-table">
+        <thead>
+        <tr>
+            <th>Protocol</th>
+            <th>Drop count</th>
+            <th>Destination ip</th>
+            <th>Destination port</th>
+            <th>Source ip</th>
+            <th>Source port</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="list-view">
+            <td wicket:id="protocol">Alert</td>
+            <td wicket:id="drop-count">10</td>
+            <td wicket:id="dist-ip"></td>
+            <td wicket:id="dist-port"></td>
+            <td wicket:id="source-ip"></td>
+            <td wicket:id="source-port"></td>
+        </tr>
+        <tr wicket:id="no-data"><td colspan="6">No data found</td></tr>
+        </tbody>
+    </table>
+</wicket:extend>
+</body>
+</html>

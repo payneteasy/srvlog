@@ -40,8 +40,8 @@ create procedure get_firewall_drop(i_drop_date datetime)
                protocol,
              count(1) drop_count
         from logs l, hosts h
-       where     log_date >= date(i_alert_date)
-             and log_date < date_add(date(i_alert_date), interval 1 day)
+       where     log_date >= date(i_drop_date)
+             and log_date < date_add(date(i_drop_date), interval 1 day)
              and h.host_id = l.host_id
              and h.hostname = 'firewall' and l.program is null
     group by case

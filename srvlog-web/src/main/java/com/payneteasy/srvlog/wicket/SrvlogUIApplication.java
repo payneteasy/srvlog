@@ -8,7 +8,9 @@ import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
+import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -22,6 +24,8 @@ public class SrvlogUIApplication extends WebApplication{
     @Override
     protected void init() {
         super.init();
+        IRequestMapper cryptoMapper = new CryptoMapper(getRootRequestMapper(), this);
+        setRootRequestMapper(cryptoMapper);
 
         getResourceSettings().setThrowExceptionOnMissingResource(false);
 
@@ -45,6 +49,21 @@ public class SrvlogUIApplication extends WebApplication{
 
         mountPage("login", LoginPage.class);
     }
+
+//    @Override
+//    protected IRequestCycleProcessor newRequestCycleProcessor() {
+//
+//        return new WebRequestCycleProcessor() {
+//            protected IRequestCodingStrategy newRequestCodingStrategy() {
+//                return new CryptedUrlWebRequestCodingStrategy(
+//                        new WebRequestCodingStrategy());
+//            }
+//        };
+//    }
+
+
+
+
 
     protected void addSpringComponentInjector(){
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));

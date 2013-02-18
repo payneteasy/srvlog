@@ -1,15 +1,22 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.util.DateRange;
+import com.payneteasy.srvlog.wicket.page.detailed.FirewallAlertDataPage;
+import com.payneteasy.srvlog.wicket.page.detailed.FirewallDropDataPage;
+import com.payneteasy.srvlog.wicket.page.detailed.OssecAlertDataPage;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * Date: 17.02.13 Time: 18:21
@@ -31,6 +38,8 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
 
         EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
 
+        EasyMock.expect(logCollector.getFirewallAlertData(null)).andReturn(Collections.<FirewallAlertData>emptyList());
+
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(FirewallAlertDataPage.class);
@@ -40,5 +49,107 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
         wicketTester.assertRenderedPage(FirewallDropDataPage.class);
 
         EasyMock.verify(logCollector);
+    }
+
+    @Test
+    public void testFirewallAlertPage() throws Exception {
+        WicketTester wicketTester = getWicketTester();
+
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+
+        Date now = getNowDate();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        EasyMock.expect(logCollector.getFirewallAlertData(null)).andReturn(Collections.<FirewallAlertData>emptyList());
+
+        EasyMock.expect(logCollector.getFirewallAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<FirewallAlertData>emptyList());
+
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(FirewallAlertDataPage.class);
+        wicketTester.assertRenderedPage(FirewallAlertDataPage.class);
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.setValue("date-field", simpleDateFormat.format(now));
+        formTester.submit("button");
+
+        EasyMock.verify(logCollector);
+    }
+
+    @Test
+    public void testNoDataPanel() throws Exception {
+        WicketTester wicketTester = getWicketTester();
+
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+
+        EasyMock.expect(logCollector.getFirewallAlertData(null)).andReturn(Arrays.asList(new FirewallAlertData[]{new FirewallAlertData()}));
+
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(FirewallAlertDataPage.class);
+        wicketTester.assertRenderedPage(FirewallAlertDataPage.class);
+        wicketTester.assertInvisible("no-data");
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.setValue("date-field", "");
+        formTester.submit("button");
+        wicketTester.assertVisible("no-data");
+
+        EasyMock.verify(logCollector);
+    }
+
+    @Test
+    public void testFirewallDropPage() throws Exception {
+        WicketTester wicketTester = getWicketTester();
+
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+
+        Date now = getNowDate();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        EasyMock.expect(logCollector.getFirewallDropData(null)).andReturn(Collections.<FirewallDropData>emptyList());
+
+        EasyMock.expect(logCollector.getFirewallDropData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<FirewallDropData>emptyList());
+
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(FirewallDropDataPage.class);
+        wicketTester.assertRenderedPage(FirewallDropDataPage.class);
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.setValue("date-field", simpleDateFormat.format(now));
+        formTester.submit("button");
+
+        EasyMock.verify(logCollector);
+    }
+
+    @Test
+    public void testOssecAlertPage() throws Exception {
+        WicketTester wicketTester = getWicketTester();
+
+        EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
+
+        Date now = getNowDate();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        EasyMock.expect(logCollector.getOssecAlertData(null)).andReturn(Collections.<OssecAlertData>emptyList());
+
+        EasyMock.expect(logCollector.getOssecAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<OssecAlertData>emptyList());
+
+        EasyMock.replay(logCollector);
+
+        wicketTester.startPage(OssecAlertDataPage.class);
+        wicketTester.assertRenderedPage(OssecAlertDataPage.class);
+
+        FormTester formTester = wicketTester.newFormTester("form");
+        formTester.setValue("date-field", simpleDateFormat.format(now));
+        formTester.submit("button");
+
+        EasyMock.verify(logCollector);
+
+    }
+
+    private Date getNowDate(){
+        return new Date();
     }
 }

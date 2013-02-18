@@ -1,5 +1,6 @@
-package com.payneteasy.srvlog.wicket.page;
+package com.payneteasy.srvlog.wicket.page.detailed;
 
+import com.payneteasy.srvlog.wicket.page.BasePage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -7,10 +8,13 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Date: 17.02.13 Time: 17:56
  */
-public class DetailedLogsPage extends BasePage{
+public class DetailedLogsPage extends BasePage {
     private Class<? extends Page> sideBarPageClass;
     public DetailedLogsPage(PageParameters pageParameters, Class<? extends Page> sideBarPageClass) {
         super(pageParameters, DetailedLogsPage.class);

@@ -6,6 +6,7 @@ import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
+import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -48,57 +49,19 @@ public class LogMonitorPage extends BasePage {
         if(!pageParameters.isEmpty()){
             String severityValue = pageParameters.get(DashboardPage.SEVERITY).toString();
             String dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE).toString();
-            filterModel.setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
+            filterModel.getDateRangeModel().setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
             filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(LogLevel.valueOf(severityValue))));
         }
 
         final Form<FilterModel> form = new Form<FilterModel>("form", Model.of(filterModel));
         add(form);
 
-        //DATE RANGE FILTER
+
         form.add(new TextField<String>("pattern", new PropertyModel<String>(filterModel, "pattern")));
 
-        final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<DateRangeType>(
-                "date-range-type"
-                , new PropertyModel<DateRangeType>(filterModel, "dateRangeType")
-                , Arrays.asList(DateRangeType.values())
-                , new IChoiceRenderer<DateRangeType>() {
-            @Override
-            public Object getDisplayValue(DateRangeType object) {
-                return object.name();
-            }
-
-            @Override
-            public String getIdValue(DateRangeType object, int index) {
-                return object.name();
-            }
-        });
-        form.add(dateRangeType);
-        dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                target.add(holderDateRangeContainer);
-            }
-        });
-
-        holderDateRangeContainer = new WebMarkupContainer("holder-exactly-dateRange") {
-            @Override
-            public boolean isVisible() {
-                return isVisibleDateField(filterModel.getDateRangeType());
-            }
-        };
-        holderDateRangeContainer.setOutputMarkupPlaceholderTag(true);
-        form.add(holderDateRangeContainer);
-
-        DateTextField dateFromTextField = getExactlyDateTextField("dateFrom-field", form, filterModel, "exactlyDateFrom", "dateForm");
-        holderDateRangeContainer.add(dateFromTextField);
-        DateTextField dateToTextField = getExactlyDateTextField("dateTo-field", form, filterModel, "exactlyDateTo", "dateTo");
-        holderDateRangeContainer.add(dateToTextField);
-
-        DateTimeField dateFromTimeField = getExactlyDateTimeField("timeFrom-field", form, filterModel, "exactlyDateFrom", "timeFrom");
-        holderDateRangeContainer.add(dateFromTimeField);
-        DateTimeField dateToTimeField = getExactlyDateTimeField("timeTo-field", form, filterModel, "exactlyDateTo", "timeTo");
-        holderDateRangeContainer.add(dateToTimeField);
+//        DATE RANGE FILTER
+        DateRangePanel dateRangePanel = new DateRangePanel("date-range", filterModel.getDateRangeModel());
+        form.add(dateRangePanel);
 
         // SEVERITY CHOICE FILTER
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
@@ -163,8 +126,8 @@ public class LogMonitorPage extends BasePage {
                         return Collections.emptyList();
                     }else {
                         return logCollector.search(
-                                filterModel.getDateRange().getFromDate()
-                                , filterModel.getDateRange().getToDate()
+                                filterModel.getDateRangeModel().getDateRange().getFromDate()
+                                , filterModel.getDateRangeModel().getDateRange().getToDate()
                                 , filterModel.getFacilityIds()
                                 , filterModel.getSeverityIds()
                                 , filterModel.getHostIds()
@@ -223,67 +186,11 @@ public class LogMonitorPage extends BasePage {
 
     }
 
-    private DateTextField getExactlyDateTextField(String id, Form form, final FilterModel filterModel, String expression, String keyPrefix) {
-        DateTextField dateTextField = new DateTextField(id, new PropertyModel<Date>(filterModel, expression), new PatternDateConverter(DATE_PATTERN, false)) {
-            @Override
-            public boolean isVisible() {
-                return DateRangeType.EXACTLY_DATE == filterModel.getDateRangeType();
-            }
-        };
-        dateTextField.add(new DatePicker());
-        dateTextField.setRequired(true);
-        return dateTextField;
-    }
-
-    private DateTimeField getExactlyDateTimeField(String id, Form form, final FilterModel filterModel, String expression, String keyPrefix) {
-        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<Date>(filterModel, expression)) {
-            @Override
-            protected boolean use12HourFormat() {
-                return false;
-            }
-
-            @Override
-            public boolean isVisible() {
-                return DateRangeType.EXACTLY_TIME == filterModel.getDateRangeType();
-            }
-
-            @Override
-            protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel) {
-                return DateTextField.forDatePattern(id, dateFieldModel, DATE_PATTERN);
-            }
-
-            @Override
-            protected DatePicker newDatePicker() {
-                return new DatePicker() {
-                    @Override
-                    protected String getDatePattern() {
-                        return DATE_PATTERN;
-                    }
-                };
-            }
-        };
-        dateTimeField.setRequired(true);
-        return dateTimeField;
-    }
-
-    private boolean isVisibleDateField(DateRangeType type) {
-        if (DateRangeType.EXACTLY_DATE == type || DateRangeType.EXACTLY_TIME == type) {
-            return true;
-        }
-        return false;
-    }
-
     @SpringBean
     private ILogCollector logCollector;
-    private static final String DATE_PATTERN = "dd.MM.yyyy";
-    private WebMarkupContainer holderDateRangeContainer;
 
     private class FilterModel implements Serializable {
-        private DateRange dateRange;
-        private DateRangeType dateRangeType;
-        private Date exactlyDateFrom;
-        private Date exactlyDateTo;
-
+        private DateRangePanel.DateRangeModel dateRangeModel;
         private List<Integer> facilityIds;
         private List<LogFacility> facilities;
 
@@ -297,75 +204,19 @@ public class LogMonitorPage extends BasePage {
         private Integer itemPrePage;
 
         private FilterModel() {
-            this.dateRange = DateRange.today();
-            this.dateRangeType = DateRangeType.TODAY;
             this.severities = new ArrayList<LogLevel>();
             this.facilities = new ArrayList<LogFacility>();
             this.itemPrePage = 25;
-
+            this.dateRangeModel = new DateRangePanel.DateRangeModel();
         }
 
-        public void setDateRangeType(DateRangeType dateRangeType) {
-            this.dateRangeType = dateRangeType;
-            setDateRange();
+        public DateRangePanel.DateRangeModel getDateRangeModel() {
+            return dateRangeModel;
         }
 
-        public DateRangeType getDateRangeType() {
-            return dateRangeType;
+        public void setDateRangeModel(DateRangePanel.DateRangeModel dateRangeModel) {
+            this.dateRangeModel = dateRangeModel;
         }
-
-        public Date getExactlyDateFrom() {
-            return exactlyDateFrom;
-        }
-
-        public void setExactlyDateFrom(Date exactlyDateFrom) {
-            this.exactlyDateFrom = exactlyDateFrom;
-        }
-
-        public Date getExactlyDateTo() {
-            return exactlyDateTo;
-        }
-
-        public void setExactlyDateTo(Date exactlyDateTo) {
-            this.exactlyDateTo = exactlyDateTo;
-        }
-
-        public DateRange getDateRange() {
-            if (isVisibleDateField(this.dateRangeType)) {
-                dateRange = new DateRange(exactlyDateFrom, exactlyDateTo);
-            }
-            return dateRange;
-        }
-
-        private void setDateRange() {
-            switch (this.dateRangeType) {
-                case TODAY:
-                    dateRange = DateRange.today();
-                    break;
-                case YESTERDAY:
-                    dateRange = DateRange.yesterday();
-                    break;
-                case THIS_WEEK:
-                    dateRange = DateRange.thisWeek();
-                    break;
-                case LAST_WEEK:
-                    dateRange = DateRange.lastWeek();
-                    break;
-                case THIS_MONTH:
-                    dateRange = DateRange.thisMonth();
-                    break;
-                case LAST_MONTH:
-                    dateRange = DateRange.lastMonth();
-                    break;
-                case EXACTLY_DATE:
-                    break;
-                case EXACTLY_TIME:
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown date range type: " + this.dateRangeType);
-            }
-        }
-
 
         //FACILITY
         public List<Integer> getFacilityIds() {

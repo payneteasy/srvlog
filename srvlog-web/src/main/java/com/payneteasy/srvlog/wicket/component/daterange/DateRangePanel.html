@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+    <title></title>
+</head>
+<body>
+<wicket:panel>
+    <div class="main-filter-title">Date range:</div>
+    <select wicket:id="date-range-type">
+        <option id="TODAY">TODAY</option>
+    </select>
+
+    <div wicket:id="holder-exactly-dateRange" class="main-filter-dateRange">
+        <!--date range-->
+        <wicket:enclosure child="dateFrom-field">
+            <div class="main-filter-dateRange-row">
+                <span class="main-filter-title-small">From:</span>
+                <input class="input-mini" wicket:id="dateFrom-field" />
+            </div>
+        </wicket:enclosure>
+
+        <wicket:enclosure child="dateTo-field">
+            <div class="main-filter-dateRange-row">
+                <span class="main-filter-title-small" >To:</span>
+                <input class="input-mini" wicket:id="dateTo-field" />
+            </div>
+        </wicket:enclosure>
+
+        <!--time range-->
+        <wicket:enclosure child="timeFrom-field">
+            <div class="main-filter-dateRange-row">
+                <span class="main-filter-title-small">From:</span>
+                <span wicket:id="timeFrom-field" class="main-timeField"></span>
+            </div>
+        </wicket:enclosure>
+        <wicket:enclosure child="timeTo-field">
+            <div class="main-filter-dateRange-row">
+                <span class="main-filter-title-small">To:</span>
+                <span wicket:id="timeTo-field" class="main-timeField"></span>
+            </div>
+        </wicket:enclosure>
+    </div>
+</wicket:panel>
+</body>
+</html>
