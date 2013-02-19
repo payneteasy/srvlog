@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.data;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ public class FirewallAlertData implements Serializable {
     private String alertClass;
     private String alertCount;
 
+    @Column(name = "alert_class")
     public String getAlertClass() {
         return alertClass;
     }
@@ -17,6 +19,7 @@ public class FirewallAlertData implements Serializable {
         this.alertClass = alertClass;
     }
 
+    @Column(name = "alert_count")
     public String getAlertCount() {
         return alertCount;
     }

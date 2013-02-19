@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.data;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ public class OssecAlertData implements Serializable {
     private String ossecAlertType;
     private String ossecAlertCount;
 
+    @Column(name = "ossec_alert_type")
     public String getOssecAlertType() {
         return ossecAlertType;
     }
@@ -17,6 +19,7 @@ public class OssecAlertData implements Serializable {
         this.ossecAlertType = ossecAlertType;
     }
 
+    @Column(name = "ossec_alert_count")
     public String getOssecAlertCount() {
         return ossecAlertCount;
     }

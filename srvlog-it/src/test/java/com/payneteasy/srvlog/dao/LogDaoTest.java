@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
  */
 public class LogDaoTest extends CommonIntegrationTest {
 
-
     private ILogDao logDao;
 
     @Before

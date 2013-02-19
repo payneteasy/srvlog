@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.data;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,7 @@ public class FirewallDropData implements Serializable{
     private String protocol;
     private Long dropCount;
 
+    @Column(name ="source_ip")
     public String getSourceIp() {
         return sourceIp;
     }
@@ -20,7 +22,7 @@ public class FirewallDropData implements Serializable{
     public void setSourceIp(String sourceIp) {
         this.sourceIp = sourceIp;
     }
-
+    @Column(name ="destination_ip")
     public String getDestinationIp() {
         return destinationIp;
     }
@@ -29,6 +31,7 @@ public class FirewallDropData implements Serializable{
         this.destinationIp = destinationIp;
     }
 
+    @Column(name ="source_port")
     public String getSourcePort() {
         return sourcePort;
     }
@@ -37,6 +40,7 @@ public class FirewallDropData implements Serializable{
         this.sourcePort = sourcePort;
     }
 
+    @Column(name ="destination_port")
     public String getDestinationPort() {
         return destinationPort;
     }
@@ -45,6 +49,7 @@ public class FirewallDropData implements Serializable{
         this.destinationPort = destinationPort;
     }
 
+    @Column(name ="protocol")
     public String getProtocol() {
         return protocol;
     }
@@ -53,6 +58,7 @@ public class FirewallDropData implements Serializable{
         this.protocol = protocol;
     }
 
+    @Column(name ="drop_count")
     public Long getDropCount() {
         return dropCount;
     }

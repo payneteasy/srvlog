@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.wicket.page.detailed;
 
+import com.payneteasy.srvlog.util.DateRange;
 import org.apache.wicket.Page;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
@@ -52,6 +53,11 @@ public class DetailedFormPage extends DetailedLogsPage{
 
     protected static class FilterDetailedModel implements Serializable {
         private Date date;
+
+        public FilterDetailedModel() {
+            DateRange today = DateRange.today();
+            this.date = today.getFromDate();
+        }
 
         public Date getDate() {
             return date;
