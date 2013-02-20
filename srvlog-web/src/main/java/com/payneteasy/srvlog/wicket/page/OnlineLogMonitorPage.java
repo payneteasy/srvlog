@@ -60,17 +60,7 @@ public class OnlineLogMonitorPage extends BasePage {
             @Override
             protected void doOnAjaxClick(Integer currentIndex, AjaxRequestTarget target) {
                 filterModel.setTimeDurationInSeconds(currentIndex);
-                for (Behavior behavior : holderListView.getBehaviors()) {
-                    if (behavior instanceof AjaxSelfUpdatingTimerBehavior) {
-                        ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
-                    }
-                }
-                holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
-                    @Override
-                    protected void onPostProcessTarget(AjaxRequestTarget target) {
-                        animateLastTableRow(target);
-                    }
-                });
+                updateComponentBehavior(target, filterModel);
                 target.add(holderListView);
             }
         };
@@ -97,6 +87,7 @@ public class OnlineLogMonitorPage extends BasePage {
         hostChoices.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                updateComponentBehavior(target, filterModel);
                 target.add(holderListView);
             }
         });
@@ -131,6 +122,20 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.add(listView);
 
 //        //update panel
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+            @Override
+            protected void onPostProcessTarget(AjaxRequestTarget target) {
+                animateLastTableRow(target);
+            }
+        });
+    }
+
+    private void updateComponentBehavior(AjaxRequestTarget target, final FilterModel filterModel) {
+        for (Behavior behavior : holderListView.getBehaviors()) {
+            if (behavior instanceof AjaxSelfUpdatingTimerBehavior) {
+                ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
+            }
+        }
         holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
