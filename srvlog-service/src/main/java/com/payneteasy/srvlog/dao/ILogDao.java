@@ -2,7 +2,6 @@ package com.payneteasy.srvlog.dao;
 
 import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
 import com.payneteasy.srvlog.data.*;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +49,7 @@ public interface ILogDao {
     List<FirewallAlertData> getFirewallAlertData(Date date);
 
     @AStoredProcedure(name="get_firewall_drop")
-    List<FirewallDropData> getFirewallDropData(Date date);
+    List<FireWallDropData> getFirewallDropData(Date date);
 
     @AStoredProcedure(name="get_ossec_alerts")
     List<OssecAlertData> getOssecAlertData(Date data);

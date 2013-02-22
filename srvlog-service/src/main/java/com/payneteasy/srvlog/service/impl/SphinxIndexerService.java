@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.service.impl;
 
-import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
@@ -11,6 +10,7 @@ import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
 import org.sphx.api.SphinxMatch;
 import org.sphx.api.SphinxResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +28,18 @@ public class SphinxIndexerService implements IIndexerService{
 
     private static final Logger LOG = LoggerFactory.getLogger(SphinxIndexerService.class);
 
+    @Value( "${host}" )
+    private String host;
+
+    @Value( "${port}" )
+    private int port;
+
+    @Value( "${connectTimeout}" )
+    private int connectTimeout;
+
     @Override
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
-        SphinxClient sphinxClient = new SphinxClient();
+        SphinxClient sphinxClient = createSphinxClient();
 
 
         setMatchMode(sphinxClient);
@@ -44,15 +53,7 @@ public class SphinxIndexerService implements IIndexerService{
 
         setAttributeFilter(severities, sphinxClient, "severity");
 
-        if (offset != null && limit != null) {
-            try {
-                sphinxClient.SetLimits(offset, limit);
-
-            } catch (SphinxException e) {
-                LOG.error("While trying to set limits", e);
-                throw new IndexerServiceException("While trying to set limits", e);
-            }
-        }
+        setLimits(offset, limit, sphinxClient);
 
 
         if (pattern == null) {
@@ -69,6 +70,24 @@ public class SphinxIndexerService implements IIndexerService{
         }
        return logIds;
    }
+
+    private void setLimits(Integer offset, Integer limit, SphinxClient sphinxClient) throws IndexerServiceException {
+        if (offset != null && limit != null) {
+            try {
+                sphinxClient.SetLimits(offset, limit);
+
+            } catch (SphinxException e) {
+                LOG.error("While trying to set limits", e);
+                throw new IndexerServiceException("While trying to set limits", e);
+            }
+        }
+    }
+
+    private SphinxClient createSphinxClient() {
+        SphinxClient sphinxClient = new SphinxClient(host, port);
+        sphinxClient.SetConnectTimeout(connectTimeout);
+        return sphinxClient;
+    }
 
     private void reportWarningsIfAny(SphinxClient sphinxClient) {
         if (StringUtils.isNotEmpty(sphinxClient.GetLastWarning())) {
@@ -112,52 +131,7 @@ public class SphinxIndexerService implements IIndexerService{
 
     @Override
     public Map<Date, Long> numberOfLogsByDate(Date from, Date to) throws IndexerServiceException{
-        SphinxClient sphinxClient = new SphinxClient();
-
-        setMatchMode(sphinxClient);
-
-        setDate(from, to, sphinxClient);
-
-        try {
-            sphinxClient.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
-        } catch (SphinxException e) {
-            LOG.error("While trying to set group by", e);
-            throw new IndexerServiceException("While trying to set group by", e);
-        }
-
-        SphinxResult result = querySphinx("", sphinxClient);
-
-        if (errorOccuredWhileQuerying(sphinxClient, result)) return Collections.emptyMap();
-
-        reportWarningsIfAny(sphinxClient);
-
-        Map<Date, Long> resultMap = new TreeMap<Date, Long>();
-        DateFormat df = new SimpleDateFormat("yyyyMMdd");
-        for(SphinxMatch sm: result.matches) {
-            Date groupDate = null;
-            Long count     = null;
-
-            for (int i= 0; i < sm.attrValues.size(); i++) {
-                if ("@groupby".equalsIgnoreCase(result.attrNames[i])) {
-                    try {
-                        groupDate = df.parse((String.valueOf(sm.attrValues.get(i))));
-                    } catch (ParseException e) {
-                        LOG.error("While parsing group date", e);
-                        throw new IndexerServiceException("While parsing group date", e);
-                    }
-                } else if ("@count".equalsIgnoreCase(result.attrNames[i])) {
-                    count = (Long) sm.attrValues.get(i);
-                }
-            }
-
-            if (groupDate != null && count !=null) {
-                resultMap.put(groupDate, count);
-            } else {
-                throw new IndexerServiceException("Cannot find group date or count value in the search result");
-            }
-        }
-
-        return resultMap;
+         return numberOfLogsByDate(from, to, 0, 31);
     }
 
 
@@ -205,6 +179,59 @@ public class SphinxIndexerService implements IIndexerService{
         return resultMap;
     }
 
+    @Override
+    public Map<Date, Long> numberOfLogsByDate(Date from, Date to, Integer offset, Integer limit) throws IndexerServiceException {
+
+        SphinxClient sphinxClient = createSphinxClient();
+
+        setMatchMode(sphinxClient);
+
+        setDate(from, to, sphinxClient);
+
+        setLimits(offset, limit, sphinxClient);
+
+        try {
+            sphinxClient.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
+        } catch (SphinxException e) {
+            LOG.error("While trying to set group by", e);
+            throw new IndexerServiceException("While trying to set group by", e);
+        }
+
+        SphinxResult result = querySphinx("", sphinxClient);
+
+        if (errorOccuredWhileQuerying(sphinxClient, result)) return Collections.emptyMap();
+
+        reportWarningsIfAny(sphinxClient);
+
+        Map<Date, Long> resultMap = new TreeMap<Date, Long>();
+        DateFormat df = new SimpleDateFormat("yyyyMMdd");
+        for(SphinxMatch sm: result.matches) {
+            Date groupDate = null;
+            Long count     = null;
+
+            for (int i= 0; i < sm.attrValues.size(); i++) {
+                if ("@groupby".equalsIgnoreCase(result.attrNames[i])) {
+                    try {
+                        groupDate = df.parse((String.valueOf(sm.attrValues.get(i))));
+                    } catch (ParseException e) {
+                        LOG.error("While parsing group date", e);
+                        throw new IndexerServiceException("While parsing group date", e);
+                    }
+                } else if ("@count".equalsIgnoreCase(result.attrNames[i])) {
+                    count = (Long) sm.attrValues.get(i);
+                }
+            }
+
+            if (groupDate != null && count !=null) {
+                resultMap.put(groupDate, count);
+            } else {
+                throw new IndexerServiceException("Cannot find group date or count value in the search result");
+            }
+        }
+
+        return resultMap;
+    }
+
     private  Map<LogLevel, Long> initTreeMapNumberOfLogsBySeverity(){
         Map<LogLevel, Long> resultMap = new TreeMap<LogLevel, Long>();
         for (LogLevel logLevel : LogLevel.values()) {
@@ -244,5 +271,21 @@ public class SphinxIndexerService implements IIndexerService{
             array[i] = list.get(i);
         }
         return array;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
     }
 }

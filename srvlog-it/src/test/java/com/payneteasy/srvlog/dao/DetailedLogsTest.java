@@ -42,7 +42,7 @@ public class DetailedLogsTest extends CommonIntegrationTest {
 
     @Test
     public void testFireWallDrop() throws Exception {
-        List<FirewallDropData> firewallDropDataList = logDao.getFirewallDropData(nowDate);
+        List<FireWallDropData> firewallDropDataList = logDao.getFirewallDropData(nowDate);
 
         Assert.assertEquals(firewallDropDataList.size(), 1);
     }

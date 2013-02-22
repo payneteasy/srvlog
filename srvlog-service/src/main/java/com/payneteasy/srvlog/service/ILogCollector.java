@@ -1,8 +1,6 @@
 package com.payneteasy.srvlog.service;
 
-import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
 import com.payneteasy.srvlog.data.*;
-import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Date;
 import java.util.List;
@@ -36,7 +34,7 @@ public interface ILogCollector {
 
     List<FirewallAlertData> getFirewallAlertData(Date date);
 
-    List<FirewallDropData> getFirewallDropData(Date date);
+    List<FireWallDropData> getFirewallDropData(Date date);
 
     List<OssecAlertData> getOssecAlertData(Date data);
 

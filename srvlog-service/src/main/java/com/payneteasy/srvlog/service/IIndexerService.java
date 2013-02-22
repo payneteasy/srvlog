@@ -17,4 +17,6 @@ public interface IIndexerService {
     Map<Date,Long> numberOfLogsByDate(Date from, Date to) throws IndexerServiceException;
 
     Map<LogLevel,Long> numberOfLogsBySeverity(Date from, Date to) throws IndexerServiceException;
+
+    Map<Date,Long> numberOfLogsByDate(Date fromDate, Date toDate, Integer offset, Integer limit) throws IndexerServiceException;
 }

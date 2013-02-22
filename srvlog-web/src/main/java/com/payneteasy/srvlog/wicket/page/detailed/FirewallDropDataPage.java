@@ -1,9 +1,7 @@
 package com.payneteasy.srvlog.wicket.page.detailed;
 
-import com.payneteasy.srvlog.data.FirewallAlertData;
-import com.payneteasy.srvlog.data.FirewallDropData;
+import com.payneteasy.srvlog.data.FireWallDropData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -25,9 +23,9 @@ public class FirewallDropDataPage extends DetailedFormPage{
     public FirewallDropDataPage(PageParameters pageParameters) {
         super(pageParameters, FirewallDropDataPage.class);
 
-        LoadableDetachableModel<List<FirewallDropData>> listDataModel = new LoadableDetachableModel<List<FirewallDropData>>() {
+        LoadableDetachableModel<List<FireWallDropData>> listDataModel = new LoadableDetachableModel<List<FireWallDropData>>() {
             @Override
-            protected List<FirewallDropData> load() {
+            protected List<FireWallDropData> load() {
                 if(getForm().hasError()){
                     return Collections.emptyList();
                 }
@@ -35,10 +33,10 @@ public class FirewallDropDataPage extends DetailedFormPage{
             }
         };
 
-        final ListView<FirewallDropData> listView = new ListView<FirewallDropData>("list-view", listDataModel) {
+        final ListView<FireWallDropData> listView = new ListView<FireWallDropData>("list-view", listDataModel) {
             @Override
-            protected void populateItem(ListItem<FirewallDropData> item) {
-                FirewallDropData firewallDropData = item.getModelObject();
+            protected void populateItem(ListItem<FireWallDropData> item) {
+                FireWallDropData firewallDropData = item.getModelObject();
                 item.add(new Label("protocol", firewallDropData.getProtocol()));
                 item.add(new Label("drop-count", firewallDropData.getDropCount()));
                 item.add(new Label("dist-ip", firewallDropData.getDestinationIp()));

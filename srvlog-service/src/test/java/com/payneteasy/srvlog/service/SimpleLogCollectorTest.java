@@ -240,7 +240,7 @@ public class SimpleLogCollectorTest {
         logCollector.setLogDao(logDao);
 
         Date now = new Date();
-        EasyMock.expect(logDao.getFirewallDropData(now)).andReturn(Collections.<FirewallDropData>emptyList());
+        EasyMock.expect(logDao.getFirewallDropData(now)).andReturn(Collections.<FireWallDropData>emptyList());
 
         EasyMock.replay(logDao);
 

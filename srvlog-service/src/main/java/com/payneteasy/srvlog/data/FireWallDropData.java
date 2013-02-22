@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * Date: 17.02.13 Time: 17:16
  */
-public class FirewallDropData implements Serializable{
+public class FireWallDropData implements Serializable{
     private String sourceIp;
     private String destinationIp;
     private String sourcePort;
@@ -69,7 +69,7 @@ public class FirewallDropData implements Serializable{
 
     @Override
     public String toString() {
-        return "FirewallDropData{" +
+        return "FireWallDropData{" +
                 "sourceIp='" + sourceIp + '\'' +
                 ", destinationIp='" + destinationIp + '\'' +
                 ", sourcePort='" + sourcePort + '\'' +
@@ -82,9 +82,9 @@ public class FirewallDropData implements Serializable{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FirewallDropData)) return false;
+        if (!(o instanceof FireWallDropData)) return false;
 
-        FirewallDropData that = (FirewallDropData) o;
+        FireWallDropData that = (FireWallDropData) o;
 
         if (destinationIp != null ? !destinationIp.equals(that.destinationIp) : that.destinationIp != null)
             return false;

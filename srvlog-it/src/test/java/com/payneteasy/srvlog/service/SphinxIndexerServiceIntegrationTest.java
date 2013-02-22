@@ -3,14 +3,12 @@ package com.payneteasy.srvlog.service;
 import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.service.impl.SphinxIndexerService;
 import com.payneteasy.srvlog.util.DateRange;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
-import org.sphx.api.SphinxMatch;
-import org.sphx.api.SphinxResult;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
@@ -161,8 +159,21 @@ public class SphinxIndexerServiceIntegrationTest {
         }
     }
 
-    public static void main(String[] args) throws SphinxException {
-        SphinxClient client = new SphinxClient();
+    public static void main(String[] args) throws SphinxException, IndexerServiceException {
+        SphinxIndexerService service = new SphinxIndexerService();
+        service.setHost("93.188.253.57");
+        service.setPort(9312);
+        service.setConnectTimeout(30000);
+
+        DateRange thisMonth = DateRange.thisMonth();
+        Map<Date, Long> dateLongMap = service.numberOfLogsByDate(thisMonth.getFromDate(), thisMonth.getToDate(), 0, 30);
+
+        System.out.println(dateLongMap.size());
+
+
+        /*SphinxClient client = new SphinxClient("93.188.253.57", 9312);
+        client.SetConnectTimeout(1000000);
+
         client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
         client.SetLimits(0, 100);
         //client.SetSelect("@count as mycount, @group as mygroup");
@@ -189,7 +200,7 @@ public class SphinxIndexerServiceIntegrationTest {
 
         }
 
-        System.out.println(result.matches.length + " results found");
+        System.out.println("\n " + result.matches.length + " results found");*/
     }
 
 }

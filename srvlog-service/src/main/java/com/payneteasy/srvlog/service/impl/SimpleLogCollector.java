@@ -90,7 +90,7 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public List<FirewallDropData> getFirewallDropData(Date date) {
+    public List<FireWallDropData> getFirewallDropData(Date date) {
         return logDao.getFirewallDropData(date);
     }
 

@@ -1,9 +1,7 @@
 package com.payneteasy.srvlog.wicket.page.detailed;
 
-import com.payneteasy.srvlog.data.FirewallDropData;
 import com.payneteasy.srvlog.data.OssecAlertData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
