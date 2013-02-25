@@ -41,7 +41,10 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     @PostConstruct
     public void init() {
-        LOG.info("  Starting syslog4j server....");
+        int port = logAdapterConfig.getSyslogPort();
+        String protocol = logAdapterConfig.getSyslogProtocol();
+        LOG.info("  Starting syslog4j server on port = {} and on protocol = {} ...", port, protocol );
+
 
         // Stupid thing which needs to be done for integration tests. However it does not affect application performance anyhow
         SyslogServer.shutdown();

@@ -45,7 +45,7 @@
 
     <!-- WICKET FILTER -->
     <filter>
-        <filter-name>wicket.srvacc</filter-name>
+        <filter-name>wicket.srvlog</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationClassName</param-name>
@@ -58,7 +58,7 @@
     </filter>
 
     <filter-mapping>
-        <filter-name>wicket.srvacc</filter-name>
+        <filter-name>wicket.srvlog</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
