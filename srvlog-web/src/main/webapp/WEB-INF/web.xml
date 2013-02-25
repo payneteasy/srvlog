@@ -62,4 +62,15 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+
+    <servlet>
+        <servlet-name>showVersionNumber</servlet-name>
+        <servlet-class>com.payneteasy.srvlog.ShowVersionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>showVersionNumber</servlet-name>
+        <url-pattern>/management/version.txt</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -28,13 +28,13 @@ public class SphinxIndexerService implements IIndexerService{
 
     private static final Logger LOG = LoggerFactory.getLogger(SphinxIndexerService.class);
 
-    @Value( "${host}" )
+    @Value( "${sphinxHost}" )
     private String host;
 
-    @Value( "${port}" )
+    @Value( "${sphinxPort}" )
     private int port;
 
-    @Value( "${connectTimeout}" )
+    @Value( "${sphinxConnectTimeout}" )
     private int connectTimeout;
 
     @Override
