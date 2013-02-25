@@ -50,13 +50,13 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         SyslogServer.shutdown();
         SyslogServer.initialize();
         // Now create a new instance of Syslog.
-        syslog4jInstance = SyslogServer.getInstance(logAdapterConfig.getSyslogProtocol());
-        syslog4jInstance.getConfig().setPort(logAdapterConfig.getSyslogPort());
+        syslog4jInstance = SyslogServer.getInstance(protocol);
+        syslog4jInstance.getConfig().setPort(port);
         syslog4jInstance.getConfig().addEventHandler(this);
         syslog4jInstance.getConfig().setUseStructuredData(true);
 
         LOG.info("  Trying to obtain threaded instance of syslog server....");
-        SyslogServer.getThreadedInstance(logAdapterConfig.getSyslogProtocol());
+        SyslogServer.getThreadedInstance(protocol);
 
         LOG.info("  Waiting for syslog4j server to be run ...");
         for (int i = 0; i < 10 && !syslog4jInstance.isStarted(); i++) {
@@ -69,7 +69,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             LOG.info("  Waiting for syslog4j server to be run. {} seconds passed ", i);
         }
 
-        LOG.info("Syslog server successfully started on port={}, using protocol={}", logAdapterConfig.getSyslogPort(), logAdapterConfig.getSyslogProtocol());
+        LOG.info("Syslog server successfully started on port={}, using protocol={}", port, protocol);
     }
 
 
