@@ -251,7 +251,6 @@ public class DatabaseUtil {
         logDao.saveHost(hostData);
 
         HostData localhostAsIp = new HostData(); //trick for W7
-        localhostAsIp = new HostData();
         localhostAsIp.setHostname("127.0.0.1");
         logDao.saveHost(localhostAsIp);
 

@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import com.nesscomputing.syslog4j.server.impl.event.SyslogServerEvent;
+import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -8,7 +9,6 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import sun.util.resources.CalendarData_ar;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -45,7 +45,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        setHostName(inetAddress, logData);
+        AdapterHelper.setHostName(inetAddress, logData);
 
         logData.setProgram("monit");
         logData.setMessage("[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
@@ -76,7 +76,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.local0.getValue());
         logData.setSeverity(LogLevel.WARN.getValue());
 
-        setHostName(inetAddress, logData);
+        AdapterHelper.setHostName(inetAddress, logData);
 
         logData.setProgram("ossec");
         logData.setMessage(": Alert Level: 2; Rule: 1002 - Unknown problem somewhere in the system.; Location: (sso) 10.0.1.7->/var/log/messages; Feb 17 13:50:19 sso syslog-ng[8332]: Connection failed; server='AF_INET(10.0.1.4:2514)', error='Connection refused (111)', time_reopen='10'");
@@ -105,7 +105,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        setHostName(inetAddress, logData);
+        AdapterHelper.setHostName(inetAddress, logData);
 
         logData.setProgram("monit");
         logData.setMessage("[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
@@ -134,7 +134,7 @@ public class SyslogAdapterTest {
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.NOTICE.getValue());
 
-        setHostName(inetAddress, logData);
+        AdapterHelper.setHostName(inetAddress, logData);
 
         logData.setMessage("123456789012345678901234567890123456789monit[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]");
         mockLogCollector.saveLog(logData);
@@ -148,14 +148,5 @@ public class SyslogAdapterTest {
 
 //      PRIVATE METHODS
 
-    private void setHostName(InetAddress inetAddress, LogData logData) {
-        String hostName = inetAddress.getHostName();
-        int j = hostName.indexOf('.');
-
-        if (j > -1) {
-            hostName = hostName.substring(0,j);
-        }
-        logData.setHost(hostName);
-    }
 }
 

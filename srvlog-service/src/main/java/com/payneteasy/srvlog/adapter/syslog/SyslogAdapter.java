@@ -84,7 +84,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
 
         for (int i = 0; i < 5 && !syslog4jInstance.isStopped(); i++) {
-            LOG.info("  Waiting syslog4j server to be stop ...");
+            LOG.info("  Waiting for syslog4j server to stop ...");
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -92,7 +92,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             }
         }
         if (!syslog4jInstance.isStopped()) {
-            LOG.info("Syslog server was not stopped in 5 seconds interval");
+            LOG.info("Syslog server was not being stopped in 5 seconds interval");
         }
     }
 
