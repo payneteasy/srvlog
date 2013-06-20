@@ -24,41 +24,6 @@ public class Log4jAdapterTest {
 
     private static final Logger log = Logger.getLogger(Log4jAdapterTest.class);
 
-    @Before
-    public void setUp() {
-
-       /*new Thread(new Runnable()  {
-
-            @Override
-            public void run() {
-                try {
-                    //cat.info("Listening on port " + port);
-                    ServerSocket serverSocket = new ServerSocket(4712);
-                    while(true) {
-                        //cat.info("Waiting to accept a new client.");
-                        Socket socket = serverSocket.accept();
-                        //cat.info("Connected to client at " + socket.getInetAddress());
-                        //cat.info("Starting new socket node.");
-                        new Thread(new Log4jNode(socket)).start();
-
-*//*
-                        new SocketNode(socket,
-                        LogManager.getLoggerRepository()),"SimpleSocketServer-" + port).start();
-*//*
-                    }
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();*/
-
-        /*try {
-            Thread.sleep(1000*5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-    }
 
     @Test
     public void testSendLog4jLog() throws IOException {
@@ -97,22 +62,5 @@ public class Log4jAdapterTest {
 
 
     }
-
-
-    //LoggingEvent processEvent = new LoggingEvent();
-    //log.warn("This is test logging", new RuntimeException("This is test runtime exception!!!"));
-
-       /* Socket socket = new Socket(InetAddress.getHost(), 4712);
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(new LoggingEvent(Log.class.getName(), log, Level.WARN, "This is test logging", null));
-
-        } finally {
-            IOUtils.closeQuietly(oos);
-            IOUtils.closeQuietly(socket);
-        }*/
-    //log.warn("This is test logging");
-
 
 }
