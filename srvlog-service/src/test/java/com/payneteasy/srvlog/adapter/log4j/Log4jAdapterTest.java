@@ -9,7 +9,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.easymock.EasyMock;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
@@ -54,7 +53,7 @@ public class Log4jAdapterTest {
         EasyMock.replay(mockLogCollector);
 
         LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log, c.getTime().getTime(), Level.WARN, "This is test logging", null);
-        log4jAdapter.processEvent(new ServerLog4jEvent(logEvent, InetAddress.getLocalHost()));
+        log4jAdapter.processEvent(new ServerLog4JEvent(logEvent, InetAddress.getLocalHost()));
 
         EasyMock.verify(mockLogCollector);
 

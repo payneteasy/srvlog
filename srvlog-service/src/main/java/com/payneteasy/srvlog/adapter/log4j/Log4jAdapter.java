@@ -7,8 +7,6 @@ import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.spi.LoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +98,7 @@ public class Log4jAdapter {
         return logCollector;
     }
 
-    public void processEvent(ServerLog4jEvent logEvent) {
+    public void processEvent(ServerLog4JEvent logEvent) {
         LogData logData = new LogData();
         String address = logEvent.getHost().getHostAddress();
         logData.setHost(AdapterHelper.extractHostname(logEvent.getHost()));
@@ -164,7 +162,7 @@ public class Log4jAdapter {
                 if (ois != null) {
                     while(true) {
                         LoggingEvent event = (LoggingEvent) ois.readObject();
-                        log4jAdapter.processEvent(new ServerLog4jEvent(event, socket.getInetAddress()));
+                        log4jAdapter.processEvent(new ServerLog4JEvent(event, socket.getInetAddress()));
                     }
                 }
             } catch(java.io.EOFException e) {
