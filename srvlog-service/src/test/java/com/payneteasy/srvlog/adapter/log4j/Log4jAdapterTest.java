@@ -53,7 +53,7 @@ public class Log4jAdapterTest {
         EasyMock.replay(mockLogCollector);
 
         LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log, c.getTime().getTime(), Level.WARN, "This is test logging", null);
-        log4jAdapter.processEvent(new ServerLog4JEvent(logEvent, InetAddress.getLocalHost()));
+        log4jAdapter.processEvent(new ServerLog4jEvent(logEvent, InetAddress.getLocalHost()));
 
         EasyMock.verify(mockLogCollector);
 

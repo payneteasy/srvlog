@@ -98,7 +98,7 @@ public class Log4jAdapter {
         return logCollector;
     }
 
-    public void processEvent(ServerLog4JEvent logEvent) {
+    public void processEvent(ServerLog4jEvent logEvent) {
         LogData logData = new LogData();
         String address = logEvent.getHost().getHostAddress();
         logData.setHost(AdapterHelper.extractHostname(logEvent.getHost()));
@@ -162,7 +162,7 @@ public class Log4jAdapter {
                 if (ois != null) {
                     while(true) {
                         LoggingEvent event = (LoggingEvent) ois.readObject();
-                        log4jAdapter.processEvent(new ServerLog4JEvent(event, socket.getInetAddress()));
+                        log4jAdapter.processEvent(new ServerLog4jEvent(event, socket.getInetAddress()));
                     }
                 }
             } catch(java.io.EOFException e) {
