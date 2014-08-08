@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 
 /**
@@ -20,11 +21,11 @@ import java.io.File;
 public class StartUI {
     private  static final Logger LOG = LoggerFactory.getLogger(StartUI.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
         new StartUI().startServerUI();
     }
 
-    private void startServerUI(){
+    private void startServerUI() throws MalformedURLException {
         LOG.info("Configuring jetty web server ...");
 
         final Server server = new Server();
@@ -48,6 +49,7 @@ public class StartUI {
         srvacc.setContextPath("/");
         srvacc.setWar("src/main/webapp");
         EnvConfiguration envConfiguration = new EnvConfiguration();
+        envConfiguration.setJettyEnvXml(new File("src/test/resources/jetty/jetty-env-ui.xml").toURI().toURL());
         Configuration[] configurations = new Configuration[]{
                 new WebInfConfiguration(),
                 new WebXmlConfiguration(),

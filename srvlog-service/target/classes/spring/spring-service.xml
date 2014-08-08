@@ -13,6 +13,9 @@
 
     <context:component-scan base-package="com.payneteasy.srvlog.service"/>
 
-    <context:property-placeholder location="classpath:syslog4j.properties"/>
+    <context:property-placeholder location="classpath*:syslog4j.properties, file:///${syslogProperties},
+    classpath*:sphinxclient.properties, file:///${sphinxclientProperties},
+    classpath*:log4jAdapter.properties, file:///${log4jAdapterProperties}"
+                                  ignore-resource-not-found="true" />
 
 </beans>

@@ -14,7 +14,7 @@
         <module>srvlog-web</module>
         <module>srvlog-it</module>
         <module>srvlog-sql</module>
-  </modules>
+    </modules>
 
     <repositories>
         <repository>
