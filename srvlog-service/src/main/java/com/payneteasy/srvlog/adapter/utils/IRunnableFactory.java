@@ -6,7 +6,7 @@ import java.net.Socket;
  * Date: 19.06.13
  * Time: 23:28
  */
-public interface IRunnableFacotry {
+public interface IRunnableFactory {
 
     public Runnable createWorker(Socket clientSocket);
 

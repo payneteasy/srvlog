@@ -65,7 +65,7 @@ public class SimpleLogCollector implements ILogCollector {
         if(StringUtils.hasText(stringIds)){
             return logDao.getLogsByIds(stringIds);
         }else {
-            return Collections.<LogData>emptyList();
+            return Collections.emptyList();
         }
     }
 

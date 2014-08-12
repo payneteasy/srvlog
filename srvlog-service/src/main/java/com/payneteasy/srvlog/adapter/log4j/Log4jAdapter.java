@@ -1,7 +1,7 @@
 package com.payneteasy.srvlog.adapter.log4j;
 
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
-import com.payneteasy.srvlog.adapter.utils.IRunnableFacotry;
+import com.payneteasy.srvlog.adapter.utils.IRunnableFactory;
 import com.payneteasy.srvlog.adapter.utils.ThreadPooledServer;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
@@ -49,7 +49,7 @@ public class Log4jAdapter {
 
     @PostConstruct
     public void init() {
-        server = new ThreadPooledServer(log4jPort,  new IRunnableFacotry() {
+        server = new ThreadPooledServer(log4jPort,  new IRunnableFactory() {
             @Override
             public Runnable createWorker(Socket clientSocket) {
                 return new Log4jNode(clientSocket, Log4jAdapter.this);

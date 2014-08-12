@@ -18,7 +18,7 @@ public class ThreadPooledServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ThreadPooledServer.class);
 
     protected int serverPort = 8080;
-    private final IRunnableFacotry workerFacotory;
+    private final IRunnableFactory workerFactory;
     protected ServerSocket serverSocket = null;
     protected boolean stopped = false;
     protected boolean started = false;
@@ -26,9 +26,9 @@ public class ThreadPooledServer implements Runnable {
     protected ExecutorService threadPool =
             Executors.newFixedThreadPool(10);
 
-    public ThreadPooledServer(int port, IRunnableFacotry workerFacotory) {
+    public ThreadPooledServer(int port, IRunnableFactory workerFactory) {
         this.serverPort = port;
-        this.workerFacotory = workerFacotory;
+        this.workerFactory = workerFactory;
     }
 
     public void run() {
@@ -37,7 +37,7 @@ public class ThreadPooledServer implements Runnable {
         }
         openServerSocket();
         while (!isStopped()) {
-            Socket clientSocket = null;
+            Socket clientSocket;
             try {
                 started = true;
                 clientSocket = this.serverSocket.accept();
@@ -50,7 +50,7 @@ public class ThreadPooledServer implements Runnable {
                         "Error accepting client connection", e);
             }
             this.threadPool.execute(
-                    workerFacotory.createWorker(clientSocket));
+                    workerFactory.createWorker(clientSocket));
         }
         this.threadPool.shutdown();
         logger.info("Server Stopped.");
