@@ -7,13 +7,19 @@ import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Date: 16.06.13
@@ -25,41 +31,88 @@ public class Log4jAdapterTest {
 
 
     @Test
-    public void testSendLog4jLog() throws IOException {
+    public void testSendLog4jLogDirectly() throws IOException {
 
         Log4jAdapter log4jAdapter = new Log4jAdapter();
         log4jAdapter.setProgram("paynet");
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         log4jAdapter.setLogCollector(mockLogCollector);
 
+        Calendar c = buildReferenceCalendar();
+        LogData logData = buildReferenceLogData(c);
+
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockLogCollector);
+
+        LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                c.getTime().getTime(), Level.WARN, "This is test logging", null);
+        log4jAdapter.processEvent(new ServerLog4JEvent(logEvent, InetAddress.getLoopbackAddress()));
+
+        EasyMock.verify(mockLogCollector);
+    }
+
+    @Test
+    public void testSendLog4jLogUsingTCP() throws IOException, InterruptedException {
+
+        final CountDownLatch savedLatch = new CountDownLatch(1);
+
+        Log4jAdapter log4jAdapter = new Log4jAdapter();
+        log4jAdapter.setProgram("paynet");
+        log4jAdapter.setLog4jPort(4712);
+        ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
+        log4jAdapter.setLogCollector(mockLogCollector);
+
+        Calendar c = buildReferenceCalendar();
+        LogData logData = buildReferenceLogData(c);
+
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
+            public Object answer() throws Throwable {
+                savedLatch.countDown();
+                return null;
+            }
+        });
+        EasyMock.replay(mockLogCollector);
+
+        // initializing, binding to the server socket...
+        log4jAdapter.init();
+
+        SocketAppender appender = new SocketAppender("localhost", 4712);
+
+        LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                c.getTime().getTime(), Level.WARN, "This is test logging", null);
+        appender.append(logEvent);
+
+        // waiting for 5 seconds at maximum
+        Assert.assertTrue(savedLatch.await(5, TimeUnit.SECONDS));
+
+        log4jAdapter.destroy();
+
+        EasyMock.verify(mockLogCollector);
+    }
+
+    private LogData buildReferenceLogData(Calendar c) throws UnknownHostException {
         LogData logData = new LogData();
-        Calendar c = Calendar.getInstance();
-        c.set(2013, 01, 17, 13, 50, 21);
-        c.set(Calendar.MILLISECOND, 0);
-
-
 
 
         logData.setDate(c.getTime());
         logData.setFacility(LogFacility.user.getValue());
         logData.setSeverity(LogLevel.WARN.getValue());
 
-        AdapterHelper.setHostName(InetAddress.getLocalHost(), logData);
+        AdapterHelper.setHostName(InetAddress.getLoopbackAddress(), logData);
 
         logData.setProgram("paynet");
         logData.setMessage("This is test logging");
-        mockLogCollector.saveLog(logData);
-        EasyMock.expectLastCall();
-        EasyMock.replay(mockLogCollector);
+        return logData;
+    }
 
-        LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log, c.getTime().getTime(), Level.WARN, "This is test logging", null);
-        log4jAdapter.processEvent(new ServerLog4JEvent(logEvent, InetAddress.getLocalHost()));
-
-        EasyMock.verify(mockLogCollector);
-
-
-
-
+    private Calendar buildReferenceCalendar() {
+        Calendar c = Calendar.getInstance();
+        c.set(2013, 01, 17, 13, 50, 21);
+        c.set(Calendar.MILLISECOND, 0);
+        return c;
     }
 
 }

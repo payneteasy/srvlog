@@ -67,6 +67,10 @@ public class Log4jAdapter {
             logger.info("  Waiting for log4j server to be run. {} seconds passed ", i);
         }
 
+        if (!server.isStarted()) {
+            throw new IllegalStateException("Could not start log4j server on port " + log4jPort);
+        }
+
         logger.info("log4j server successfully started on port={}", log4jPort);
     }
 
@@ -98,7 +102,7 @@ public class Log4jAdapter {
         return logCollector;
     }
 
-    public void processEvent(ServerLog4JEvent logEvent) {
+    void processEvent(ServerLog4JEvent logEvent) {
         LogData logData = new LogData();
         String address = logEvent.getHost().getHostAddress();
         logData.setHost(AdapterHelper.extractHostname(logEvent.getHost()));
@@ -130,6 +134,10 @@ public class Log4jAdapter {
 
     public String getProgram() {
         return program;
+    }
+
+    public void setLog4jPort(int log4jPort) {
+        this.log4jPort = log4jPort;
     }
 
     //Copied partially from log4j library
