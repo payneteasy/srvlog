@@ -32,11 +32,9 @@ public class Log4jAdapterTest {
 
     @Test
     public void testSendLog4jLogDirectly() throws IOException {
-
-        Log4jAdapter log4jAdapter = new Log4jAdapter();
-        log4jAdapter.setProgram("paynet");
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
-        log4jAdapter.setLogCollector(mockLogCollector);
+
+        Log4jAdapter log4jAdapter = new Log4jAdapter(mockLogCollector, "paynet", 4000);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -57,11 +55,9 @@ public class Log4jAdapterTest {
 
         final CountDownLatch savedLatch = new CountDownLatch(1);
 
-        Log4jAdapter log4jAdapter = new Log4jAdapter();
-        log4jAdapter.setProgram("paynet");
-        log4jAdapter.setLog4jPort(4712);
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
-        log4jAdapter.setLogCollector(mockLogCollector);
+
+        Log4jAdapter log4jAdapter = new Log4jAdapter(mockLogCollector, "paynet", 4712);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
