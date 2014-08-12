@@ -17,24 +17,21 @@ public class ThreadPooledServer implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ThreadPooledServer.class);
 
-    protected int serverPort = 8080;
+    private final int serverPort;
     private final IRunnableFactory workerFactory;
-    protected ServerSocket serverSocket = null;
-    protected boolean stopped = false;
-    protected boolean started = false;
-    protected Thread runningThread = null;
-    protected ExecutorService threadPool =
-            Executors.newFixedThreadPool(10);
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
+    private ServerSocket serverSocket = null;
+    private boolean stopped = false;
+    private boolean started = false;
 
     public ThreadPooledServer(int port, IRunnableFactory workerFactory) {
         this.serverPort = port;
         this.workerFactory = workerFactory;
     }
 
+    @Override
     public void run() {
-        synchronized (this) {
-            this.runningThread = Thread.currentThread();
-        }
         openServerSocket();
         while (!isStopped()) {
             Socket clientSocket;
@@ -82,5 +79,3 @@ public class ThreadPooledServer implements Runnable {
         }
     }
 }
-
-
