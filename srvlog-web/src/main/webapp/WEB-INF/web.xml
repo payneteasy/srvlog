@@ -40,7 +40,7 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
     </listener>
 
     <!-- WICKET FILTER -->

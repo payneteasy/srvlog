@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration>
+<!--
+  <appender name="server" class="ch.qos.logback.classic.net.SocketAppender">
+    &lt;!&ndash;No layout specified for appender named [server] of class [org.apache.log4j.net.SocketAppender]&ndash;&gt;
+    <ReconnectionDelay>1000</ReconnectionDelay>
+    <Port>4712</Port>
+    <RemoteHost>localhost</RemoteHost>
+  </appender>
+-->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <pattern>ps %d{HH:mm:ss} %-15t %-5p %-26.26c{1} - %m%n</pattern>
+    </encoder>
+  </appender>
+<!--
+  <appender name="file" class="ch.qos.logback.core.FileAppender">
+    <file>target/output.log</file>
+    <encoder>
+      <pattern>ps %d{HH:mm:ss} %-15t %-5p %-26.26c{1} - %m%n</pattern>
+    </encoder>
+  </appender>
+-->
+<!--
+  <logger name="com.payneteasy.srvlog.adapter.log4j.Log4jAdapterTest" level="WARN">
+    <appender-ref ref="server"/>
+  </logger>
+-->
+  <logger name="com.payneteasy.srvlog" level="INFO"/>
+  <root level="INFO">
+    <appender-ref ref="console"/>
+    <!--<appender-ref ref="file"/>-->
+  </root>
+</configuration>

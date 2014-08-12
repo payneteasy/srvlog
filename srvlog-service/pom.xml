@@ -35,13 +35,20 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
       </dependency>
+<!--
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-log4j12</artifactId>
       </dependency>
+-->
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>jcl-over-slf4j</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
       </dependency>
 
       <!-- SPRING -->
@@ -70,8 +77,6 @@
       <dependency>
           <groupId>com.nesscomputing</groupId>
           <artifactId>ness-syslog4j</artifactId>
-          <version>0.9.47-NESS-8-SNAPSHOT</version>
-          <!--TODO move to parent artefact-->
       </dependency>
 
       <dependency>

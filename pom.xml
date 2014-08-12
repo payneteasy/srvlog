@@ -131,11 +131,13 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+<!--
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+-->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
@@ -145,6 +147,12 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.1.2</version>
             </dependency>
 
             <!-- SPRING -->
@@ -197,11 +205,24 @@
                 <version>${spring.security.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.logback-extensions</groupId>
+                <artifactId>logback-ext-spring</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+
             <!-- proc jdbc -->
             <dependency>
                 <artifactId>jdbc-proc-daofactory</artifactId>
                 <groupId>com.googlecode.jdbc-proc.jdbc-proc</groupId>
                 <version>${jdbc-proc.version}</version>
+            </dependency>
+
+            <!--syslog4j from ness computing-->
+            <dependency>
+                <groupId>com.nesscomputing</groupId>
+                <artifactId>ness-syslog4j</artifactId>
+                <version>0.9.47-NESS-8-SNAPSHOT</version>
             </dependency>
 
             <!--Easy Mock -->
