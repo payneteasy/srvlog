@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.adapter.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,7 +20,8 @@ public class ThreadPooledServer implements Runnable {
 
     private final int serverPort;
     private final IRunnableFactory workerFactory;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(10);
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(10,
+            new CustomizableThreadFactory("tcp-logger-processor-"));
 
     private ServerSocket serverSocket = null;
     private boolean stopped = false;

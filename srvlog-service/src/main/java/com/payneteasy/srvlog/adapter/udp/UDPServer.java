@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.adapter.udp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -32,11 +33,14 @@ public class UDPServer {
     private final int serverPort;
     private final IDatagramProcessor datagramProcessor;
     // this executor must be single-threaded
-    private final ExecutorService acceptorExecutor = Executors.newSingleThreadExecutor();
+    private final ExecutorService acceptorExecutor = Executors.newSingleThreadExecutor(
+            new CustomizableThreadFactory("udp-acceptor-"));
     private DatagramChannel channel;
 
     private final BlockingQueue<Datagram> queue;
-    private final ExecutorService processingExecutor = Executors.newSingleThreadExecutor();
+    private final ExecutorService processingExecutor = Executors.newSingleThreadExecutor(
+            new CustomizableThreadFactory("udp-processor-")
+    );
 
     private volatile boolean started = false;
     private volatile boolean stopped = false;

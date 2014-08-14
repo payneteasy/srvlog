@@ -5,6 +5,7 @@ import com.payneteasy.srvlog.adapter.utils.ThreadPooledServer;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -21,7 +22,8 @@ public abstract class AbstractTCPLoggerAdapter {
     private final int serverPort;
 
     private ThreadPooledServer server = null;
-    private final ExecutorService serverRunner = Executors.newSingleThreadExecutor();
+    private final ExecutorService serverRunner = Executors.newSingleThreadExecutor(
+            new CustomizableThreadFactory("tcp-logger-acceptor-"));
 
     protected AbstractTCPLoggerAdapter(ILogCollector logCollector, String program, int serverPort) {
         this.logCollector = logCollector;
