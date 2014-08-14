@@ -33,22 +33,22 @@ public abstract class AbstractLoggerAdapter {
     public void init() {
         server = new ThreadPooledServer(serverPort, createWorkerFactory());
         serverRunner.execute(server);
-        logger.info("  Waiting for " + getLoggerTypeName() + " server to be run ...");
+        logger.info("  Waiting for " + getLoggerTypeName() + " TCP server to be run ...");
         for (int i = 0; i < 10 && !server.isStarted(); i++) {
 
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
-                logger.error(" Can't run " + getLoggerTypeName() + " server", e);
+                logger.error(" Can't run " + getLoggerTypeName() + " TCP server", e);
             }
-            logger.info("  Waiting for " + getLoggerTypeName() + " server to be run. {} seconds passed ", i);
+            logger.info("  Waiting for " + getLoggerTypeName() + " TCP server to be run. {} seconds passed ", i);
         }
 
         if (!server.isStarted()) {
-            throw new IllegalStateException("Could not start " + getLoggerTypeName() + " server on port " + serverPort);
+            throw new IllegalStateException("Could not start " + getLoggerTypeName() + " TCP server on port " + serverPort);
         }
 
-        logger.info(getLoggerTypeName() + " server successfully started on port={}", serverPort);
+        logger.info(getLoggerTypeName() + " TCP server successfully started on port={}", serverPort);
     }
 
     protected abstract String getLoggerTypeName();
@@ -57,20 +57,20 @@ public abstract class AbstractLoggerAdapter {
 
     @PreDestroy
     public void destroy() {
-        logger.info("  Stopping " + getLoggerTypeName() + " server ...");
+        logger.info("  Stopping " + getLoggerTypeName() + " TCP server ...");
 
         server.stop();
 
         for (int i = 0; i < 5 && !server.isStopped(); i++) {
-            logger.info("  Waiting for " + getLoggerTypeName() + " server to stop ...");
+            logger.info("  Waiting for " + getLoggerTypeName() + " TCP server to stop ...");
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
-                logger.error(" Can't stop " + getLoggerTypeName() + " server", e);
+                logger.error(" Can't stop " + getLoggerTypeName() + " TCP server", e);
             }
         }
         if (!server.isStopped()) {
-            logger.warn(getLoggerTypeName() + " server was not stopped in 5 seconds interval");
+            logger.warn(getLoggerTypeName() + " TCP server was not stopped in 5 seconds interval");
         }
     }
 

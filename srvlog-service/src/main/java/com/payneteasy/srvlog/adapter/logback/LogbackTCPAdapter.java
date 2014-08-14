@@ -17,17 +17,13 @@ import org.springframework.stereotype.Service;
 import java.net.Socket;
 import java.util.Date;
 
-/**
- * Date: 19.06.13
- * Time: 20:04
- */
 @Service
-public class LogbackAdapter extends AbstractLoggerAdapter {
+public class LogbackTCPAdapter extends AbstractLoggerAdapter {
     @Autowired
-    public LogbackAdapter(
+    public LogbackTCPAdapter(
             ILogCollector logCollector,
             @Value("${logbackProgram}") String program,
-            @Value("${logbackPort}") int serverPort) {
+            @Value("${logbackTCPPort}") int serverPort) {
         super(logCollector, program, serverPort);
     }
 
@@ -41,7 +37,7 @@ public class LogbackAdapter extends AbstractLoggerAdapter {
         return new IRunnableFactory() {
             @Override
             public Runnable createWorker(Socket clientSocket) {
-                return new LogbackNode(clientSocket, LogbackAdapter.this);
+                return new LogbackNode(clientSocket, LogbackTCPAdapter.this);
             }
         };
     }
@@ -73,9 +69,9 @@ public class LogbackAdapter extends AbstractLoggerAdapter {
     //Copied partially from log4j library
     private static class LogbackNode extends LoggerAcceptorNode<ILoggingEvent> {
 
-        private final LogbackAdapter logbackAdapter;
+        private final LogbackTCPAdapter logbackAdapter;
 
-        private LogbackNode(Socket socket, LogbackAdapter logbackAdapter) {
+        private LogbackNode(Socket socket, LogbackTCPAdapter logbackAdapter) {
             super(socket, logger);
             this.logbackAdapter = logbackAdapter;
         }

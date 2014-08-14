@@ -2,9 +2,9 @@ package com.payneteasy.srvlog.adapter.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.net.SocketAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import com.payneteasy.loggingextensions.logback.UDPAppender;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
@@ -23,20 +23,16 @@ import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Date: 16.06.13
- * Time: 19:43
- */
-public class LogbackAdapterTest {
+public class LogbackUDPAdapterTest {
 
-    private static final Logger log = (Logger) LoggerFactory.getLogger(LogbackAdapterTest.class);
+    private static final Logger log = (Logger) LoggerFactory.getLogger(LogbackUDPAdapterTest.class);
 
 
     @Test
     public void testSendLogbackLogDirectly() throws IOException {
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        LogbackAdapter logbackAdapter = new LogbackAdapter(mockLogCollector, "paynet", 4000);
+        LogbackUDPAdapter logbackAdapter = new LogbackUDPAdapter(mockLogCollector, "paynet", 4000);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -59,7 +55,7 @@ public class LogbackAdapterTest {
 
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        LogbackAdapter logbackAdapter = new LogbackAdapter(mockLogCollector, "paynet", 4713);
+        LogbackUDPAdapter logbackAdapter = new LogbackUDPAdapter(mockLogCollector, "paynet", 4713);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -77,14 +73,14 @@ public class LogbackAdapterTest {
         // initializing, binding to the server socket...
         logbackAdapter.init();
 
-        SocketAppender appender = new SocketAppender();
+        UDPAppender appender = new UDPAppender();
         appender.setRemoteHost("localhost");
         appender.setPort(4713);
         appender.setContext(log.getLoggerContext());
         appender.start();
 
         ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
-                /*c.getTime().getTime(), */Level.WARN, "This is test logging", null, null);
+                Level.WARN, "This is test logging", null, null);
         appender.doAppend(logEvent);
 
         // waiting for 5 seconds at maximum
