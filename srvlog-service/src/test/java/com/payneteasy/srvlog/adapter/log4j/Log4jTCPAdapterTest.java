@@ -25,16 +25,16 @@ import java.util.concurrent.TimeUnit;
  * Date: 16.06.13
  * Time: 19:43
  */
-public class Log4jAdapterTest {
+public class Log4jTCPAdapterTest {
 
-    private static final Logger log = Logger.getLogger(Log4jAdapterTest.class);
+    private static final Logger log = Logger.getLogger(Log4jTCPAdapterTest.class);
 
 
     @Test
     public void testSendLog4jLogDirectly() throws IOException {
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        Log4jAdapter log4jAdapter = new Log4jAdapter(mockLogCollector, "paynet", 4000);
+        Log4jTCPAdapter log4jAdapter = new Log4jTCPAdapter(mockLogCollector, "paynet", 4000);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -57,7 +57,7 @@ public class Log4jAdapterTest {
 
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        Log4jAdapter log4jAdapter = new Log4jAdapter(mockLogCollector, "paynet", 4712);
+        Log4jTCPAdapter log4jAdapter = new Log4jTCPAdapter(mockLogCollector, "paynet", 4712);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);

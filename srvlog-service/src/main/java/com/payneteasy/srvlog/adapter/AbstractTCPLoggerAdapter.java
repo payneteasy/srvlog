@@ -12,9 +12,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractLoggerAdapter {
+public abstract class AbstractTCPLoggerAdapter {
 
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractLoggerAdapter.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractTCPLoggerAdapter.class);
 
     private final ILogCollector logCollector;
     private final String program;
@@ -23,7 +23,7 @@ public abstract class AbstractLoggerAdapter {
     private ThreadPooledServer server = null;
     private final ExecutorService serverRunner = Executors.newSingleThreadExecutor();
 
-    protected AbstractLoggerAdapter(ILogCollector logCollector, String program, int serverPort) {
+    protected AbstractTCPLoggerAdapter(ILogCollector logCollector, String program, int serverPort) {
         this.logCollector = logCollector;
         this.program = program;
         this.serverPort = serverPort;

@@ -1,20 +1,18 @@
-package com.payneteasy.srvlog.adapter.logback;
+package com.payneteasy.srvlog.adapter.log4j;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import com.payneteasy.loggingextensions.logback.UDPLogbackAppender;
+import com.payneteasy.loggingextensions.log4j.UDPLog4jAppender;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -23,16 +21,16 @@ import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class LogbackUDPAdapterTest {
+public class Log4jUDPAdapterTest {
 
-    private static final Logger log = (Logger) LoggerFactory.getLogger(LogbackUDPAdapterTest.class);
+    private static final Logger log = Logger.getLogger(Log4jUDPAdapterTest.class);
 
 
     @Test
-    public void testSendLogbackLogDirectly() throws IOException {
+    public void testSendLog4jLogDirectly() throws IOException {
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        LogbackUDPAdapter logbackAdapter = new LogbackUDPAdapter(mockLogCollector, "paynet", 4000);
+        Log4jUDPAdapter log4jAdapter = new Log4jUDPAdapter(mockLogCollector, "paynet", 4000);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -41,9 +39,9 @@ public class LogbackUDPAdapterTest {
         EasyMock.expectLastCall();
         EasyMock.replay(mockLogCollector);
 
-        ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
-                Level.WARN, "This is test logging", null, null);
-        logbackAdapter.processEvent(new ServerLogbackEvent(logEvent, InetAddress.getLoopbackAddress()));
+        LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                Level.WARN, "This is test logging", null);
+        log4jAdapter.processEvent(new ServerLog4JEvent(logEvent, InetAddress.getLoopbackAddress()));
 
         EasyMock.verify(mockLogCollector);
     }
@@ -55,7 +53,7 @@ public class LogbackUDPAdapterTest {
 
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
-        LogbackUDPAdapter logbackAdapter = new LogbackUDPAdapter(mockLogCollector, "paynet", 4713);
+        Log4jUDPAdapter log4jAdapter = new Log4jUDPAdapter(mockLogCollector, "paynet", 4713);
 
         Calendar c = buildReferenceCalendar();
         LogData logData = buildReferenceLogData(c);
@@ -71,23 +69,22 @@ public class LogbackUDPAdapterTest {
         EasyMock.replay(mockLogCollector);
 
         // initializing, binding to the server socket...
-        logbackAdapter.init();
+        log4jAdapter.init();
 
-        UDPLogbackAppender appender = new UDPLogbackAppender();
+        UDPLog4jAppender appender = new UDPLog4jAppender();
         appender.setRemoteHost("localhost");
         appender.setPort(4713);
-        appender.setContext(log.getLoggerContext());
-        appender.start();
+        appender.activateOptions();
 
-        ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
-                Level.WARN, "This is test logging", null, null);
+        LoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                Level.WARN, "This is test logging", null);
         appender.doAppend(logEvent);
 
         // waiting for 5 seconds at maximum
         Assert.assertTrue(savedLatch.await(5, TimeUnit.SECONDS));
 
-        appender.stop();
-        logbackAdapter.destroy();
+        appender.close();
+        log4jAdapter.destroy();
 
         EasyMock.verify(mockLogCollector);
     }

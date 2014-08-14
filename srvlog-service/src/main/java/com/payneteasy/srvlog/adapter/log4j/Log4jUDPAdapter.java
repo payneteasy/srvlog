@@ -1,10 +1,11 @@
-package com.payneteasy.srvlog.adapter.logback;
+package com.payneteasy.srvlog.adapter.log4j;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.payneteasy.srvlog.adapter.logback.AbstractUDPLoggerAdapter;
 import com.payneteasy.srvlog.adapter.udp.Datagram;
 import com.payneteasy.srvlog.adapter.udp.IDatagramProcessor;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
+import org.apache.log4j.spi.LoggingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,23 +15,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 @Service
-public class LogbackUDPAdapter extends AbstractUDPLoggerAdapter {
+public class Log4jUDPAdapter extends AbstractUDPLoggerAdapter {
 
     @Autowired
-    public LogbackUDPAdapter(
+    public Log4jUDPAdapter(
             ILogCollector logCollector,
-            @Value("${logbackProgram}") String program,
-            @Value("${logbackUDPPort}") int serverPort) {
+            @Value("${log4jProgram}") String program,
+            @Value("${log4jUDPPort}") int serverPort) {
         super(serverPort, program, logCollector);
     }
 
     @Override
     protected String getLoggerTypeName() {
-        return "logback";
+        return "log4j";
     }
 
-    void processEvent(ServerLogbackEvent logEvent) {
-        LogData logData = LogbackAdapterUtils.buildLogData(logEvent, getProgram());
+    void processEvent(ServerLog4JEvent logEvent) {
+        LogData logData = Log4jAdapterUtils.buildLogData(logEvent, getProgram());
 
         logger.info("New " + getLoggerTypeName() + " event caught");
         getLogCollector().saveLog(logData);
@@ -38,29 +39,29 @@ public class LogbackUDPAdapter extends AbstractUDPLoggerAdapter {
 
     @Override
     protected IDatagramProcessor createProcessor() {
-        return new LogbackProcessor(this);
+        return new Log4jProcessor(this);
     }
 
-    private static class LogbackProcessor implements IDatagramProcessor {
+    private static class Log4jProcessor implements IDatagramProcessor {
 
-        private final LogbackUDPAdapter logbackAdapter;
+        private final Log4jUDPAdapter logbackAdapter;
 
-        private LogbackProcessor(LogbackUDPAdapter logbackAdapter) {
+        private Log4jProcessor(Log4jUDPAdapter logbackAdapter) {
             this.logbackAdapter = logbackAdapter;
         }
 
         @Override
         public void processDatagram(Datagram datagram) {
-            ILoggingEvent event;
+            LoggingEvent event;
             try {
                 ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(datagram.getData()));
-                event = (ILoggingEvent) ois.readObject();
+                event = (LoggingEvent) ois.readObject();
             } catch (IOException e) {
                 throw new IllegalStateException("Cannot read event data", e);
             } catch (ClassNotFoundException e) {
                 throw new IllegalStateException("Cannot read event data", e);
             }
-            logbackAdapter.processEvent(new ServerLogbackEvent(event, datagram.getSourceAddress()));
+            logbackAdapter.processEvent(new ServerLog4JEvent(event, datagram.getSourceAddress()));
         }
     }
 }
