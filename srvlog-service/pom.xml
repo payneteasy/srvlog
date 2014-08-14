@@ -101,6 +101,12 @@
           <artifactId>commons-io</artifactId>
       </dependency>
 
+      <dependency>
+          <groupId>com.payneteasy.logging-extensions</groupId>
+          <artifactId>logging-extensions</artifactId>
+          <scope>test</scope>
+      </dependency>
+
 
   </dependencies>
 
