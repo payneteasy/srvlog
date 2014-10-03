@@ -55,11 +55,11 @@ public class DatabaseUtil {
         if(LOG.isInfoEnabled()) {
             Thread outputReader = new Thread(new ProcessStreamReader(false, process.getInputStream()));
             outputReader.start();
-            outputReader.join();
+            //outputReader.join();
         }
         Thread errorReader = new Thread(new ProcessStreamReader(true, process.getErrorStream()));
         errorReader.start();
-        errorReader.join();
+        //errorReader.join();
 
         return process;
     }
