@@ -26,7 +26,7 @@ source srvlog_logs_main
 	sql_attr_timestamp	= log_date
         sql_attr_uint           = host_id
 
-	sql_query_info		= SELECT * FROM logs WHERE log_id=$id
+	# sql_query_info		= SELECT * FROM logs WHERE log_id=$id
 }
 
 source srvlog_logs_delta: srvlog_logs_main

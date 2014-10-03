@@ -10,7 +10,22 @@ mkdir data
 
 mkdir log
 
-SPHINX_DIR=$([ "$OS_NAME" = "Cygwin" ] && cygpath --windows $(PWD) || echo $(PWD))
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        SPHINX_DIR=$(pwd)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        SPHINX_DIR=$(echo $(PWD))
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+       # POSIX compatibility layer and Linux environment emulation for Windows
+        SPHINX_DIR=$(cygpath --windows $(PWD))
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+        SPHINX_DIR=$(pwd -W)
+else
+        # Unknown.
+        SPHINX_DIR=$(pwd)
+fi
+
+#SPHINX_DIR=$([ "$OS_NAME" = "Cygwin" ] && cygpath --windows $(PWD) || echo $(PWD))
 
 SPHINX_DIR=$(echo "$SPHINX_DIR" | sed 's#\\#/#g')
 
