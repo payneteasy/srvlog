@@ -43,7 +43,7 @@ public class DatabaseUtil {
     }
 
 
-    public static Process runCommand(List<String> parameters, File workingDir) throws IOException {
+    public static Process runCommand(List<String> parameters, File workingDir) throws IOException, InterruptedException {
         LOG.info("Running {}", parameters);
         ProcessBuilder pb = new ProcessBuilder(parameters);
 
@@ -53,9 +53,13 @@ public class DatabaseUtil {
 
         Process process = pb.start();
         if(LOG.isInfoEnabled()) {
-            new Thread(new ProcessStreamReader(false, process.getInputStream())).start();
+            Thread outputReader = new Thread(new ProcessStreamReader(false, process.getInputStream()));
+            outputReader.start();
+            outputReader.join();
         }
-        new Thread(new ProcessStreamReader(true, process.getErrorStream())).start();
+        Thread errorReader = new Thread(new ProcessStreamReader(true, process.getErrorStream()));
+        errorReader.start();
+        errorReader.join();
 
         return process;
     }
