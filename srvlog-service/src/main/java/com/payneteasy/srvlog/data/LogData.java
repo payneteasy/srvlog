@@ -91,7 +91,20 @@ public class LogData implements Serializable {
 
 //        if (!date.equals(logData.date)) return false;
         if (facility != null ? !facility.equals(logData.facility) : logData.facility != null) return false;
-        if (host != null ? !host.equals(logData.host) : logData.host != null) return false;
+        //if (host != null ? !host.equals(logData.host) : logData.host != null) return false;
+        if (host != null) {
+            if (!host.equals(logData.host)) {
+                if (logData.host != null
+                        && (!host.equalsIgnoreCase("127.0.0.1") && !host.equalsIgnoreCase("localhost"))
+                        && (!logData.host.equalsIgnoreCase("127.0.0.1") && !logData.host.equalsIgnoreCase("localhost"))
+                ) {
+                    return false;
+                }
+
+            }
+        } else if (logData.host != null) return false;
+
+
         if (id != null ? !id.equals(logData.id) : logData.id != null) return false;
         if (!message.equals(logData.message)) return false;
         if (program != null ? !program.equals(logData.program) : logData.program != null) return false;
