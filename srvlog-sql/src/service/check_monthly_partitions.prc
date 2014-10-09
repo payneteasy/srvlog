@@ -24,7 +24,7 @@ create procedure check_monthly_partitions(i_table_name              varchar(128)
                                                        ) as signed
                                                      );
 
-    declare continue handler for not found set ex_no_records_found = 1;
+    declare continue handler for not found begin select 1 into ex_no_records_found from (select 1) t; end;
     select case
              when date_format(i_data_date, '%m') = '12' then
                lpad(cast(date_format(i_data_date, '%Y') as signed) + 1, 4, '0')
