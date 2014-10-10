@@ -6,6 +6,8 @@ import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.isMessageFromSnort;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.parseSnortMessage;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -116,7 +118,17 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             log.setHost(event.getHost());
             log.setProgram(((StructuredSyslogServerEvent) event).getApplicationName());
             log.setMessage(event.getMessage());
-        } else {  //rfc3164
+        }
+        else if (isMessageFromSnort(event.getMessage())) {
+            SnortMessage snortMessage = parseSnortMessage(event.getMessage());
+
+            log.setDate(snortMessage.getDate());
+            log.setMessage(snortMessage.toString());
+            log.setHost(snortMessage.getSensorName());
+            log.setProgram(snortMessage.getProgram());
+            log.setSeverity(snortMessage.getPriority());
+        }
+        else {  //rfc3164
             log.setHost(event.getHost());
 
             String message = event.getMessage();
