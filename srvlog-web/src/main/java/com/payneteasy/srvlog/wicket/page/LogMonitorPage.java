@@ -5,6 +5,7 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
+import static com.payneteasy.srvlog.util.DateRangeType.EXACTLY_TIME;
 import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
 import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -32,11 +33,30 @@ import java.io.Serializable;
 import java.util.*;
 
 import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
+import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel.DateRangeModel;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
 
 /**
  * Date: 11.01.13
  */
 public class LogMonitorPage extends BasePage {
+
+    /**
+     * Parameters key for start time in date range filter.
+     */
+    public static final String TIME_FROM = "TIME_FROM";
+
+    /**
+     * Parameters key for filter pattern.
+     */
+    public static final String PATTERN = "PATTERN";
+
+    /**
+     * Parser for date and time.
+     */
+    private final SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public LogMonitorPage(PageParameters pageParameters) {
         super(pageParameters, LogMonitorPage.class);
@@ -47,10 +67,7 @@ public class LogMonitorPage extends BasePage {
         final FilterModel filterModel = new FilterModel();
 
         if(!pageParameters.isEmpty()){
-            String severityValue = pageParameters.get(DashboardPage.SEVERITY).toString();
-            String dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE).toString();
-            filterModel.getDateRangeModel().setDateRangeType(DateRangeType.valueOf(dateRangeTypeValue));
-            filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(LogLevel.valueOf(severityValue))));
+            fillFilterModel(filterModel, pageParameters);
         }
 
         final Form<FilterModel> form = new Form<FilterModel>("form", Model.of(filterModel));
@@ -184,6 +201,51 @@ public class LogMonitorPage extends BasePage {
             }
         });
 
+    }
+
+    /**
+     * Set filter model values from page parameters.
+     *
+     * @param       filterModel         Filter model.
+     * @param       pageParameters      Page parameters.
+     */
+    private void fillFilterModel(FilterModel filterModel, PageParameters pageParameters) {
+        StringValue severityValue = pageParameters.get(DashboardPage.SEVERITY);
+
+        if (!severityValue.isEmpty()) {
+            LogLevel severity = LogLevel.valueOf(severityValue.toString());
+            filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(severity)));
+        }
+
+        DateRangeModel dateRangeModel = filterModel.getDateRangeModel();
+        StringValue dateRangeTypeValue = pageParameters.get(DashboardPage.DATE_RANGE_TYPE);
+
+        if (!dateRangeTypeValue.isEmpty()) {
+            DateRangeType dateRangeType = DateRangeType.valueOf(dateRangeTypeValue.toString());
+            dateRangeModel.setDateRangeType(dateRangeType);
+        }
+
+        StringValue dateTimeFromValue = pageParameters.get(TIME_FROM);
+
+        if (!dateTimeFromValue.isEmpty()) {
+            try {
+                Date dateTimeFrom = dateParser.parse(dateTimeFromValue.toString());
+                Date dateTimeTo = new DateTime(dateTimeFrom).plusMinutes(1).toDate();
+
+                dateRangeModel.setDateRangeType(EXACTLY_TIME);
+                dateRangeModel.setExactlyDateFrom(dateTimeFrom);
+                dateRangeModel.setExactlyDateTo(dateTimeTo);
+            }
+            catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        StringValue patternValue = pageParameters.get(PATTERN);
+
+        if (!patternValue.isEmpty()) {
+            filterModel.setPattern(patternValue.toString());
+        }
     }
 
     @SpringBean
