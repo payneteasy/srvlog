@@ -159,8 +159,17 @@ public class SphinxIndexerServiceIntegrationTest {
         }
     }
 
-    public static void main(String[] args) throws SphinxException, IndexerServiceException {
-        SphinxIndexerService service = new SphinxIndexerService();
+    public static void main(String[] args)  {
+
+        try {
+            DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"), new File("sphinx"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        /*SphinxIndexerService service = new SphinxIndexerService();
         service.setHost("93.188.253.57");
         service.setPort(9312);
         service.setConnectTimeout(30000);
@@ -169,7 +178,7 @@ public class SphinxIndexerServiceIntegrationTest {
         Map<Date, Long> dateLongMap = service.numberOfLogsByDate(thisMonth.getFromDate(), thisMonth.getToDate(), 0, 30);
 
         System.out.println(dateLongMap.size());
-
+*/
 
         /*SphinxClient client = new SphinxClient("93.188.253.57", 9312);
         client.SetConnectTimeout(1000000);

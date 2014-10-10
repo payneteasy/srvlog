@@ -1,5 +1,7 @@
 package com.payneteasy.srvlog.data;
 
+import com.payneteasy.srvlog.util.ComparisonUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -91,7 +93,10 @@ public class LogData implements Serializable {
 
 //        if (!date.equals(logData.date)) return false;
         if (facility != null ? !facility.equals(logData.facility) : logData.facility != null) return false;
-        if (host != null ? !host.equals(logData.host) : logData.host != null) return false;
+        //if (host != null ? !host.equals(logData.host) : logData.host != null) return false;
+        if (!ComparisonUtils.hostAddressesAreEqual(host, logData.host)) return false;
+
+
         if (id != null ? !id.equals(logData.id) : logData.id != null) return false;
         if (!message.equals(logData.message)) return false;
         if (program != null ? !program.equals(logData.program) : logData.program != null) return false;
