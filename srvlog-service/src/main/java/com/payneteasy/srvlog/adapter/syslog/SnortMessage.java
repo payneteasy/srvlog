@@ -43,6 +43,13 @@ public class SnortMessage {
     public static SnortMessage parseSnortMessage(String rawSnortMessage) {
         SnortMessage snortMessage = new SnortMessage();
 
+        if (!isMessageFromSnort(rawSnortMessage)) {
+            throw new RuntimeException(
+                "Message does not look like message from Snort. " +
+                "Check message with method isMessageFromSnort() first."
+            );
+        }
+
         try (Scanner scanner = new Scanner(rawSnortMessage)) {
             scanner.useDelimiter(quote("||"));
 

@@ -120,13 +120,19 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             log.setMessage(event.getMessage());
         }
         else if (isMessageFromSnort(event.getMessage())) {
-            SnortMessage snortMessage = parseSnortMessage(event.getMessage());
+            try {
+                SnortMessage snortMessage = parseSnortMessage(event.getMessage());
 
-            log.setDate(snortMessage.getDate());
-            log.setMessage(snortMessage.toString());
-            log.setHost(snortMessage.getSensorName());
-            log.setProgram(snortMessage.getProgram());
-            log.setSeverity(snortMessage.getPriority());
+                log.setDate(snortMessage.getDate());
+                log.setMessage(snortMessage.toString());
+                log.setHost(snortMessage.getSensorName());
+                log.setProgram(snortMessage.getProgram());
+                log.setSeverity(snortMessage.getPriority());
+            }
+            catch (Exception e) {
+                LOG.error("Error occured while parsing message {}", event.getMessage(), e);
+                return;
+            }
         }
         else {  //rfc3164
             log.setHost(event.getHost());
