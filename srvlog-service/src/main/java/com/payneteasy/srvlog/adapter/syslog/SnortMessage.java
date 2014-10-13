@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import static java.util.TimeZone.getTimeZone;
 import static java.util.regex.Pattern.quote;
 
 /**
@@ -109,12 +110,22 @@ public class SnortMessage {
     }
 
     /**
-     * Date and time formatter.
+     * Date and time parser.
+     * Uses UTC time zone.
      *
      * {@link DateFormat} isn't thread safe, so we must create
      * own instance of {@link DateFormat} for each {@link SnortMessage} object.
      */
-    private final DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+    private final DateFormat dateParser;
+
+    /**
+     * Date and time formatter.
+     * Uses local time zone.
+     *
+     * {@link DateFormat} isn't thread safe, so we must create
+     * own instance of {@link DateFormat} for each {@link SnortMessage} object.
+     */
+    private final DateFormat dateFormatter;
 
     /**
      * Name of software, that generates message.
@@ -161,6 +172,13 @@ public class SnortMessage {
      * Packet payload.
      */
     private String payload;
+
+    public SnortMessage() {
+        dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        dateParser.setTimeZone(getTimeZone("UTC"));
+
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+    }
 
     /**
      * Returns date and time, when message generated.
@@ -226,7 +244,7 @@ public class SnortMessage {
      */
     private void setDate(String date) {
         try {
-            this.date = dateFormatter.parse(date);
+            this.date = dateParser.parse(date);
         }
         catch (ParseException ex) {
             throw new RuntimeException(ex);

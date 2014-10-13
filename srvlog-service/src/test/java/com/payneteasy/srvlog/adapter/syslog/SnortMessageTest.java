@@ -136,7 +136,7 @@ public class SnortMessageTest {
     }
 
     private void assertRequiredMessagePartsExisted(String snortMessage) {
-        assertMessagePartExisted(snortMessage, "Date: 2014-09-11 16:23:01.479");
+        assertMessagePartExisted(snortMessage, "Date: 2014-09-11 19:23:01.479");
         assertMessagePartExisted(snortMessage, "Priority: 1");
         assertMessagePartExisted(snortMessage, "Classification: [1:1310:5] Snort Alert [1:1310:5]");
         assertMessagePartExisted(snortMessage, "Alert cause: policy-violation");
