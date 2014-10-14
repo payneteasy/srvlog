@@ -38,34 +38,42 @@
 
 /* SEVERITY COLORS from higher to lowest */
 .LEVEL-EMERGENCY{ color: #ba1e20;}
+.LEVEL-EMERGENCY .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-EMERGENCY td{ background-color: #ba1e20; color: #ffffff; }
 .table tbody tr.LEVEL-EMERGENCY:hover td{ background-color: #961919; }
 
 .LEVEL-ALERT{ color: #fa603d;}
+.LEVEL-ALERT .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-ALERT td{ background-color: #fa603d; color: #ffffff; }
 .table tbody tr.LEVEL-ALERT:hover td{ background-color: #e55839; }
 
 .LEVEL-CRITICAL{ color: #ff5454;}
+.LEVEL-CRITICAL .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-CRITICAL td{ background-color: #ff5454; color: #ffffff; }
 .table tbody tr.LEVEL-CRITICAL:hover td{ background-color: #d84545; }
 
 .LEVEL-ERROR{ color: #ff9900;}
+.LEVEL-ERROR .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-ERROR td{ background-color: #ff9900; color: #ffffff; }
 .table tbody tr.LEVEL-ERROR:hover td{ background-color: #e28904; }
 
 .LEVEL-WARN{ color: #c09853;}
+.LEVEL-WARN .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-WARN td{ background-color: #c09853; color: #ffffff; }
 .table tbody tr.LEVEL-WARN:hover td{ background-color: #a58248; }
 
 .LEVEL-NOTICE{ color: #000000;}
+.LEVEL-NOTICE .readmore-js-toggle { color: #000000; text-decoration: underline; }
 .table tbody tr.LEVEL-NOTICE td{ background-color: #ffffff; color: #000000; }
 .table tbody tr.LEVEL-NOTICE:hover td{ background-color: #e5e3e3; }
 
 .LEVEL-INFO{ color: #bce8f1;}
+.LEVEL-INFO .readmore-js-toggle { color: #000000; text-decoration: underline; }
 .table tbody tr.LEVEL-INFO td{ background-color: #bce8f1; color: #000000; }
 .table tbody tr.LEVEL-INFO:hover td{ background-color: #9bc1c9; }
 
 .LEVEL-DEBUG{ color: #86b76e;}
+.LEVEL-DEBUG .readmore-js-toggle { color: #ffffff; text-decoration: underline; }
 .table tbody tr.LEVEL-DEBUG td{ background-color: #86b76e; color: #ffffff; }
 .table tbody tr.LEVEL-DEBUG:hover td{ background-color: #6b9357; }
 
