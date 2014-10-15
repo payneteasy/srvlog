@@ -7,7 +7,7 @@ create table mysql_routines_return_arguments (
   argument_type varchar(128) not null,
   ordinal_number int(10),
   unique key unq_mysql_routines_arguments_name_type (routine_name, argument_name)
-) 
+)
 engine = innodb;
 
 \. run_install_command.sql
@@ -20,6 +20,8 @@ engine = innodb;
 \. save/save_host.sql
 \. save/save_log.sql
 \. save/save_unprocessed.sql
+\. save/save_snort_log.sql
+\. save/save_unprocessed_snort_log.sql
 
 \. create/create_collections.sql
 
@@ -36,5 +38,7 @@ engine = innodb;
 \. get/get_ossec_alerts.sql
 \. get/get_unprocessed_logs.sql
 \. get/get_unprocessed_hosts_name.sql
+\. get/get_snort_logs_by_log_id.sql
+\. get/get_unprocessed_snort_logs_by_identifier.sql
 
 commit;
