@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import com.payneteasy.srvlog.data.SnortLogData;
 import static java.lang.Integer.parseInt;
 import jregex.Matcher;
 import jregex.Pattern;
@@ -82,6 +83,22 @@ public class ProtocolHeader {
     }
 
     /**
+     * Creates object representation of protocol header from data transfer object.
+     *
+     * @param       snortLogData        Data transfer object
+     *
+     * @return      Object representation of protocol header.
+     */
+    public static ProtocolHeader createProtocolHeader(SnortLogData snortLogData) {
+        ProtocolHeader protocolHeader = new ProtocolHeader();
+
+        protocolHeader.sourcePort = snortLogData.getSourcePort();
+        protocolHeader.destinationPort = snortLogData.getDestinationPort();
+
+        return protocolHeader;
+    }
+
+    /**
      * Source port.
      */
     private int sourcePort;
@@ -96,4 +113,13 @@ public class ProtocolHeader {
         return "sp: " + sourcePort + "; dp: " + destinationPort + ";";
     }
 
+    /**
+     * Fills data transfer object by protocol header data.
+     *
+     * @param       snortLogData        Transfer object to fill.
+     */
+    public void fillSnortLogData(SnortLogData snortLogData) {
+        snortLogData.setSourcePort(sourcePort);
+        snortLogData.setDestinationPort(destinationPort);
+    }
 }

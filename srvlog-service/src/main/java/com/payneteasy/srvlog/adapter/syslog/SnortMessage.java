@@ -1,12 +1,14 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
-import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isSnortMessageContainsIpHeader;
-import static com.payneteasy.srvlog.adapter.syslog.IpHeader.parseIpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.IpHeader.createIpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.parseTcpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.parseUdpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.ICMP;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.TCP;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.UDP;
+import com.payneteasy.srvlog.data.SnortLogData;
 import static java.lang.Integer.parseInt;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -60,8 +62,8 @@ public class SnortMessage {
             snortMessage.classification = scanner.next().trim();
             snortMessage.alertCause = scanner.next().trim();
 
-            if (isSnortMessageContainsIpHeader(rawSnortMessage)) {
-                snortMessage.ipHeader = parseIpHeader(rawSnortMessage);
+            if (isContainsIpHeader(rawSnortMessage)) {
+                snortMessage.ipHeader = createIpHeader(rawSnortMessage);
                 // skip parsed ip header in scanner
                 scanner.next();
 
@@ -84,6 +86,40 @@ public class SnortMessage {
             scanner.findInLine("[0-9]+");
             snortMessage.payload = decodePayload(scanner.findInLine("[0-9ABCDEF]+"));
         }
+
+        return snortMessage;
+    }
+
+    /**
+     * Creates object representation of barnyard2 syslog_full output plugin message
+     * from data transfer object.
+     *
+     * @param       snortLogData        Data transfer object
+     *
+     * @return      Object representation of message.
+     */
+    public static SnortMessage createSnortMessage(SnortLogData snortLogData) {
+        SnortMessage snortMessage = new SnortMessage();
+
+        snortMessage.sensorName = snortLogData.getSensorName();
+        snortMessage.date = snortLogData.getDate();
+        snortMessage.priority = snortLogData.getPriority();
+        snortMessage.classification = snortLogData.getClassification();
+        snortMessage.alertCause = snortLogData.getAlertCause();
+
+        if (isContainsIpHeader(snortLogData)) {
+            snortMessage.ipHeader = createIpHeader(snortLogData);
+
+            // snort message contains protocol header only for TCP, UDP and ICMP protocols
+            switch (snortMessage.ipHeader.getProtocolNumber()) {
+                case TCP:
+                case UDP:
+                    snortMessage.protocolHeader = createProtocolHeader(snortLogData);
+                    break;
+            }
+        }
+
+        snortMessage.payload = snortLogData.getPayload();
 
         return snortMessage;
     }
@@ -235,6 +271,28 @@ public class SnortMessage {
         stringRepresentation += "\nPayload" + payload;
 
         return stringRepresentation;
+    }
+
+    /**
+     * Converts object to data transfer object.
+     *
+     * @return      Data transfer object.
+     */
+    public SnortLogData toSnortLogData() {
+        SnortLogData snortLogData = new SnortLogData();
+
+        snortLogData.setProgram(program);
+        snortLogData.setSensorName(sensorName);
+        snortLogData.setDate(getDate());
+        snortLogData.setPriority(priority);
+        snortLogData.setClassification(classification);
+        snortLogData.setAlertCause(alertCause);
+        snortLogData.setPayload(payload);
+
+        ipHeader.fillSnortLogData(snortLogData);
+        protocolHeader.fillSnortLogData(snortLogData);
+
+        return snortLogData;
     }
 
     /**

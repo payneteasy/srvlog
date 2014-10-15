@@ -1,9 +1,11 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.getAlias;
+import com.payneteasy.srvlog.data.SnortLogData;
 import static java.lang.Integer.parseInt;
 import jregex.Matcher;
 import jregex.Pattern;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Object representation for ip header from barnyard2 syslog_full output plugin message.
@@ -37,8 +39,19 @@ public class IpHeader {
      * .
      * @return      True, if message contains IP header.
      */
-    public static boolean isSnortMessageContainsIpHeader(String rawSnortMessage) {
+    public static boolean isContainsIpHeader(String rawSnortMessage) {
         return ipHeaderRegex.matcher(rawSnortMessage).find();
+    }
+
+    /**
+     * Returns true, if data transfer object contains IP header.
+     *
+     * @param       snortLogData        Data transfer object to check.
+     *
+     * @return      True, if data transfer object contains IP header.
+     */
+    public static boolean isContainsIpHeader(SnortLogData snortLogData) {
+        return !isEmpty(snortLogData.getProtocolAlias());
     }
 
     /**
@@ -48,7 +61,7 @@ public class IpHeader {
      *
      * @return      Object representation of IP header.
      */
-    public static IpHeader parseIpHeader(String rawSnortMessage) {
+    public static IpHeader createIpHeader(String rawSnortMessage) {
         IpHeader ipHeader = new IpHeader();
 
         Matcher matcher = ipHeaderRegex.matcher(rawSnortMessage);
@@ -73,6 +86,40 @@ public class IpHeader {
         ipHeader.fragmentOffset = parseInt(matcher.group("FRAGMENT_OFFSET"));
         ipHeader.timeToLive = parseInt(matcher.group("TIME_TO_LIVE"));
         ipHeader.checksum = parseInt(matcher.group("CHECKSUM"));
+
+        return ipHeader;
+    }
+
+    /**
+     * Creates object representation of IP header from data transfer object.
+     *
+     * @param       snortLogData        Data transfer object
+     *
+     * @return      Object representation of IP header.
+     */
+    public static IpHeader createIpHeader(SnortLogData snortLogData) {
+        IpHeader ipHeader = new IpHeader();
+
+        if (!isContainsIpHeader(snortLogData)) {
+            throw new RuntimeException(
+                "Snort message does not contains ip header. " +
+                "Check message with method isContainsIPHeader() first"
+            );
+        }
+
+        ipHeader.protocolNumber = snortLogData.getProtocolNumber();
+        ipHeader.protocolAlias = snortLogData.getProtocolAlias();
+        ipHeader.sourceIp = snortLogData.getSourceIp();
+        ipHeader.destinationIp = snortLogData.getDestinationIp();
+        ipHeader.protocolVersion = snortLogData.getProtocolVersion();
+        ipHeader.headerLength = snortLogData.getHeaderLength();
+        ipHeader.serviceType = snortLogData.getServiceType();
+        ipHeader.datagramLength = snortLogData.getDatagramLength();
+        ipHeader.identification = snortLogData.getIdentification();
+        ipHeader.flags = snortLogData.getFlags();
+        ipHeader.fragmentOffset = snortLogData.getFragmentOffset();
+        ipHeader.timeToLive = snortLogData.getTimeToLive();
+        ipHeader.checksum = snortLogData.getChecksum();
 
         return ipHeader;
     }
@@ -167,6 +214,27 @@ public class IpHeader {
             field("ttl", timeToLive) +
             field("csum", checksum)
         ;
+    }
+
+    /**
+     * Fills data transfer object by IP header data.
+     *
+     * @param       snortLogData        Transfer object to fill.
+     */
+    public void fillSnortLogData(SnortLogData snortLogData) {
+        snortLogData.setProtocolNumber(protocolNumber);
+        snortLogData.setProtocolAlias(protocolAlias);
+        snortLogData.setProtocolVersion(protocolVersion);
+        snortLogData.setSourceIp(sourceIp);
+        snortLogData.setDestinationIp(destinationIp);
+        snortLogData.setHeaderLength(headerLength);
+        snortLogData.setServiceType(serviceType);
+        snortLogData.setDatagramLength(datagramLength);
+        snortLogData.setIdentification(identification);
+        snortLogData.setFlags(flags);
+        snortLogData.setFragmentOffset(fragmentOffset);
+        snortLogData.setTimeToLive(timeToLive);
+        snortLogData.setChecksum(checksum);
     }
 
     /**

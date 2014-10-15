@@ -1,10 +1,14 @@
 package com.payneteasy.srvlog.service.impl;
 
+import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
+import com.payneteasy.srvlog.adapter.syslog.SnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,5 +105,34 @@ public class SimpleLogCollector implements ILogCollector {
 
     public void setIndexerService(IIndexerService indexerService) {
         this.indexerService = indexerService;
+    }
+
+    @Override
+    public void saveUnprocessedSnortLog(UnprocessedSnortLogData rawSnortMessage) {
+        logDao.saveUnprocessedSnortLog(rawSnortMessage);
+    }
+
+    @Override
+    public void saveSnortLog(SnortMessage snortMessage) {
+        logDao.saveSnortLog(snortMessage.toSnortLogData());
+    }
+
+    @Override
+    public List<UnprocessedSnortLogData> getUnprocessedSnortLogsByIdentifier(String identifier) {
+        return logDao.getUnprocessedSnortLogsByIdentifier(identifier);
+    }
+
+    @Override
+    public List<SnortMessage> getSnortLogsByLogId(Long logId) {
+        List<SnortLogData> snortLogDatas = logDao.getSnortLogsByLogId(logId);
+
+        List<SnortMessage> snortMessages = new ArrayList<>(snortLogDatas.size());
+
+        for (SnortLogData snortLogData : snortLogDatas) {
+            SnortMessage snortMessage = createSnortMessage(snortLogData);
+            snortMessages.add(snortMessage);
+        }
+
+        return snortMessages;
     }
 }

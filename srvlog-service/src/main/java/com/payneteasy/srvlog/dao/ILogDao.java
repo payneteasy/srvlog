@@ -2,6 +2,7 @@ package com.payneteasy.srvlog.dao;
 
 import com.googlecode.jdbcproc.daofactory.annotation.AStoredProcedure;
 import com.payneteasy.srvlog.data.*;
+import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,4 +54,16 @@ public interface ILogDao {
 
     @AStoredProcedure(name="get_ossec_alerts")
     List<OssecAlertData> getOssecAlertData(Date data);
+
+    @AStoredProcedure(name = "save_unprocessed_snort_log")
+    void saveUnprocessedSnortLog(UnprocessedSnortLogData rawSnortMessage);
+
+    @AStoredProcedure(name = "save_snort_log")
+    void saveSnortLog(SnortLogData snortLogData);
+
+    @AStoredProcedure(name = "get_unprocessed_snort_logs_by_identifier")
+    List<UnprocessedSnortLogData> getUnprocessedSnortLogsByIdentifier(String identifier);
+
+    @AStoredProcedure(name = "get_snort_logs_by_log_id")
+    List<SnortLogData> getSnortLogsByLogId(Long logId);
 }
