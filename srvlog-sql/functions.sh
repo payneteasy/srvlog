@@ -4,12 +4,12 @@ export SRVLOG_DB_USERNAME=${SRVLOG_DB_USERNAME:-srvlog}
 export SRVLOG_DB_PASSWORD=${SRVLOG_DB_PASSWORD:-123srvlog123}
 export SRVLOG_DB_DATABASE=${SRVLOG_DB_DATABASE:-srvlog}
 
-export SRVLOG_DB_ROOT_PASSWORD=${SRVLOG_DB_ROOT_PASSWORD:-charpa}
+export SRVLOG_DB_ROOT_PASSWORD=${SRVLOG_DB_ROOT_PASSWORD:-11111}
 
 export SRVLOG_DB_HOST=${SRVLOG_DB_HOST:-localhost}
 export SRVLOG_DB_PORT=${SRVLOG_DB_PORT:-3306}
 
-export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/tmp/mysql.sock}
+export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/var/run/mysqld/mysqld.sock}
 
 export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
@@ -53,7 +53,7 @@ logWarn() {
 die() {
     errorCode=$?
     errorMessage=$1
-    
+
     if [ $errorCode != 0 ]
     then
         logError ".ERROR.: $errorCode - $errorMessage"
