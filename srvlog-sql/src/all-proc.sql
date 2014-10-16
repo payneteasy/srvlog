@@ -41,4 +41,6 @@ engine = innodb;
 \. get/get_snort_logs_by_log_id.sql
 \. get/get_unprocessed_snort_logs.sql
 
+\. delete/delete_all_unprocessed_snort_logs.sql
+
 commit;
