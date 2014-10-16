@@ -17,7 +17,7 @@ public class IpHeader {
     /**
      * Regular expression for ip header parsing.
      */
-    private final static Pattern ipHeaderRegex = new Pattern(
+    private final static Pattern IP_HEADER_REGEX = new Pattern(
         "(?<=\\|\\| )({PROTOCOL}\\d{1,3}) " +
         "({SOURCE_IP}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}) " +
         "({DESTINATION_IP}\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}) " +
@@ -40,7 +40,7 @@ public class IpHeader {
      * @return      True, if message contains IP header.
      */
     public static boolean isContainsIpHeader(String rawSnortMessage) {
-        return ipHeaderRegex.matcher(rawSnortMessage).find();
+        return IP_HEADER_REGEX.matcher(rawSnortMessage).find();
     }
 
     /**
@@ -64,7 +64,7 @@ public class IpHeader {
     public static IpHeader createIpHeader(String rawSnortMessage) {
         IpHeader ipHeader = new IpHeader();
 
-        Matcher matcher = ipHeaderRegex.matcher(rawSnortMessage);
+        Matcher matcher = IP_HEADER_REGEX.matcher(rawSnortMessage);
 
         if (!matcher.find()) {
             throw new RuntimeException(

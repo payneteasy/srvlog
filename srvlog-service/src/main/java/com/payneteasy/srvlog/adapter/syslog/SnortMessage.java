@@ -43,7 +43,7 @@ public class SnortMessage {
      *
      * @return      Object representation of message.
      */
-    public static SnortMessage parseSnortMessage(String rawSnortMessage) {
+    public static SnortMessage createSnortMessage(String rawSnortMessage) {
         SnortMessage snortMessage = new SnortMessage();
 
         if (!isMessageFromSnort(rawSnortMessage)) {
@@ -308,6 +308,5 @@ public class SnortMessage {
             throw new RuntimeException(ex);
         }
     }
-
 
 }

@@ -6,11 +6,16 @@ import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.createOssecSnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.isSnortMessageFromOssec;
+import static com.payneteasy.srvlog.adapter.syslog.RawSnortMessage.createRawSnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.isMessageFromSnort;
-import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.parseSnortMessage;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.data.SnortLogData;
+import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +27,7 @@ import javax.annotation.PreDestroy;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -121,18 +127,13 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         }
         else if (isMessageFromSnort(event.getMessage())) {
             try {
-                SnortMessage snortMessage = parseSnortMessage(event.getMessage());
-
-                log.setDate(snortMessage.getDate());
-                log.setMessage(snortMessage.toString());
-                log.setHost(snortMessage.getSensorName());
-                log.setProgram(snortMessage.getProgram());
-                log.setSeverity(snortMessage.getPriority());
+                logCollector.saveUnprocessedSnortLog(createRawSnortMessage(event.getMessage()));
             }
             catch (Exception e) {
                 LOG.error("Error occured while parsing message {}", event.getMessage(), e);
-                return;
             }
+
+            return;
         }
         else {  //rfc3164
             log.setHost(event.getHost());
@@ -158,6 +159,20 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             LOG.debug("Saving log: " + log);
         }
         logCollector.saveLog(log);
+
+        if (isSnortMessageFromOssec(event.getMessage())) {
+            OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(event.getMessage());
+
+            List<UnprocessedSnortLogData> unprocessedSnortLogs =
+                logCollector.getUnprocessedSnortLogs(ossecSnortMessage);
+
+            for (UnprocessedSnortLogData unprocessedSnortLog : unprocessedSnortLogs) {
+                SnortLogData snortLog = createSnortMessage(unprocessedSnortLog.getMessage()).toSnortLogData();
+                snortLog.setLogId(log.getId());
+
+                logCollector.saveSnortLog(snortLog);
+            }
+        }
     }
 
     private String parseProgramField(LogData log, String message, int tagTerminationIdx) {

@@ -1,5 +1,7 @@
 package com.payneteasy.srvlog.service;
 
+import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
+import com.payneteasy.srvlog.adapter.syslog.RawSnortMessage;
 import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
 import com.payneteasy.srvlog.adapter.syslog.SnortMessage;
 import com.payneteasy.srvlog.data.*;
@@ -40,11 +42,11 @@ public interface ILogCollector {
 
     List<OssecAlertData> getOssecAlertData(Date data);
 
-    void saveUnprocessedSnortLog(UnprocessedSnortLogData rawSnortMessage);
+    void saveUnprocessedSnortLog(RawSnortMessage rawSnortMessage);
 
-    void saveSnortLog(SnortMessage snortMessage);
+    void saveSnortLog(SnortLogData snortLogData);
 
-    List<UnprocessedSnortLogData> getUnprocessedSnortLogsByIdentifier(String identifier);
+    List<UnprocessedSnortLogData> getUnprocessedSnortLogs(OssecSnortMessage ossecSnortMessage);
 
     List<SnortMessage> getSnortLogsByLogId(Long logId);
 }

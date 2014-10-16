@@ -1,5 +1,7 @@
 package com.payneteasy.srvlog.service.impl;
 
+import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
+import com.payneteasy.srvlog.adapter.syslog.RawSnortMessage;
 import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
 import com.payneteasy.srvlog.adapter.syslog.SnortMessage;
 import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
@@ -108,18 +110,22 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public void saveUnprocessedSnortLog(UnprocessedSnortLogData rawSnortMessage) {
-        logDao.saveUnprocessedSnortLog(rawSnortMessage);
+    public void saveUnprocessedSnortLog(RawSnortMessage rawSnortMessage) {
+        logDao.saveUnprocessedSnortLog(rawSnortMessage.toUnprocessedSnortLogData());
     }
 
     @Override
-    public void saveSnortLog(SnortMessage snortMessage) {
-        logDao.saveSnortLog(snortMessage.toSnortLogData());
+    public void saveSnortLog(SnortLogData snortLogData) {
+        logDao.saveSnortLog(snortLogData);
     }
 
     @Override
-    public List<UnprocessedSnortLogData> getUnprocessedSnortLogsByIdentifier(String identifier) {
-        return logDao.getUnprocessedSnortLogsByIdentifier(identifier);
+    public List<UnprocessedSnortLogData> getUnprocessedSnortLogs(OssecSnortMessage ossecSnortMessage) {
+        return logDao.getUnprocessedSnortLogs(
+            ossecSnortMessage.getIdentifier(),
+            ossecSnortMessage.getDateFrom(),
+            ossecSnortMessage.getDateTo()
+        );
     }
 
     @Override

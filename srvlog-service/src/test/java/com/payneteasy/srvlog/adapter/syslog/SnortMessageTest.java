@@ -1,6 +1,6 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
-import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.parseSnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class SnortMessageTest {
 
     @Test
     public void testParseSnortMessageWithFullMEssage() {
-        SnortMessage snortMessage = parseSnortMessage(FULL_MESSAGE);
+        SnortMessage snortMessage = createSnortMessage(FULL_MESSAGE);
         String stringMessage = snortMessage.toString();
 
         assertRequiredMessagePartsExisted(stringMessage);
@@ -83,7 +83,7 @@ public class SnortMessageTest {
 
     @Test
     public void testParseSnortMessageWithMessageWithoutHeaders() {
-        SnortMessage snortMessage = parseSnortMessage(MESSAGE_WITHOUT_HEADERS);
+        SnortMessage snortMessage = createSnortMessage(MESSAGE_WITHOUT_HEADERS);
         String stringMessage = snortMessage.toString();
 
         assertRequiredMessagePartsExisted(stringMessage);
@@ -93,7 +93,7 @@ public class SnortMessageTest {
 
     @Test
     public void testParseSnortMessageWithMessageWithTcpHeader() {
-        SnortMessage snortMessage = parseSnortMessage(MESSAGE_WITH_TCP_HEADER);
+        SnortMessage snortMessage = createSnortMessage(MESSAGE_WITH_TCP_HEADER);
         String stringMessage = snortMessage.toString();
 
         assertRequiredMessagePartsExisted(stringMessage);
@@ -103,7 +103,7 @@ public class SnortMessageTest {
 
     @Test
     public void testParseSnortMessageWithMessageWithUdpHeader() {
-        SnortMessage snortMessage = parseSnortMessage(MESSAGE_WITH_UDP_HEADER);
+        SnortMessage snortMessage = createSnortMessage(MESSAGE_WITH_UDP_HEADER);
         String stringMessage = snortMessage.toString();
 
         assertRequiredMessagePartsExisted(stringMessage);
@@ -113,7 +113,7 @@ public class SnortMessageTest {
 
     @Test
     public void testParseSnortMessageWithMessageWithIcmpHeader() {
-        SnortMessage snortMessage = parseSnortMessage(MESSAGE_WITH_ICMP_HEADER);
+        SnortMessage snortMessage = createSnortMessage(MESSAGE_WITH_ICMP_HEADER);
         String stringMessage = snortMessage.toString();
 
         assertRequiredMessagePartsExisted(stringMessage);
