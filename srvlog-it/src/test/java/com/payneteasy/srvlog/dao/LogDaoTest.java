@@ -1,8 +1,8 @@
 package com.payneteasy.srvlog.dao;
 
 import com.payneteasy.srvlog.CommonIntegrationTest;
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
-import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.parseSnortMessage;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.SnortLogData;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.joda.time.DateTime;
 
 import static org.junit.Assert.*;
 
@@ -195,7 +196,7 @@ public class LogDaoTest extends CommonIntegrationTest {
             "665613666653664353032666631663A46463D303A4C443D72753A4E523D31303A544D3D313430353430383935303A4C4D3D313" +
             "431303434313737373A53473D333A533D6457513855344B6F69352D59766E366F0D0A436F6E6E656374696F6E3A204B6565702D416C6976650D0A0D0A|";
 
-        SnortLogData snortLogData = parseSnortMessage(message).toSnortLogData();
+        SnortLogData snortLogData = createSnortMessage(message).toSnortLogData();
         snortLogData.setLogId(1L);
 
         logDao.saveSnortLog(snortLogData);
@@ -208,7 +209,7 @@ public class LogDaoTest extends CommonIntegrationTest {
     }
 
     @Test
-    public void testSaveAndGetSnortUnprocessedLog() {
+    public void testSaveSnortUnprossedLog() {
         UnprocessedSnortLogData unprocessedSnortLogData = new UnprocessedSnortLogData();
 
         unprocessedSnortLogData.setDate(new Date());
@@ -218,10 +219,74 @@ public class LogDaoTest extends CommonIntegrationTest {
         logDao.saveUnprocessedSnortLog(unprocessedSnortLogData);
 
         assertNotNull(unprocessedSnortLogData.getId());
+    }
 
-        List<UnprocessedSnortLogData> unprocessedSnortLogDatas = logDao.getUnprocessedSnortLogsByIdentifier("identifier");
+    @Test
+    public void testGetSnortUnprocessedLogLimited() {
+        logDao.deleteAllUnprocessedSnortLogs();
 
-        assertFalse(unprocessedSnortLogDatas.isEmpty());
+        for (int i = 0; i < 15; i++) {
+            createUnprocessedSnortLog("identifier", new Date());
+        }
+
+        Date dateTo = new Date();
+        Date dateFrom = new DateTime(dateTo).minusMinutes(5).toDate();
+
+        List<UnprocessedSnortLogData> unprocessedSnortLogs =
+            logDao.getUnprocessedSnortLogs("identifier", dateFrom, dateTo);
+
+        assertFalse(unprocessedSnortLogs.isEmpty());
+        assertEquals(10, unprocessedSnortLogs.size());
+    }
+
+    @Test
+    public void testGetSnortUnprocessedRespectsIdentifier() {
+        logDao.deleteAllUnprocessedSnortLogs();
+
+        createUnprocessedSnortLog("identifier_1", new Date());
+        createUnprocessedSnortLog("identifier_2", new Date());
+
+        Date dateTo = new Date();
+        Date dateFrom = new DateTime(dateTo).minusMinutes(5).toDate();
+
+        List<UnprocessedSnortLogData> unprocessedSnortLogs =
+            logDao.getUnprocessedSnortLogs("identifier_1", dateFrom, dateTo);
+
+        assertFalse(unprocessedSnortLogs.isEmpty());
+        assertEquals(1, unprocessedSnortLogs.size());
+    }
+
+    @Test
+    public void testGetSnortUnprocessedRespectsDataBounds() {
+        logDao.deleteAllUnprocessedSnortLogs();
+
+        Date dateTo = new Date();
+        Date dateFrom = new DateTime(dateTo).minusMinutes(5).toDate();
+        Date dateOlderThatBounds = new DateTime(dateTo).minusMinutes(15).toDate();
+
+        for (int i = 0; i < 5; i++) {
+            createUnprocessedSnortLog("identifier", dateTo);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            createUnprocessedSnortLog("identifier", dateOlderThatBounds);
+        }
+
+        List<UnprocessedSnortLogData> unprocessedSnortLogs =
+            logDao.getUnprocessedSnortLogs("identifier", dateFrom, dateTo);
+
+        assertFalse(unprocessedSnortLogs.isEmpty());
+        assertEquals(5, unprocessedSnortLogs.size());
+    }
+
+    private void createUnprocessedSnortLog(String identifier, Date date) {
+        UnprocessedSnortLogData unprocessedSnortLogData = new UnprocessedSnortLogData();
+
+        unprocessedSnortLogData.setDate(date);
+        unprocessedSnortLogData.setIdentifier(identifier);
+        unprocessedSnortLogData.setMessage("message");
+
+        logDao.saveUnprocessedSnortLog(unprocessedSnortLogData);
     }
 
     public static void main(String[] args) {
