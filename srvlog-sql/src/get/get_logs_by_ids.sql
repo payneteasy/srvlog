@@ -10,7 +10,9 @@ main_sql:
             ' l.severity,',
             ' l.facility,',
             ' l.message,',
-            ' l.program',
+            ' l.program,',
+            ' l.hash,',
+            ' l.has_snort_logs',
        ' from logs l',
        ' join hosts h on l.host_id = h.host_id ',
        ' where l.log_id in (',i_log_ids, ')',
@@ -30,6 +32,8 @@ call save_routine_information('get_logs_by_ids',
                                         'severity int',
                                         'facility int',
                                         'message varchar',
-                                        'program varchar'
+                                        'program varchar',
+                                        'hash varchar',
+                                        'has_snort_logs int'
                                        )
                              );

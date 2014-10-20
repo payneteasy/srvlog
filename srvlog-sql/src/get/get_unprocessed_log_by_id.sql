@@ -9,7 +9,9 @@ main_sql:
             l.severity,
             l.facility,
             l.message,
-            l.program
+            l.program,
+            l.hash,
+            l.has_snort_logs
        from unprocessed_logs l
       where l.log_id = i_log_id;
   end
@@ -23,6 +25,8 @@ call save_routine_information('get_unprocessed_log_by_id',
                                         'severity int',
                                         'facility int',
                                         'message varchar',
-                                        'program varchar'
+                                        'program varchar',
+                                        'hash varchar',
+                                        'has_snort_logs int'
                                        )
                              );

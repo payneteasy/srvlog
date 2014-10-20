@@ -1,24 +1,24 @@
-drop procedure if exists get_unprocessed_logs;
+drop procedure if exists get_logs_by_hash;
 delimiter $$
-create procedure get_unprocessed_logs(i_num_of_logs int (10))
+create procedure get_logs_by_hash(i_hash varchar(32))
 main_sql:
   begin
      select l.log_id,
-                 l.log_date,
-                 l.host,
-                 l.severity,
-                 l.facility,
-                 l.message,
-                 l.program,
-                 l.hash,
-                 l.has_snort_logs
-       from unprocessed_logs l
-      order by l.log_date desc
-      limit i_num_of_logs;
+            l.log_date,
+            h.hostname host,
+            l.severity,
+            l.facility,
+            l.message,
+            l.program,
+            l.hash,
+            l.has_snort_logs
+       from logs l
+            join hosts h on l.host_id = h.host_id
+      where l.hash = i_hash;
   end
 $$
 delimiter ;
-call save_routine_information('get_unprocessed_logs',
+call save_routine_information('get_logs_by_hash',
                               concat_ws(',',
                                         'log_id int',
                                         'log_date datetime',

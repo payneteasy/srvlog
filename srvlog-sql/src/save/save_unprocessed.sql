@@ -11,21 +11,23 @@ main_sql:
       host_id          int(10) unsigned,
       message          text,
       program          varchar(60),
+      hash       varchar(32),
+      has_snort_logs   int(1),
       primary key temp_logs_to_process(log_id)
       )
       engine = myisam;
 
     truncate table temp_logs_to_process;
 
-	insert into temp_logs_to_process(log_id, log_date, facility, severity, host_id, message, program)
-	      select ul.log_id, ul.log_date, ul.facility, ul.severity, h.host_id, ul.message, ul.program
+	insert into temp_logs_to_process(log_id, log_date, facility, severity, host_id, message, program, hash, has_snort_logs)
+	      select ul.log_id, ul.log_date, ul.facility, ul.severity, h.host_id, ul.message, ul.program, ul.hash, ul.has_snort_logs
 		    from unprocessed_logs ul, hosts h
 		   where ul.host = h.hostname;
 
-    insert into logs(log_date, logs_partition_key, facility, severity, host_id, message, program)
-          select log_date, date_format(log_date, "%Y%m"), facility, severity, host_id, message, program
+    insert into logs(log_date, logs_partition_key, facility, severity, host_id, message, program, hash, has_snort_logs)
+          select log_date, date_format(log_date, "%Y%m"), facility, severity, host_id, message, program, hash, has_snort_logs
 		    from temp_logs_to_process;
-    
+
 	delete ul from unprocessed_logs ul, temp_logs_to_process tl where ul.log_id = tl.log_id;
   end
 $$

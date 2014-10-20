@@ -38,7 +38,8 @@ engine = innodb;
 \. get/get_ossec_alerts.sql
 \. get/get_unprocessed_logs.sql
 \. get/get_unprocessed_hosts_name.sql
-\. get/get_snort_logs_by_log_id.sql
+\. get/get_logs_by_hash.sql
+\. get/get_snort_logs_by_hash.sql
 \. get/get_unprocessed_snort_logs.sql
 
 \. delete/delete_all_unprocessed_snort_logs.sql
