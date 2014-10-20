@@ -36,6 +36,7 @@ import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassB
 import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel.DateRangeModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.joda.time.DateTime;
 
 /**
@@ -171,6 +172,23 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClassBySeverity(logLevel, item);
+
+                if (logData.hasSnortLogs()) {
+                    PageParameters linkParameters = new PageParameters();
+
+                    linkParameters.add("hash", logData.getHash());
+
+                    BookmarkablePageLink<SnortLogMonitorPage> link = new BookmarkablePageLink<SnortLogMonitorPage>(
+                        "log-snort-logs-link",
+                        SnortLogMonitorPage.class,
+                        linkParameters
+                    );
+
+                    item.add(link);
+                }
+                else {
+                    item.add(new Label("log-snort-logs-link", ""));
+                }
             }
         };
         form.add(listView);

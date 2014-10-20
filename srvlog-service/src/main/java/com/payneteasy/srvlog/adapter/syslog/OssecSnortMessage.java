@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import static com.google.common.hash.Hashing.md5;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DateFormat;
 import java.util.Date;
 import static java.util.Locale.ENGLISH;
@@ -59,7 +60,7 @@ public class OssecSnortMessage {
 
         snortMessage.setDate(matcher.group("DATE"));
         snortMessage.identifier = matcher.group("IDENTIFIER");
-        snortMessage.hash = md5().hashString(rawMessage).toString();
+        snortMessage.hash = md5().hashString(rawMessage, UTF_8).toString();
 
         return snortMessage;
     }

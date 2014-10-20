@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+    <wicket:extend>
+        <div class="container-fluid" id="page">
+
+            <h2>Ossec message</h2>
+
+            <table class="table table-bordered table-striped table-hover main-table">
+                <colgroup>
+                    <col width="120px"/>
+                    <col width="100px"/>
+                    <col width="100px"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Facility</th>
+                        <th>Severity</th>
+                        <th>Host</th>
+                        <th>Program</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr wicket:id="logs">
+                        <td wicket:id="log-date" id="log-date" class="log-date">Date</td>
+                        <td wicket:id="log-facility">Facility</td>
+                        <td wicket:id="log-severity">Severity</td>
+                        <td wicket:id="log-host">Host</td>
+                        <td wicket:id="log-program">Program</td>
+                        <td><span wicket:id="log-message" class="log-message"></span></td>
+                    </tr>
+                    <tr wicket:id="no-logs"><td colspan="6">No data found</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Snort packets</h2>
+
+            <table class="table table-bordered table-striped table-hover main-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Priority</th>
+                        <th>Classification</th>
+                        <th>Alert cause</th>
+                        <th>Header</th>
+                        <th class="payload">Payload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr wicket:id="snort-logs">
+                        <td wicket:id="date"></td>
+                        <td wicket:id="priority"></td>
+                        <td wicket:id="classification"></td>
+                        <td wicket:id="alert-cause"></td>
+                        <td wicket:id="header"></td>
+                        <td wicket:id="payload"></td>
+                    </tr>
+                    <tr wicket:id="no-snort-logs"><td colspan="6">No data found</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </wicket:extend>
+    </body>
+</html>
