@@ -197,13 +197,13 @@ public class LogDaoTest extends CommonIntegrationTest {
             "431303434313737373A53473D333A533D6457513855344B6F69352D59766E366F0D0A436F6E6E656374696F6E3A204B6565702D416C6976650D0A0D0A|";
 
         SnortLogData snortLogData = createSnortMessage(message).toSnortLogData();
-        snortLogData.setLogId(1L);
+        snortLogData.setHash("hash");
 
         logDao.saveSnortLog(snortLogData);
 
         assertNotNull(snortLogData.getId());
 
-        List<SnortLogData> snortLogDatas = logDao.getSnortLogsByLogId(1L);
+        List<SnortLogData> snortLogDatas = logDao.getSnortLogsByHash("hash");
 
         assertFalse(snortLogDatas.isEmpty());
     }
