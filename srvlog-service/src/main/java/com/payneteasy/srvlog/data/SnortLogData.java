@@ -1,5 +1,9 @@
 package com.payneteasy.srvlog.data;
 
+import com.payneteasy.srvlog.adapter.syslog.IpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.IpHeader.createIpHeader;
+import com.payneteasy.srvlog.adapter.syslog.ProtocolHeader;
+import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -14,7 +18,7 @@ import javax.persistence.Id;
 public class SnortLogData {
 
     private Long id;
-    private Long logId;
+    private String hash;
     private String program;
     private String sensorName;
     private Date date;
@@ -48,13 +52,13 @@ public class SnortLogData {
         this.id = id;
     }
 
-    @Column(name = "log_id")
-    public Long getLogId() {
-        return logId;
+    @Column(name = "hash")
+    public String getHash() {
+        return hash;
     }
 
-    public void setLogId(Long logId) {
-        this.logId = logId;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     @Column(name = "program")
@@ -255,4 +259,11 @@ public class SnortLogData {
         this.destinationPort = destinationPort;
     }
 
+    public IpHeader getIpHeader() {
+        return createIpHeader(this);
+    }
+
+    public ProtocolHeader getProtocolHeader() {
+        return createProtocolHeader(this);
+    }
 }

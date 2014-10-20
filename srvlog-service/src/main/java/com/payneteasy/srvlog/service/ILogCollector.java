@@ -48,5 +48,7 @@ public interface ILogCollector {
 
     List<UnprocessedSnortLogData> getUnprocessedSnortLogs(OssecSnortMessage ossecSnortMessage);
 
-    List<SnortMessage> getSnortLogsByLogId(Long logId);
+    List<LogData> getLogsByHash(String hash);
+
+    List<SnortLogData> getSnortLogsByHash(String hash);
 }

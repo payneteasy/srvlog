@@ -155,11 +155,6 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             log.setMessage(message);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Saving log: " + log);
-        }
-        logCollector.saveLog(log);
-
         if (isSnortMessageFromOssec(event.getMessage())) {
             OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(event.getMessage());
 
@@ -168,11 +163,23 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
             for (UnprocessedSnortLogData unprocessedSnortLog : unprocessedSnortLogs) {
                 SnortLogData snortLog = createSnortMessage(unprocessedSnortLog.getMessage()).toSnortLogData();
-                snortLog.setLogId(log.getId());
+                snortLog.setHash(ossecSnortMessage.getHash());
 
                 logCollector.saveSnortLog(snortLog);
             }
+
+            log.setHash(ossecSnortMessage.getHash());
+
+            if (!unprocessedSnortLogs.isEmpty()) {
+                log.hasSnortLogs(true);
+            }
         }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Saving log: " + log);
+        }
+
+        logCollector.saveLog(log);
     }
 
     private String parseProgramField(LogData log, String message, int tagTerminationIdx) {

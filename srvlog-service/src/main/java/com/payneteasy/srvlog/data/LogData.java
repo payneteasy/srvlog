@@ -18,6 +18,8 @@ public class LogData implements Serializable {
     private String message;
     private Long id;
     private String program;
+    private String hash;
+    private int hasSnortLogs;
 
     @Column(name = "log_date")
     public Date getDate() {
@@ -83,6 +85,38 @@ public class LogData implements Serializable {
         this.program = program;
     }
 
+    @Column(name = "hash")
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    @Column(name = "has_snort_logs")
+    public int getHasSnortLogs() {
+        return hasSnortLogs;
+    }
+
+    public void setHasSnortLogs(int hasSnortLogs) {
+        this.hasSnortLogs = hasSnortLogs;
+    }
+
+    public boolean hasSnortLogs() {
+        switch (hasSnortLogs) {
+            case 1:
+                return true;
+            case 0:
+                return false;
+            default:
+                throw new RuntimeException("Unsupported value for hasSnortLogs: " + hasSnortLogs);
+        }
+    }
+
+    public void hasSnortLogs(boolean hasSnortLogs) {
+        this.hasSnortLogs = hasSnortLogs ? 1 : 0;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -67,6 +67,9 @@ public interface ILogDao {
     @AStoredProcedure(name = "delete_all_unprocessed_snort_logs")
     void deleteAllUnprocessedSnortLogs();
 
-    @AStoredProcedure(name = "get_snort_logs_by_log_id")
-    List<SnortLogData> getSnortLogsByLogId(Long logId);
+    @AStoredProcedure(name = "get_logs_by_hash")
+    List<LogData> getLogsByHash(String hash);
+
+    @AStoredProcedure(name = "get_snort_logs_by_hash")
+    List<SnortLogData> getSnortLogsByHash(String hash);
 }

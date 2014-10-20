@@ -108,13 +108,13 @@ public class SnortMessage {
         snortMessage.alertCause = snortLogData.getAlertCause();
 
         if (isContainsIpHeader(snortLogData)) {
-            snortMessage.ipHeader = createIpHeader(snortLogData);
+            snortMessage.ipHeader = snortLogData.getIpHeader();
 
             // snort message contains protocol header only for TCP, UDP and ICMP protocols
             switch (snortMessage.ipHeader.getProtocolNumber()) {
                 case TCP:
                 case UDP:
-                    snortMessage.protocolHeader = createProtocolHeader(snortLogData);
+                    snortMessage.protocolHeader = snortLogData.getProtocolHeader();
                     break;
             }
         }

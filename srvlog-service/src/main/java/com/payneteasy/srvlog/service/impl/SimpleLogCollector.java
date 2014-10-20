@@ -129,16 +129,12 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public List<SnortMessage> getSnortLogsByLogId(Long logId) {
-        List<SnortLogData> snortLogDatas = logDao.getSnortLogsByLogId(logId);
+    public List<LogData> getLogsByHash(String hash) {
+        return logDao.getLogsByHash(hash);
+    }
 
-        List<SnortMessage> snortMessages = new ArrayList<>(snortLogDatas.size());
-
-        for (SnortLogData snortLogData : snortLogDatas) {
-            SnortMessage snortMessage = createSnortMessage(snortLogData);
-            snortMessages.add(snortMessage);
-        }
-
-        return snortMessages;
+    @Override
+    public List<SnortLogData> getSnortLogsByHash(String hash) {
+        return logDao.getSnortLogsByHash(hash);
     }
 }
