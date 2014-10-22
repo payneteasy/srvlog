@@ -42,6 +42,10 @@ create table snort_logs(
     -- protocol header data
     source_port         int(16) unsigned,
     destination_port    int(16) unsigned,
+    -- http header data
+    host                varchar(60),
+    x_forwarded_for     varchar(60),
+    x_real_ip           varchar(60),
     -- packet payload
     payload             text not null,
 

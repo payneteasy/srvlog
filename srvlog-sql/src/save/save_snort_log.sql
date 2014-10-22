@@ -27,6 +27,10 @@ create procedure save_snort_log(out o_id int (10),
                             -- protocol header data
                             i_source_port         int(16),
                             i_destination_port    int(16),
+                            -- http header data
+                            i_host                varchar(60),
+                            i_x_forwarded_for     varchar(60),
+                            i_x_real_ip           varchar(60),
                             -- packet payload
                             i_payload             text)
 
@@ -35,11 +39,11 @@ main_sql:
     insert into snort_logs(hash, program, sensor_name, date, priority, classification,  alert_cause, protocol_number,
                            protocol_alias, protocol_version, source_ip, destination_ip, header_length, service_type,
                            datagram_length, identification, flags, fragment_offset, time_to_live, checksum,
-                           source_port, destination_port, payload)
+                           source_port, destination_port, host, x_forwarded_for, x_real_ip, payload)
     values (i_hash, i_program, i_sensor_name, i_date, i_priority, i_classification, i_alert_cause, i_protocol_number,
             i_protocol_alias, i_protocol_version, i_source_ip, i_destination_ip, i_header_length, i_service_type,
             i_datagram_length, i_identification, i_flags, i_fragment_offset, i_time_to_live, i_checksum, i_source_port,
-            i_destination_port, i_payload);
+            i_destination_port, i_host, i_x_forwarded_for, i_x_real_ip, i_payload);
 
     set o_id = last_insert_id();
   end
