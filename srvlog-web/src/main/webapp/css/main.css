@@ -290,3 +290,12 @@
             word-wrap: break-word;
             white-space: pre-wrap;
         }
+
+/* Hex viewer styles */
+.hex-viewer-panel td {
+    border: none;
+    margin: 0;
+    padding: 0 10px;
+    white-space: pre;
+    font-family: monospace;
+}

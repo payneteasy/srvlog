@@ -6,6 +6,7 @@ import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.data.SnortLogData;
 import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.srvlog.wicket.component.HexViewerPanel;
 import static java.lang.String.valueOf;
 import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -82,7 +83,7 @@ public class SnortLogMonitorPage extends BasePage {
                 li.add(new Label("classification", snortLogData.getClassification()));
                 li.add(new Label("alert-cause", snortLogData.getAlertCause()));
                 li.add(new Label("ip-header", getHeaderInfo(snortLogData)));
-                li.add(new Label("payload", snortLogData.getPayload()));
+                li.add(new HexViewerPanel("payload", snortLogData.getPayload()));
 
                 addHttpHeaders(li, snortLogData);
             }
