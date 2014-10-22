@@ -1,8 +1,9 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import static com.payneteasy.srvlog.adapter.syslog.HttpHeader.createHttpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.HttpHeader.isContainsHttpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.createIpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
-import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.parseTcpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.parseUdpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.ICMP;
@@ -87,6 +88,13 @@ public class SnortMessage {
             snortMessage.payload = decodePayload(scanner.findInLine("[0-9ABCDEF]+"));
         }
 
+        if (    snortMessage.ipHeader != null
+            &&  snortMessage.ipHeader.getProtocolNumber() == TCP
+            &&  isContainsHttpHeader(snortMessage.payload)
+        ) {
+            snortMessage.httpHeader = createHttpHeader(snortMessage.payload);
+        }
+
         return snortMessage;
     }
 
@@ -120,6 +128,10 @@ public class SnortMessage {
         }
 
         snortMessage.payload = snortLogData.getPayload();
+
+        if (isContainsHttpHeader(snortLogData)) {
+            snortMessage.httpHeader = snortLogData.getHttpHeader();
+        }
 
         return snortMessage;
     }
@@ -203,6 +215,11 @@ public class SnortMessage {
      * Packet protocol header.
      */
     private ProtocolHeader protocolHeader;
+
+    /**
+     * Packet HTTP headers.
+     */
+    private HttpHeader httpHeader;
 
     /**
      * Packet payload.
@@ -289,8 +306,17 @@ public class SnortMessage {
         snortLogData.setAlertCause(alertCause);
         snortLogData.setPayload(payload);
 
-        ipHeader.fillSnortLogData(snortLogData);
-        protocolHeader.fillSnortLogData(snortLogData);
+        if (ipHeader != null) {
+            ipHeader.fillSnortLogData(snortLogData);
+        }
+
+        if (protocolHeader != null) {
+            protocolHeader.fillSnortLogData(snortLogData);
+        }
+
+        if (httpHeader != null) {
+            httpHeader.fillSnortLogData(snortLogData);
+        }
 
         return snortLogData;
     }

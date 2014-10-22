@@ -135,7 +135,9 @@ public class OssecSnortMessage {
             dateParser = dateParser.withDefaultYear(currentYear);
         }
 
-        dateTo = dateParser.parseDateTime(dateString.replaceAll(" +", " "));
+        DateTime creationDate = dateParser.parseDateTime(dateString.replaceAll(" +", " "));
+
+        dateTo = creationDate.plusMinutes(1);
         dateFrom = dateTo.minusMinutes(5);
     }
 

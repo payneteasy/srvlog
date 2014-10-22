@@ -1,9 +1,12 @@
 package com.payneteasy.srvlog.data;
 
+import com.payneteasy.srvlog.adapter.syslog.HttpHeader;
+import static com.payneteasy.srvlog.adapter.syslog.HttpHeader.createHttpHeader;
 import com.payneteasy.srvlog.adapter.syslog.IpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.createIpHeader;
 import com.payneteasy.srvlog.adapter.syslog.ProtocolHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -15,7 +18,7 @@ import javax.persistence.Id;
  *
  * @author imenem
  */
-public class SnortLogData {
+public class SnortLogData implements Serializable {
 
     private Long id;
     private String hash;
@@ -41,6 +44,9 @@ public class SnortLogData {
     private int checksum;
     private int sourcePort;
     private int destinationPort;
+    private String host;
+    private String xForwardedFor;
+    private String xRealIp;
 
     @Id
     @Column(name = "id")
@@ -81,11 +87,11 @@ public class SnortLogData {
 
     @Column(name = "date")
     public Date getDate() {
-        return date;
+        return (Date) date.clone();
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.date = (Date) date.clone();
     }
 
     @Column(name = "priority")
@@ -259,11 +265,42 @@ public class SnortLogData {
         this.destinationPort = destinationPort;
     }
 
+    @Column(name = "host")
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    @Column(name = "x_forwarded_for")
+    public String getxForwardedFor() {
+        return xForwardedFor;
+    }
+
+    public void setxForwardedFor(String xForwardedFor) {
+        this.xForwardedFor = xForwardedFor;
+    }
+
+    @Column(name = "x_real_ip")
+    public String getxRealIp() {
+        return xRealIp;
+    }
+
+    public void setxRealIp(String xRealIp) {
+        this.xRealIp = xRealIp;
+    }
+
     public IpHeader getIpHeader() {
         return createIpHeader(this);
     }
 
     public ProtocolHeader getProtocolHeader() {
         return createProtocolHeader(this);
+    }
+
+    public HttpHeader getHttpHeader() {
+        return createHttpHeader(this);
     }
 }
