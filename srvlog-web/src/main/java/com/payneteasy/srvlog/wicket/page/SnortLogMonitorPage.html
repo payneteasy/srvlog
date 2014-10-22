@@ -59,7 +59,12 @@
                         <td wicket:id="priority"></td>
                         <td wicket:id="classification"></td>
                         <td wicket:id="alert-cause"></td>
-                        <td wicket:id="header"></td>
+                        <td>
+                            <div wicket:id="ip-header"></div>
+                            <div wicket:id="host"></div>
+                            <div wicket:id="x-forwarded-for"></div>
+                            <div wicket:id="x-real-ip"></div>
+                        </td>
                         <td wicket:id="payload"></td>
                     </tr>
                     <tr wicket:id="no-snort-logs"><td colspan="6">No data found</td></tr>
