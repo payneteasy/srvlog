@@ -13,6 +13,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.time.DateFormatUtils.format;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -80,7 +81,11 @@ public class SnortLogMonitorPage extends BasePage {
 
                 li.add(new Label("date", snortLogData.getDate().toString()));
                 li.add(new Label("priority", valueOf(snortLogData.getPriority())));
-                li.add(new Label("classification", snortLogData.getClassification()));
+                li.add(new ExternalLink(
+                    "classification-url",
+                    snortLogData.getSignature().getDescriptionUrl(),
+                    snortLogData.getClassification())
+                );
                 li.add(new Label("alert-cause", snortLogData.getAlertCause()));
                 li.add(new Label("ip-header", getHeaderInfo(snortLogData)));
                 li.add(new HexViewerPanel("payload", snortLogData.getPayload()));
