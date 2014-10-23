@@ -25,6 +25,10 @@ create table snort_logs(
     priority            int(2) unsigned not null,
     classification      varchar(60) not null,
     alert_cause         varchar(256) not null,
+    -- snort signature data
+    generator_id        int(10) unsigned not null,
+    signature_id        int(10) unsigned not null,
+    signature_revision  int(10) unsigned not null,
     -- IP header data
     protocol_number     int(5) unsigned,
     protocol_alias      varchar(60),
