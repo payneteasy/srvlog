@@ -9,6 +9,7 @@ import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.parseUdpHeader
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.ICMP;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.TCP;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolRegistry.UDP;
+import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import com.payneteasy.srvlog.data.SnortLogData;
 import static java.lang.Integer.parseInt;
 import java.text.DateFormat;
@@ -63,6 +64,8 @@ public class SnortMessage {
             snortMessage.classification = scanner.next().trim();
             snortMessage.alertCause = scanner.next().trim();
 
+            snortMessage.signature = createSnortSignature(snortMessage.classification);
+
             if (isContainsIpHeader(rawSnortMessage)) {
                 snortMessage.ipHeader = createIpHeader(rawSnortMessage);
                 // skip parsed ip header in scanner
@@ -114,6 +117,8 @@ public class SnortMessage {
         snortMessage.priority = snortLogData.getPriority();
         snortMessage.classification = snortLogData.getClassification();
         snortMessage.alertCause = snortLogData.getAlertCause();
+
+        snortMessage.signature = snortLogData.getSignature();
 
         if (isContainsIpHeader(snortLogData)) {
             snortMessage.ipHeader = snortLogData.getIpHeader();
@@ -205,6 +210,11 @@ public class SnortMessage {
      * Message cause.
      */
     private String alertCause;
+
+    /**
+     * Snort signature for message.
+     */
+    private SnortSignature signature;
 
     /**
      * Packet ip header.
@@ -305,6 +315,8 @@ public class SnortMessage {
         snortLogData.setClassification(classification);
         snortLogData.setAlertCause(alertCause);
         snortLogData.setPayload(payload);
+
+        signature.fillSnortLogData(snortLogData);
 
         if (ipHeader != null) {
             ipHeader.fillSnortLogData(snortLogData);

@@ -6,6 +6,8 @@ import com.payneteasy.srvlog.adapter.syslog.IpHeader;
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.createIpHeader;
 import com.payneteasy.srvlog.adapter.syslog.ProtocolHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
+import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
+import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -28,6 +30,9 @@ public class SnortLogData implements Serializable {
     private int priority;
     private String classification;
     private String alertCause;
+    private int generatorId;
+    private int signatureId;
+    private int signatureRevision;
     private String payload;
     private int protocolNumber;
     private String protocolAlias;
@@ -119,6 +124,33 @@ public class SnortLogData implements Serializable {
 
     public void setAlertCause(String alertCause) {
         this.alertCause = alertCause;
+    }
+
+    @Column(name = "generator_id")
+    public int getGeneratorId() {
+        return generatorId;
+    }
+
+    public void setGeneratorId(int generatorId) {
+        this.generatorId = generatorId;
+    }
+
+    @Column(name = "signature_id")
+    public int getSignatureId() {
+        return signatureId;
+    }
+
+    public void setSignatureId(int signatureId) {
+        this.signatureId = signatureId;
+    }
+
+    @Column(name = "signature_revision")
+    public int getSignatureRevision() {
+        return signatureRevision;
+    }
+
+    public void setSignatureRevision(int signatureRevision) {
+        this.signatureRevision = signatureRevision;
     }
 
     @Column(name = "payload")
@@ -290,6 +322,10 @@ public class SnortLogData implements Serializable {
 
     public void setxRealIp(String xRealIp) {
         this.xRealIp = xRealIp;
+    }
+
+    public SnortSignature getSignature() {
+        return createSnortSignature(this);
     }
 
     public IpHeader getIpHeader() {
