@@ -1,6 +1,9 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
+import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import static org.joda.time.DateTimeZone.UTC;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -71,6 +74,10 @@ public class SnortMessageTest {
         "| 536 18 512 1947 45 |" +
         PAYLOAD;
 
+    private final static String LOCALIZED_DATE =
+        "Date: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").format(new DateTime(2014, 9, 11, 16, 23, 01, 479, UTC).toDate());
+
+
     @Test
     public void testParseSnortMessageWithFullMEssage() {
         SnortMessage snortMessage = createSnortMessage(FULL_MESSAGE);
@@ -136,7 +143,7 @@ public class SnortMessageTest {
     }
 
     private void assertRequiredMessagePartsExisted(String snortMessage) {
-        assertMessagePartExisted(snortMessage, "Date: 2014-09-11 19:23:01.479");
+        assertMessagePartExisted(snortMessage, LOCALIZED_DATE);
         assertMessagePartExisted(snortMessage, "Priority: 1");
         assertMessagePartExisted(snortMessage, "Classification: [1:1310:5] Snort Alert [1:1310:5]");
         assertMessagePartExisted(snortMessage, "Alert cause: policy-violation");
