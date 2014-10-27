@@ -1,9 +1,8 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
-import com.payneteasy.srvlog.data.SnortLogData;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * @author imenem
