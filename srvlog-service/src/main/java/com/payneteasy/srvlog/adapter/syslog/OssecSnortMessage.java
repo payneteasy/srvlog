@@ -3,13 +3,12 @@ package com.payneteasy.srvlog.adapter.syslog;
 import static com.google.common.hash.Hashing.md5;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import static java.util.Locale.ENGLISH;
 import jregex.Matcher;
 import jregex.Pattern;
 import org.joda.time.DateTime;
-import static org.joda.time.format.DateTimeFormat.forPattern;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Object representation of snort message, processed by ossec.
@@ -67,12 +66,11 @@ public class OssecSnortMessage {
 
     /**
      * Date and time parser.
-     * Uses UTC time zone.
      *
      * {@link DateFormat} isn't thread safe, so we must create
      * own instance of {@link DateFormat} for each {@link SnortMessage} object.
      */
-    private DateTimeFormatter dateParser = forPattern("MMM d HH:mm:ss").withLocale(ENGLISH).withZoneUTC();
+    private final DateFormat dateParser = new SimpleDateFormat("yyyy MMM d HH:mm:ss");
 
     /**
      * Date and time, when ossec finished incoming messages collecting and generated this message.
@@ -127,18 +125,16 @@ public class OssecSnortMessage {
      */
     private void setDate(String dateString) {
         // Date has no year, so we must set in here.
-        // Application processes fresh messages, so this solution is usable.
-        // Application can be runned for a long time, so we must check year every time.
-        int currentYear = new DateTime().getYear();
+        String fullDate = new DateTime().getYear() + " " + dateString.replaceAll(" +", " ");
 
-        if (dateParser.getDefaultYear() != currentYear) {
-            dateParser = dateParser.withDefaultYear(currentYear);
+        try {
+            DateTime creationDate = new DateTime(dateParser.parse(fullDate));
+
+            dateTo = creationDate.plusMinutes(1);
+            dateFrom = dateTo.minusMinutes(5);
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
         }
-
-        DateTime creationDate = dateParser.parseDateTime(dateString.replaceAll(" +", " "));
-
-        dateTo = creationDate.plusMinutes(1);
-        dateFrom = dateTo.minusMinutes(5);
     }
 
 }
