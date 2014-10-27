@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import static com.google.common.hash.Hashing.md5;
+import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -62,6 +63,17 @@ public class OssecSnortMessage {
         snortMessage.hash = md5().hashString(rawMessage, UTF_8).toString();
 
         return snortMessage;
+    }
+
+    /**
+     * Return raw message string from syslog server event.
+     *
+     * @param       event       Syslog server event.
+     *
+     * @return      Raw message from event.
+     */
+    public static String getRawMessage(SyslogServerEventIF event) {
+        return new String(event.getRaw()).replaceFirst("^<\\d+>", "");
     }
 
     /**

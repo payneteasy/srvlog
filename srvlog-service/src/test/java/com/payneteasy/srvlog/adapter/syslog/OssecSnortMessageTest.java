@@ -1,6 +1,10 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import com.nesscomputing.syslog4j.server.impl.event.SyslogServerEvent;
 import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.createOssecSnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.getRawMessage;
+import static java.net.InetAddress.getByName;
+import java.net.UnknownHostException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -20,6 +24,14 @@ public class OssecSnortMessageTest {
         OssecSnortMessage snortMessage = createOssecSnortMessage(MESSAGE);
 
         assertEquals("[1:2016979:3]", snortMessage.getIdentifier());
+        assertEquals("43121a82906a94c006faac0b9877af7d", snortMessage.getHash());
+    }
+
+    @Test
+    public void testGetRawMessage() throws UnknownHostException {
+        String rawMessage = getRawMessage(new SyslogServerEvent("<132>" + MESSAGE, getByName("127.0.0.1")));
+
+        assertEquals(MESSAGE, rawMessage);
     }
 
 }

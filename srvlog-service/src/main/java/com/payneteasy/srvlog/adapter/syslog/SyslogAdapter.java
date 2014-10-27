@@ -7,6 +7,7 @@ import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
 import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.createOssecSnortMessage;
+import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.getRawMessage;
 import static com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage.isSnortMessageFromOssec;
 import static com.payneteasy.srvlog.adapter.syslog.RawSnortMessage.createRawSnortMessage;
 import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
@@ -155,8 +156,10 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
             log.setMessage(message);
         }
 
-        if (isSnortMessageFromOssec(event.getMessage())) {
-            OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(event.getMessage());
+        String rawMessage = getRawMessage(event);
+
+        if (isSnortMessageFromOssec(rawMessage)) {
+            OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(rawMessage);
 
             List<UnprocessedSnortLogData> unprocessedSnortLogs =
                 logCollector.getUnprocessedSnortLogs(ossecSnortMessage);
