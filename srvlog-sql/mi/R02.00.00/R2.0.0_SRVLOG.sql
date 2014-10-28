@@ -23,8 +23,8 @@ create table snort_logs(
     sensor_name         varchar(60) not null,
     date                datetime not null,
     priority            int(2) unsigned not null,
-    classification      varchar(60) not null,
-    alert_cause         varchar(256) not null,
+    classification      varchar(255) not null,
+    alert_cause         varchar(255) not null,
     -- snort signature data
     generator_id        int(10) unsigned not null,
     signature_id        int(10) unsigned not null,
