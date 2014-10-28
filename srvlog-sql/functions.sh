@@ -13,14 +13,31 @@ export SRVLOG_DB_SOCK=${SRVLOG_DB_SOCK:-/var/run/mysqld/mysqld.sock}
 
 export PATH_TO_MYSQL=${PATH_TO_MYSQL:-mysql}
 
-SYSTEM=`uname`
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        OS_NAME="linux" 
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        OS_NAME="macosx"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+       # POSIX compatibility layer and Linux environment emulation for Windows
+        OS_NAME="Windows"
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+        OS_NAME="Windows"
+else
+        # Unknown.
+        OS_NAME="Windows" 
+fi
 
 
-case "$SYSTEM" in
-  CYGWIN*) OS_NAME="Cygwin" ;;
-  Darwin*) OS_NAME="macosx"  ;;
-  Linux*)  OS_NAME="linux"   ;;
-esac
+#SYSTEM=`uname`
+
+
+#case "$SYSTEM" in
+#  CYGWIN*) OS_NAME="Cygwin" ;;
+#  Darwin*) OS_NAME="macosx"  ;;
+#  Linux*)  OS_NAME="linux"   ;;
+#esac
 
 
 fn_exists() {
@@ -30,24 +47,25 @@ fn_exists() {
 
 logInfo() {
     # or tts -s
-    test -t 0 && tput setaf 2 # green
+
+    #test -t 0 && tput setaf 2 # green
     echo $1
-    test -t 0 && tput sgr0
-    [ "$OS_NAME" = "Cygwin" ] && echo "$USER INFO: $1" || logger "$USER INFO: $1"
+    #test -t 0 && tput sgr0
+    [ "$OS_NAME" = "Windows" ] && echo "$USER INFO: $1" || logger "$USER INFO: $1"
 }
 
 logError() {
-    test -t 0 && tput setaf 1 # red
+    #test -t 0 && tput setaf 1 # red
     echo $1
-    test -t 0 && tput sgr0
-    [ "$OS_NAME" = "Cygwin" ] && echo "$USER ERROR: $1" || logger "$USER ERROR: $1"
+    #test -t 0 && tput sgr0
+    [ "$OS_NAME" = "Windows" ] && echo "$USER ERROR: $1" || logger "$USER ERROR: $1"
 }
 
 logWarn() {
-    test -t 0 && tput setaf 3 # yellow
+    #test -t 0 && tput setaf 3 # yellow
     echo $1
-    test -t 0 && tput sgr0
-    [ "$OS_NAME" = "Cygwin" ] && echo "$USER WARN: $1" || logger "$USER WARN: $1"
+    #test -t 0 && tput sgr0
+    [ "$OS_NAME" = "Windows" ] && echo "$USER WARN: $1" || logger "$USER WARN: $1"
 }
 
 die() {
