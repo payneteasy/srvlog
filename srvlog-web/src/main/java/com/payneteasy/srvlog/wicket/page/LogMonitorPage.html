@@ -1,9 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
     <title></title>
-    <wicket:head>
-        <script type="text/javascript" src="js/readmore.js" />
-    </wicket:head>
 </head>
 <body>
 <wicket:extend>
@@ -94,23 +91,6 @@
 
     <script type="text/javascript">
         $("#appendedInputButton").focus();
-    </script>
-
-    <script type="text/javascript">
-        // onLoad
-        (function($, document){$(function(){
-            var readMoreSelector = '.log-message',
-                displayLines = 6,
-                lineHeight   = parseInt($(readMoreSelector + ':first-of-type').css('line-height')),
-                attachReadMore =  function() {
-                    $(readMoreSelector).readmore({
-                        maxHeight: displayLines * lineHeight
-                    });
-                };
-
-            attachReadMore();
-            $(document).ajaxComplete(attachReadMore);
-        })})(jQuery, document);
     </script>
 </wicket:extend>
 </body>
