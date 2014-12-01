@@ -160,7 +160,7 @@ public class DatabaseUtil {
 
 
         Calendar c = Calendar.getInstance();
-        c.set(2012, 0, 1, 0, 0, 0);
+        c.set(2012, Calendar.JANUARY, 1, 0, 0, 0);
 
         List<Integer> facilityList = Arrays.asList(LogFacility.kern.getValue(),
                                                    LogFacility.user.getValue(),
