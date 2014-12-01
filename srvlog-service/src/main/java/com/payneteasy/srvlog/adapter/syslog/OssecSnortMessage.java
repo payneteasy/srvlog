@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import static java.util.Locale.ENGLISH;
 import jregex.Matcher;
 import jregex.Pattern;
 import org.joda.time.DateTime;
@@ -82,7 +83,7 @@ public class OssecSnortMessage {
      * {@link DateFormat} isn't thread safe, so we must create
      * own instance of {@link DateFormat} for each {@link SnortMessage} object.
      */
-    private final DateFormat dateParser = new SimpleDateFormat("yyyy MMM d HH:mm:ss");
+    private final DateFormat dateParser = new SimpleDateFormat("yyyy MMM d HH:mm:ss", ENGLISH);
 
     /**
      * Date and time, when ossec finished incoming messages collecting and generated this message.
