@@ -2,7 +2,6 @@ package com.payneteasy.srvlog.wicket.component.daterange;
 
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
-import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.datetime.PatternDateConverter;
@@ -11,7 +10,6 @@ import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
@@ -122,6 +120,7 @@ public class DateRangePanel extends Panel{
                     protected String getDatePattern() {
                         return DATE_PATTERN;
                     }
+
                 };
             }
         };

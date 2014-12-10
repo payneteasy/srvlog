@@ -6,12 +6,15 @@ create table unprocessed_snort_logs(
     date            datetime not null,
     identifier      varchar(60) not null,
     message         text not null,
-
+    unprocessed_snort_logs_partition_key  int(6)  unsigned not null,
     index pk_id(id),
     index idx_snort_unprocessed_logs_date(date),
     index idx_snort_unprocessed_logs_identifier(identifier)
 )
-engine = innodb;
+engine = innodb
+partition by range (unprocessed_snort_logs_partition_key)(
+  partition unprocessed_snort_logs_100000 values less than(100001)
+  );
 
 drop table if exists snort_logs;
 

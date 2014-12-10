@@ -87,6 +87,21 @@ public class SphinxIndexerServiceIntegrationTest {
     }
 
     @Test
+    public void testQueryByDateTime() throws IndexerServiceException {
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 0, 2, 0, 0, 0);
+        Date from = c.getTime();
+
+        c.roll(Calendar.HOUR_OF_DAY, 3);
+        Date to = c.getTime();
+
+        List<Long> idList = indexerService.search(from, to, null, null, null, null, null, null);
+        assertEquals("4 log records should be found by datetime range specified", 4, idList.size());
+        //System.out.println("Number of ids = " + idList.size());
+    }
+
+
+    @Test
     public void testQueryByPattern() throws IndexerServiceException {
         List<Long> idList = indexerService.search(null, null, null, null, null, "host", 0, 100);
         assertEquals(80, idList.size());

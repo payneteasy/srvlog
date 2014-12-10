@@ -10,6 +10,7 @@ import com.payneteasy.srvlog.wicket.page.detailed.OssecAlertDataPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
