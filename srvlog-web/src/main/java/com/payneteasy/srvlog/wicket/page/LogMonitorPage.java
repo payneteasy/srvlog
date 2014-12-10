@@ -36,6 +36,7 @@ import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassB
 import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel.DateRangeModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import static java.util.Locale.ENGLISH;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.joda.time.DateTime;
 
@@ -57,7 +58,7 @@ public class LogMonitorPage extends BasePage {
     /**
      * Parser for date and time.
      */
-    private final SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm", ENGLISH);
 
     public LogMonitorPage(PageParameters pageParameters) {
         super(pageParameters, LogMonitorPage.class);
