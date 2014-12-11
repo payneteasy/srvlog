@@ -3,14 +3,11 @@ package com.payneteasy.srvlog.service.impl;
 import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
 import com.payneteasy.srvlog.adapter.syslog.RawSnortMessage;
 import com.payneteasy.srvlog.data.UnprocessedSnortLogData;
-import com.payneteasy.srvlog.adapter.syslog.SnortMessage;
-import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +35,10 @@ public class SimpleLogCollector implements ILogCollector {
         logDao.saveLog(logData);
     }
 
+    public void changeHasSnortLogs(Long logId, boolean hasSnortLogs) {
+        logDao.changeHasSnortLogs(logId, hasSnortLogs ? 1 : 0);
+    }
+    
     public void setLogDao(ILogDao logDao) {
         this.logDao = logDao;
     }
@@ -120,11 +121,25 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
+    public void saveOssecLog(OssecLogData ossecLogData) {
+        logDao.saveOssecLog(ossecLogData);
+    }
+
+    @Override
     public List<UnprocessedSnortLogData> getUnprocessedSnortLogs(OssecSnortMessage ossecSnortMessage) {
         return logDao.getUnprocessedSnortLogs(
             ossecSnortMessage.getIdentifier(),
             ossecSnortMessage.getDateFrom(),
             ossecSnortMessage.getDateTo()
+        );
+    }
+
+    @Override
+    public List<OssecLogData> getOssecLogs(RawSnortMessage rawSnortMessage) {
+        return logDao.getOssecLogs(
+            rawSnortMessage.getIdentifier(),
+            rawSnortMessage.getDateFrom(),
+            rawSnortMessage.getDateTo()
         );
     }
 

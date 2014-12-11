@@ -19,6 +19,9 @@ public interface ILogDao {
     @AStoredProcedure(name="save_log")
     void saveLog(LogData log);
 
+    @AStoredProcedure(name="change_has_snort_logs")
+    void changeHasSnortLogs(Long logId, int hasSnortLogs);
+    
     @AStoredProcedure(name="get_log_by_id")
     LogData load(Long id);
 
@@ -61,8 +64,14 @@ public interface ILogDao {
     @AStoredProcedure(name = "save_snort_log")
     void saveSnortLog(SnortLogData snortLogData);
 
+    @AStoredProcedure(name = "save_ossec_log")
+    void saveOssecLog(OssecLogData ossecLogData);
+
     @AStoredProcedure(name = "get_unprocessed_snort_logs")
     List<UnprocessedSnortLogData> getUnprocessedSnortLogs(String identifier, Date fromDate, Date toDate);
+
+    @AStoredProcedure(name = "get_ossec_logs")
+    List<OssecLogData> getOssecLogs(String identifier, Date fromDate, Date toDate);
 
     @AStoredProcedure(name = "delete_all_unprocessed_snort_logs")
     void deleteAllUnprocessedSnortLogs();
