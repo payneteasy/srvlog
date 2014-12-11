@@ -22,6 +22,7 @@ engine = innodb;
 \. save/save_unprocessed.sql
 \. save/save_snort_log.sql
 \. save/save_unprocessed_snort_log.sql
+\. save/save_ossec_log.sql
 
 \. create/create_collections.sql
 
@@ -41,7 +42,10 @@ engine = innodb;
 \. get/get_logs_by_hash.sql
 \. get/get_snort_logs_by_hash.sql
 \. get/get_unprocessed_snort_logs.sql
+\. get/get_ossec_logs.sql
 
 \. delete/delete_all_unprocessed_snort_logs.sql
+
+\. update/change_has_snort_logs.sql
 
 commit;
