@@ -26,7 +26,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <wicket.version>6.4.0</wicket.version>
+        <wicket.version>6.17.0</wicket.version>
         <jetty.version>8.1.8.v20121106</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.security.version>3.2.5.RELEASE</spring.security.version>
@@ -309,11 +309,17 @@
             </dependency>
 
             <!-- mysql driver -->
+
             <dependency>
+            	<groupId>mysql</groupId>
+            	<artifactId>mysql-connector-java</artifactId>
+            	<version>5.1.35</version>
+            </dependency>
+            <!--<dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.22-3</version>
-            </dependency>
+                <version></version>
+            </dependency>-->
 
             <!--json-->
             <dependency>
@@ -390,6 +396,19 @@
 
     <build>
         <plugins>
+
+            <!--<plugin>
+              <groupId>org.owasp</groupId>
+              <artifactId>dependency-check-maven</artifactId>
+              <version>1.2.10</version>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
