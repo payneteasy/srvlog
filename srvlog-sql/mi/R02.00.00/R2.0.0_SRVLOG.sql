@@ -2,18 +2,18 @@ set names utf8 collate utf8_general_ci;
 drop table if exists unprocessed_snort_logs;
 
 create table unprocessed_snort_logs(
-    id              int(10) unsigned not null auto_increment,
-    date            datetime not null,
-    identifier      varchar(60) not null,
-    message         text not null,
-    unprocessed_snort_logs_partition_key  int(6)  unsigned not null,
+    id                                     int(10) unsigned not null auto_increment,
+    date                                   datetime not null,
+    identifier                             varchar(60) not null,
+    message                                text not null,
+    unprocessed_snort_logs_partition_key   int(8)  unsigned not null,
     index pk_id(id),
     index idx_snort_unprocessed_logs_date(date),
     index idx_snort_unprocessed_logs_identifier(identifier)
 )
 engine = innodb
 partition by range (unprocessed_snort_logs_partition_key)(
-  partition unprocessed_snort_logs_100000 values less than(100001)
+  partition unprocessed_snort_logs_10000100 values less than(10000101)
   );
 
 drop table if exists snort_logs;

@@ -16,6 +16,7 @@ engine = innodb;
 
 \. service/check_all_partitions.prc
 \. service/check_monthly_partitions.prc
+\. service/check_daily_partitions.prc
 
 \. save/save_host.sql
 \. save/save_log.sql
