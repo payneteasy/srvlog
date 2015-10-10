@@ -1,15 +1,14 @@
 package com.payneteasy.srvlog.data;
 
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 /**
  * Data transfer object.
  * This class uses to save additional data from ossec message for message searching.
- * 
+ *
  * @author imenem
  */
 public class OssecLogData {
@@ -34,7 +33,7 @@ public class OssecLogData {
     public Long getLogId() {
         return logId;
     }
-    
+
     public void setLogId(Long logId) {
         this.logId = logId;
     }
@@ -65,5 +64,55 @@ public class OssecLogData {
     public void setHash(String hash) {
         this.hash = hash;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.logId);
+        hash = 37 * hash + Objects.hashCode(this.logData);
+        hash = 37 * hash + Objects.hashCode(this.date);
+        hash = 37 * hash + Objects.hashCode(this.identifier);
+        hash = 37 * hash + Objects.hashCode(this.hash);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OssecLogData other = (OssecLogData) obj;
+        if (!Objects.equals(this.logId, other.logId)) {
+            return false;
+        }
+        if (!Objects.equals(this.logData, other.logData)) {
+            return false;
+        }
+        if (!Objects.equals(this.date, other.date)) {
+            return false;
+        }
+        if (!Objects.equals(this.identifier, other.identifier)) {
+            return false;
+        }
+        if (!Objects.equals(this.hash, other.hash)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "OssecLogData{" +
+            "id=" + id + "," +
+            "logId=" + logId + "," +
+            "date=" + date + "," +
+            "identifier=" + identifier + "," +
+            "logData=" + logData + "," +
+            "hash=" + hash
+            + "}";
+    }
+
 }

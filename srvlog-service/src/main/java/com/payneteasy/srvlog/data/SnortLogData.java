@@ -10,8 +10,10 @@ import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
 import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Data transfer object.
@@ -23,7 +25,6 @@ import javax.persistence.Id;
 public class SnortLogData implements Serializable {
 
     private Long id;
-    private String hash;
     private String program;
     private String sensorName;
     private Date date;
@@ -61,15 +62,6 @@ public class SnortLogData implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Column(name = "hash")
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
     }
 
     @Column(name = "program")
@@ -339,4 +331,220 @@ public class SnortLogData implements Serializable {
     public HttpHeader getHttpHeader() {
         return createHttpHeader(this);
     }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 3;
+        hashCode = 17 * hashCode + Objects.hashCode(this.program);
+        hashCode = 17 * hashCode + Objects.hashCode(this.sensorName);
+        hashCode = 17 * hashCode + Objects.hashCode(this.date);
+        hashCode = 17 * hashCode + this.priority;
+        hashCode = 17 * hashCode + Objects.hashCode(this.classification);
+        hashCode = 17 * hashCode + Objects.hashCode(this.alertCause);
+        hashCode = 17 * hashCode + this.generatorId;
+        hashCode = 17 * hashCode + this.signatureId;
+        hashCode = 17 * hashCode + this.signatureRevision;
+        hashCode = 17 * hashCode + this.protocolNumber;
+        hashCode = 17 * hashCode + Objects.hashCode(this.protocolAlias);
+        hashCode = 17 * hashCode + this.protocolVersion;
+        hashCode = 17 * hashCode + Objects.hashCode(this.sourceIp);
+        hashCode = 17 * hashCode + Objects.hashCode(this.destinationIp);
+        hashCode = 17 * hashCode + this.headerLength;
+        hashCode = 17 * hashCode + this.serviceType;
+        hashCode = 17 * hashCode + this.datagramLength;
+        hashCode = 17 * hashCode + this.identification;
+        hashCode = 17 * hashCode + this.flags;
+        hashCode = 17 * hashCode + this.fragmentOffset;
+        hashCode = 17 * hashCode + this.timeToLive;
+        hashCode = 17 * hashCode + this.checksum;
+        hashCode = 17 * hashCode + this.sourcePort;
+        hashCode = 17 * hashCode + this.destinationPort;
+        hashCode = 17 * hashCode + Objects.hashCode(this.host);
+        hashCode = 17 * hashCode + Objects.hashCode(this.xForwardedFor);
+        hashCode = 17 * hashCode + Objects.hashCode(this.xRealIp);
+        return hashCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SnortLogData other = (SnortLogData) obj;
+        if (!Objects.equals(this.program, other.program)) {
+            return false;
+        }
+        if (!Objects.equals(this.sensorName, other.sensorName)) {
+            return false;
+        }
+        if (!Objects.equals(this.date, other.date)) {
+            return false;
+        }
+        if (this.priority != other.priority) {
+            return false;
+        }
+        if (!Objects.equals(this.classification, other.classification)) {
+            return false;
+        }
+        if (!Objects.equals(this.alertCause, other.alertCause)) {
+            return false;
+        }
+        if (this.generatorId != other.generatorId) {
+            return false;
+        }
+        if (this.signatureId != other.signatureId) {
+            return false;
+        }
+        if (this.signatureRevision != other.signatureRevision) {
+            return false;
+        }
+        if (this.protocolNumber != other.protocolNumber) {
+            return false;
+        }
+        if (!Objects.equals(this.protocolAlias, other.protocolAlias)) {
+            return false;
+        }
+        if (this.protocolVersion != other.protocolVersion) {
+            return false;
+        }
+        if (!Objects.equals(this.sourceIp, other.sourceIp)) {
+            return false;
+        }
+        if (!Objects.equals(this.destinationIp, other.destinationIp)) {
+            return false;
+        }
+        if (this.headerLength != other.headerLength) {
+            return false;
+        }
+        if (this.serviceType != other.serviceType) {
+            return false;
+        }
+        if (this.datagramLength != other.datagramLength) {
+            return false;
+        }
+        if (this.identification != other.identification) {
+            return false;
+        }
+        if (this.flags != other.flags) {
+            return false;
+        }
+        if (this.fragmentOffset != other.fragmentOffset) {
+            return false;
+        }
+        if (this.timeToLive != other.timeToLive) {
+            return false;
+        }
+        if (this.checksum != other.checksum) {
+            return false;
+        }
+        if (this.sourcePort != other.sourcePort) {
+            return false;
+        }
+        if (this.destinationPort != other.destinationPort) {
+            return false;
+        }
+        if (!Objects.equals(this.host, other.host)) {
+            return false;
+        }
+        if (!Objects.equals(this.xForwardedFor, other.xForwardedFor)) {
+            return false;
+        }
+        if (!Objects.equals(this.xRealIp, other.xRealIp)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        String string = "SnortLogData{";
+
+        if (!isEmpty(program)) {
+            string += "program=" + program + "; ";
+        }
+        if (!isEmpty(sensorName)) {
+            string += "sensorName=" + sensorName + "; ";
+        }
+        if (date != null) {
+            string += "date=" + date + "; ";
+        }
+        if (priority != 0) {
+            string += "priority=" + priority + "; ";
+        }
+        if (!isEmpty(classification)) {
+            string += "classification=" + classification + "; ";
+        }
+        if (!isEmpty(alertCause)) {
+            string += "alertCause=" + alertCause + "; ";
+        }
+        if (generatorId != 0) {
+            string += "generatorId=" + generatorId + "; ";
+        }
+        if (signatureId != 0) {
+            string += "signatureId=" + signatureId + "; ";
+        }
+        if (signatureRevision != 0) {
+            string += "signatureRevision=" + signatureRevision + "; ";
+        }
+        if (protocolNumber != 0) {
+            string += "protocolNumber=" + protocolNumber + "; ";
+        }
+        if (!isEmpty(protocolAlias)) {
+            string += "protocolAlias=" + protocolAlias + "; ";
+        }
+        if (protocolVersion != 0) {
+            string += "protocolVersion=" + protocolVersion + "; ";
+        }
+        if (!isEmpty(sourceIp)) {
+            string += "sourceIp=" + sourceIp + "; ";
+        }
+        if (!isEmpty(destinationIp)) {
+            string += "destinationIp=" + destinationIp + "; ";
+        }
+        if (headerLength != 0) {
+            string += "headerLength=" + headerLength + "; ";
+        }
+        if (serviceType != 0) {
+            string += "serviceType=" + serviceType + "; ";
+        }
+        if (datagramLength != 0) {
+            string += "datagramLength=" + datagramLength + "; ";
+        }
+        if (identification != 0) {
+            string += "identification=" + identification + "; ";
+        }
+        if (flags != 0) {
+            string += "flags=" + flags + "; ";
+        }
+        if (fragmentOffset != 0) {
+            string += "fragmentOffset=" + fragmentOffset + "; ";
+        }
+        if (timeToLive != 0) {
+            string += "timeToLive=" + timeToLive + "; ";
+        }
+        if (checksum != 0) {
+            string += "checksum=" + checksum + "; ";
+        }
+        if (sourcePort != 0) {
+            string += "sourcePort=" + sourcePort + "; ";
+        }
+        if (destinationPort != 0) {
+            string += "destinationPort=" + destinationPort + "; ";
+        }
+        if (!isEmpty(host)) {
+            string += "host=" + host + "; ";
+        }
+        if (!isEmpty(xForwardedFor)) {
+            string += "xForwardedFor=" + xForwardedFor + "; ";
+        }
+        if (!isEmpty(xRealIp)) {
+            string += "xRealIp=" + xRealIp + "; ";
+        }
+
+        return string + "}";
+    }
+
 }
