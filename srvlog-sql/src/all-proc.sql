@@ -41,5 +41,7 @@ engine = innodb;
 \. get/get_unprocessed_hosts_name.sql
 \. get/get_logs_by_hash.sql
 \. get/get_ossec_logs.sql
+\. get/get_ossec_logs_by_hash.sql
+\. get/get_snort_logs.sql
 
 commit;
