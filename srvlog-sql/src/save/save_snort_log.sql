@@ -2,7 +2,6 @@ drop procedure if exists save_snort_log;
 delimiter $$
 
 create procedure save_snort_log(out o_id int (10),
-                            i_hash                varchar(32),
                             -- snort methadata
                             i_program             varchar(60),
                             i_sensor_name         varchar(60),
@@ -41,7 +40,6 @@ create procedure save_snort_log(out o_id int (10),
 main_sql:
   begin
     insert into snort_logs(
-        hash,
         -- snort methadata
         program,
         sensor_name,
@@ -78,7 +76,6 @@ main_sql:
         payload
     )
     values (
-        i_hash,
         -- snort methadata
         i_program,
         i_sensor_name,

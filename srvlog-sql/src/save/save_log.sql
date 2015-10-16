@@ -7,8 +7,7 @@ create procedure save_log(out o_log_id int (10),
                           i_host     varchar(60),
                           i_message  text,
                           i_program  varchar (60),
-                          i_hash varchar(32),
-                          i_has_snort_logs int(1)
+                          i_hash varchar(32)
 )
 
 main_sql:
@@ -21,11 +20,11 @@ main_sql:
       where hostname = i_host;
 
       if v_host_id is not null then
-           insert into logs(log_date, logs_partition_key, facility, severity, host_id, message, program, hash, has_snort_logs)
-           values (i_log_date, date_format(log_date, "%Y%m"), i_facility, i_severity, v_host_id, i_message, i_program, i_hash, i_has_snort_logs);
+           insert into logs(log_date, logs_partition_key, facility, severity, host_id, message, program, hash)
+           values (i_log_date, date_format(log_date, "%Y%m"), i_facility, i_severity, v_host_id, i_message, i_program, i_hash);
       else
-           insert into unprocessed_logs(log_date, facility, severity, host, message, program, hash, has_snort_logs)
-           values (i_log_date, i_facility, i_severity, i_host, i_message, i_program, i_hash, i_has_snort_logs);
+           insert into unprocessed_logs(log_date, facility, severity, host, message, program, hash)
+           values (i_log_date, i_facility, i_severity, i_host, i_message, i_program, i_hash);
       end if;
      set o_log_id = last_insert_id();
   end

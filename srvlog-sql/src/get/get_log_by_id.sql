@@ -10,8 +10,7 @@ main_sql:
             l.facility,
             l.message,
             l.program,
-            l.hash,
-            l.has_snort_logs
+            l.hash
        from logs l
             join hosts h on l.host_id = h.host_id
       where l.log_id = i_log_id;
@@ -27,7 +26,6 @@ call save_routine_information('get_log_by_id',
                                         'facility int',
                                         'message varchar',
                                         'program varchar',
-                                        'hash varchar',
-                                        'has_snort_logs int'
+                                        'hash varchar'
                                        )
                              );

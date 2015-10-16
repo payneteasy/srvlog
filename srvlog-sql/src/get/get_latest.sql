@@ -11,8 +11,7 @@ create procedure get_latest(i_num_of_logs int(10), i_host_id int(10))
                l.facility,
                l.message,
                l.program,
-               l.hash,
-               l.has_snort_logs
+               l.hash
           from logs l force index ( idx_logs_host_log_date ) join hosts h on l.host_id = h.host_id
          where l.host_id = i_host_id
       order by l.log_date desc
@@ -25,8 +24,7 @@ create procedure get_latest(i_num_of_logs int(10), i_host_id int(10))
                l.facility,
                l.message,
                l.program,
-               l.hash,
-               l.has_snort_logs
+               l.hash
           from logs l force index ( idx_logs_log_date ) join hosts h on l.host_id = h.host_id
       order by l.log_date desc
          limit i_num_of_logs;
@@ -43,7 +41,6 @@ call save_routine_information('get_latest',
                                         'facility int',
                                         'message varchar',
                                         'program varchar',
-                                        'hash varchar',
-                                        'has_snort_logs int'
+                                        'hash varchar'
                                        )
                              );

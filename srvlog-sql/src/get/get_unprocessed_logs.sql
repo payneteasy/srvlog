@@ -10,8 +10,7 @@ main_sql:
                  l.facility,
                  l.message,
                  l.program,
-                 l.hash,
-                 l.has_snort_logs
+                 l.hash
        from unprocessed_logs l
       order by l.log_date desc
       limit i_num_of_logs;
@@ -27,7 +26,6 @@ call save_routine_information('get_unprocessed_logs',
                                         'facility int',
                                         'message varchar',
                                         'program varchar',
-                                        'hash varchar',
-                                        'has_snort_logs int'
+                                        'hash varchar'
                                        )
                              );
