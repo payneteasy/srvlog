@@ -174,7 +174,7 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClassBySeverity(logLevel, item);
 
-                if (logData.hasSnortLogs()) {
+                if (logData.getHash() != null) {
                     PageParameters linkParameters = new PageParameters();
 
                     linkParameters.add("hash", logData.getHash());

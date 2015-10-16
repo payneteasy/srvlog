@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
+import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -9,6 +10,7 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.wicket.component.HexViewerPanel;
 import static java.lang.String.valueOf;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.time.DateFormatUtils.format;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -71,7 +73,14 @@ public class SnortLogMonitorPage extends BasePage {
     }
 
     private void addSnortLogs(String hash) {
-        final List<SnortLogData> snortLogs = logCollector.getSnortLogsByHash(hash);
+        final List<SnortLogData> snortLogs = logCollector.getOssecLogsByHash(hash)
+            .stream()
+            .map(OssecSnortMessage::createOssecSnortMessage)
+            .map(logCollector::getSnortLogs)
+            .flatMap(List::stream)
+            .collect(toList());
+
+        snortLogs.sort((firstLog, secondLog) -> firstLog.getDate().compareTo(secondLog.getDate()));
 
         add(new ListView<SnortLogData>("snort-logs", snortLogs) {
 
