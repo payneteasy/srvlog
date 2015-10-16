@@ -14,7 +14,6 @@ import javax.persistence.Id;
 public class OssecLogData {
     private Long id;
     private Long logId;
-    private LogData logData;
     private Date date;
     private String identifier;
     private String hash;
@@ -69,7 +68,6 @@ public class OssecLogData {
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.logId);
-        hash = 37 * hash + Objects.hashCode(this.logData);
         hash = 37 * hash + Objects.hashCode(this.date);
         hash = 37 * hash + Objects.hashCode(this.identifier);
         hash = 37 * hash + Objects.hashCode(this.hash);
@@ -86,9 +84,6 @@ public class OssecLogData {
         }
         final OssecLogData other = (OssecLogData) obj;
         if (!Objects.equals(this.logId, other.logId)) {
-            return false;
-        }
-        if (!Objects.equals(this.logData, other.logData)) {
             return false;
         }
         if (!Objects.equals(this.date, other.date)) {
@@ -110,7 +105,6 @@ public class OssecLogData {
             "logId=" + logId + "," +
             "date=" + date + "," +
             "identifier=" + identifier + "," +
-            "logData=" + logData + "," +
             "hash=" + hash
             + "}";
     }

@@ -1,5 +1,8 @@
 package com.payneteasy.srvlog.service.impl;
 
+import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
+import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
+import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
@@ -119,7 +122,20 @@ public class SimpleLogCollector implements ILogCollector {
     }
 
     @Override
-    public List<SnortLogData> getSnortLogsByHash(String hash) {
-        return logDao.getSnortLogsByHash(hash);
+    public List<OssecLogData> getOssecLogsByHash(String hash) {
+        return logDao.getOssecLogsByHash(hash);
+    }
+
+    @Override
+    public List<SnortLogData> getSnortLogs(OssecSnortMessage ossecSnortMessage) {
+        SnortSignature signature = createSnortSignature(ossecSnortMessage.getIdentifier());
+
+        return logDao.getSnortLogs(
+            signature.getGeneratorId(),
+            signature.getSignatureId(),
+            signature.getSignatureRevision(),
+            ossecSnortMessage.getDateFrom(),
+            ossecSnortMessage.getDateTo()
+        );
     }
 }

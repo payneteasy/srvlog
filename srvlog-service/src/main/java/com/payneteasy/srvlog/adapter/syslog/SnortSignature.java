@@ -79,6 +79,33 @@ public class SnortSignature {
     private int signatureRevision;
 
     /**
+     * Returns signature generator id.
+     *
+     * @return      Signature generator id.
+     */
+    public int getGeneratorId() {
+        return generatorId;
+    }
+
+    /**
+     * Returns signature id.
+     *
+     * @return      Signature id.
+     */
+    public int getSignatureId() {
+        return signatureId;
+    }
+
+    /**
+     * Returns signature revision.
+     *
+     * @return      Signature revision.
+     */
+    public int getSignatureRevision() {
+        return signatureRevision;
+    }
+
+    /**
      * Returns url to page with signature description.
      *
      * @return      Url to page with signature description.

@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.service;
 
+import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
 import com.payneteasy.srvlog.data.*;
 
 import java.util.Date;
@@ -38,11 +39,14 @@ public interface ILogCollector {
 
     List<OssecAlertData> getOssecAlertData(Date data);
 
+    List<SnortLogData> getSnortLogs(OssecSnortMessage ossecSnortMessage);
+
+    List<OssecLogData> getOssecLogsByHash(String hash);
+
     void saveSnortLog(SnortLogData snortLogData);
 
     void saveOssecLog(OssecLogData ossecLogData);
 
     List<LogData> getLogsByHash(String hash);
 
-    List<SnortLogData> getSnortLogsByHash(String hash);
 }

@@ -63,9 +63,13 @@ public interface ILogDao {
     @AStoredProcedure(name = "get_ossec_logs")
     List<OssecLogData> getOssecLogs(String identifier, Date fromDate, Date toDate);
 
+    @AStoredProcedure(name = "get_ossec_logs_by_hash")
+    List<OssecLogData> getOssecLogsByHash(String hash);
+
+    @AStoredProcedure(name = "get_snort_logs")
+    List<SnortLogData> getSnortLogs(int generatorId, int signatureId, int signatureRevision, Date fromDate, Date toDate);
+
     @AStoredProcedure(name = "get_logs_by_hash")
     List<LogData> getLogsByHash(String hash);
 
-    @AStoredProcedure(name = "get_snort_logs_by_hash")
-    List<SnortLogData> getSnortLogsByHash(String hash);
 }

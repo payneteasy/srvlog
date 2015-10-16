@@ -83,11 +83,12 @@ public class SnortMessageManager {
      * @param       logData         Object with common log data.
      */
     public void processOssecSnortMessage(String rawMessage, LogData logData) {
-        OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(rawMessage, logData);
-
+        OssecSnortMessage ossecSnortMessage = createOssecSnortMessage(rawMessage);
         logData.setHash(ossecSnortMessage.getHash());
 
         saveLog(logData);
+
+        ossecSnortMessage.setLogData(logData);
         logCollector.saveOssecLog(ossecSnortMessage.toOssecLogData());
     }
 
