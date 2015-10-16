@@ -20,19 +20,19 @@ import org.junit.Test;
  * @author imenem
  */
 public class SnortMessageManagerTest extends CommonIntegrationTest {
-    
+
     private final static String IDENTIFIER = "[1:2016979:3]";
-    
+
     private final static DateTime DATE = new DateTime();
-    
-    private final static String OSSEC_MESSAGE = 
+
+    private final static String OSSEC_MESSAGE =
         DATE.toString("MMM d HH:mm:ss", ENGLISH) + " log-1 ossec: Alert Level: 10; Rule: 20121 - MIDSE on nginx-1; " +
         "Location: (firewall) 10.0.1.1->/var/log/messages; srcip: 185.56.80.125; dstip: 10.0.2.4; " +
-        "Jun  9 16:08:10 firewall snort[20441]: " + IDENTIFIER + 
+        "Jun  9 16:08:10 firewall snort[20441]: " + IDENTIFIER +
         " ET WEB_SERVER suhosin.simulation PHP config option in uri " +
         "[Classification: A Network Trojan was detected] [Priority: 1] <eth3> {TCP} 185.56.80.125:59841 -> 10.0.2.4:4027";
-    
-    private final static String SNORT_MESSAGE = 
+
+    private final static String SNORT_MESSAGE =
         "| [SNORTIDS[LOG]: [snortIds1-eth1] ] |" +
         "| " + DATE.withZone(UTC).toString("yyyy-MM-dd HH:mm:ss.SSS", ENGLISH) + " 1 " + IDENTIFIER + " Snort Alert [1:2016979:3] |" +
         "| policy-violation |" +
@@ -60,9 +60,9 @@ public class SnortMessageManagerTest extends CommonIntegrationTest {
         "5352D32333A3B204F47503D2D343036313135353A3B20505245463D49443D616639656538316235343936363363613A553D333" +
         "665613666653664353032666631663A46463D303A4C443D72753A4E523D31303A544D3D313430353430383935303A4C4D3D313" +
         "431303434313737373A53473D333A533D6457513855344B6F69352D59766E366F0D0A436F6E6E656374696F6E3A204B6565702D416C6976650D0A0D0A|";
-    
+
     private ILogDao logDao;
-    
+
     private SnortMessageManager snortMessageManager;
 
     @Override
@@ -72,46 +72,34 @@ public class SnortMessageManagerTest extends CommonIntegrationTest {
         logDao = context.getBean(ILogDao.class);
         snortMessageManager = new SnortMessageManager(context.getBean(ILogCollector.class));
     }
-    
+
     @Test
     public void testOssecMessageComesFirst() {
         LogData logData = getLogData();
-        
+
         snortMessageManager.processOssecSnortMessage(OSSEC_MESSAGE, logData);
         snortMessageManager.processRawSnortMessage(SNORT_MESSAGE);
-        
-        // SnortMessageManager changes data directly in DB
-        LogData reloadedLogData = reloadLogData(logData);
-        
+
         assertNotNull("Log must be saved", logData.getId());
-        assertTrue(reloadedLogData.hasSnortLogs());
     }
-    
+
     @Test
     public void testRawMessageComesFirst() {
         LogData logData = getLogData();
-        
+
         snortMessageManager.processRawSnortMessage(SNORT_MESSAGE);
         snortMessageManager.processOssecSnortMessage(OSSEC_MESSAGE, logData);
-        
-        // SnortMessageManager changes data directly in DB
-        LogData reloadedLogData = reloadLogData(logData);
-        
+
         assertNotNull("Log must be saved", logData.getId());
-        assertTrue(reloadedLogData.hasSnortLogs());
     }
-    
+
     private LogData getLogData() {
         LogData logData = new LogData();
-        
+
         logData.setDate(new Date());
         logData.setHost("host1");
 
         return logData;
-    }
-    
-    private LogData reloadLogData(LogData logData) {
-        return logDao.load(logData.getId());
     }
 }
 
