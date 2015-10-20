@@ -247,7 +247,7 @@ public class SyslogAdapterTest {
 
         snortLogData.setProgram("snort");
         snortLogData.setSensorName("snortIds1-eth1");
-        snortLogData.setDate(new DateTime("2014-09-11T19:23:01.479").toDate());
+        snortLogData.setDate(new DateTime("2014-09-11T16:23:01.479Z").toDate());
         snortLogData.setPriority(1);
         snortLogData.setClassification("[1:1310:5] Snort Alert [1:1310:5]");
         snortLogData.setAlertCause("policy-violation");
