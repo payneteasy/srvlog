@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
+import static org.joda.time.DateTimeZone.UTC;
 
 import static org.junit.Assert.*;
 
@@ -201,8 +202,8 @@ public class LogDaoTest extends CommonIntegrationTest {
 
         assertNotNull(snortLogData.getId());
 
-        Date dateTo = new DateTime(2014, 9, 11, 19, 23, 2).toDate();;
-        Date dateFrom = new DateTime(2014, 9, 11, 19, 23, 0).toDate();
+        Date dateTo = new DateTime(2014, 9, 11, 16, 23, 2, UTC).toDate();
+        Date dateFrom = new DateTime(2014, 9, 11, 16, 23, 0, UTC).toDate();
 
         List<SnortLogData> snortLogDatas = logDao.getSnortLogs(1, 1310, 5, dateFrom, dateTo);
 
