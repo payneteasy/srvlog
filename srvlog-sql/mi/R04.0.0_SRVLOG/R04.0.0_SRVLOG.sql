@@ -279,8 +279,10 @@ drop trigger if exists trg_snort_logs_au;
 drop table if exists tmp_mi_snort_logs_identifiers;
 rename table snort_logs to snort_logs_500_old, snort_logs_new to snort_logs;
 
+drop event if exists ev_check_snort_logs_partitions;
+
 create event ev_check_snort_logs_partitions
-    on schedule every 4 hours starts now()
+    on schedule every 4 hour starts now()
     comment 'Check snort_logs table partitions'
     do call check_monthly_partitions('snort_logs', date_add(now(), interval 1 day), 6);
 
