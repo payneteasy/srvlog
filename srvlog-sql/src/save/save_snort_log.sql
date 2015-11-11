@@ -40,6 +40,7 @@ create procedure save_snort_log(out o_id int (10),
 main_sql:
   begin
     insert into snort_logs(
+        snort_logs_partition_key,
         -- snort methadata
         program,
         sensor_name,
@@ -76,6 +77,7 @@ main_sql:
         payload
     )
     values (
+        date_format(now(), "%Y%m"),
         -- snort methadata
         i_program,
         i_sensor_name,
