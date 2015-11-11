@@ -244,10 +244,10 @@ insert         into snort_logs_new(id,
                  s.payload
             from snort_logs s, tmp_mi_snort_logs_identifiers t
    where t.id = s.id
-on duplicate key update snort_logs_partition_key = s.snort_logs_partition_key,
+on duplicate key update snort_logs_partition_key = date_format(s.date, "%Y%m"),
                         program = s.program,
                         sensor_name = s.sensor_name,
-                        date = date_format(s.date "%Y%m"),
+                        date = s.date,
                         priority = s.priority,
                         classification = s.classification,
                         alert_cause = s.alert_cause,
