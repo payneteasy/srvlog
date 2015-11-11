@@ -2,6 +2,6 @@
 
 . ../../functions.sh
 
-runScript R3.0.0_SRVLOG.sql
+runScript R03.0.0_SRVLOG.sql
 
 exit $?
