@@ -96,6 +96,67 @@ public class SyslogAdapterTest {
     }
 
     @Test
+    public void testParseMessageFromMariaAuditPlugin() throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+
+        String syslogMessage = "<14>Mar  9 17:05:07 log-1 mysql-server_auditing:  log-1,root,localhost,30,0,FAILED_CONNECT,,,1045";
+        adapter = new SyslogAdapter();
+        ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
+        adapter.setLogCollector(mockLogCollector);
+        LogData logData = new LogData();
+        Calendar c = Calendar.getInstance();
+        c.set(2016, 02, 9, 17, 5, 07);
+        c.set(Calendar.MILLISECOND, 0);
+
+        logData.setDate(c.getTime());
+        logData.setFacility(LogFacility.user.getValue());
+        logData.setSeverity(LogLevel.INFO.getValue());
+
+        AdapterHelper.setHostName(inetAddress, logData);
+
+        logData.setProgram("mysql-server_auditing");
+        logData.setMessage(":  log-1,root,localhost,30,0,FAILED_CONNECT,,,1045");
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockLogCollector);
+
+        adapter.event(null, null, new SyslogServerEvent(syslogMessage, InetAddress.getLocalHost()));
+
+        EasyMock.verify(mockLogCollector);
+    }
+
+
+    @Test
+    public void testParseMessageWithoutColon() throws UnknownHostException {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+
+        String syslogMessage = "<14>Mar  9 17:05:07 log-1 mysql-server_auditing  log-1,root,localhost,30,0,FAILED_CONNECT,,,1045";
+        adapter = new SyslogAdapter();
+        ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
+        adapter.setLogCollector(mockLogCollector);
+        LogData logData = new LogData();
+        Calendar c = Calendar.getInstance();
+        c.set(2016, 02, 9, 17, 5, 07);
+        c.set(Calendar.MILLISECOND, 0);
+
+        logData.setDate(c.getTime());
+        logData.setFacility(LogFacility.user.getValue());
+        logData.setSeverity(LogLevel.INFO.getValue());
+
+        AdapterHelper.setHostName(inetAddress, logData);
+
+        logData.setProgram(null);
+        logData.setMessage("mysql-server_auditing  log-1,root,localhost,30,0,FAILED_CONNECT,,,1045");
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockLogCollector);
+
+        adapter.event(null, null, new SyslogServerEvent(syslogMessage, InetAddress.getLocalHost()));
+
+        EasyMock.verify(mockLogCollector);
+    }
+
+    @Test
     public void parseLogMessageWithoutHostName() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getLocalHost();
         String syslogMessage = "<13>Dec 22 05:31:55 monit[1612]: 'rootfs' space usage 80.6% matches resource limit [space usage>80.0%]";

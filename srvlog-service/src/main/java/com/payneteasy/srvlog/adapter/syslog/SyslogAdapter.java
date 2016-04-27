@@ -124,12 +124,14 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
             int tagEndIdx = message.indexOf(":");
 
-            if (tagIdx == -1) {
-                message = message.substring(tagEndIdx + 1);
+            if (tagIdx == -1 && tagEndIdx > 1) {
+                message = parseProgramField(log, message, tagEndIdx);
             } else if (tagEndIdx > -1 && tagEndIdx < tagIdx) {
                 message = parseProgramField(log, message, tagEndIdx);
             } else if (tagIdx > -1) {
                 message = parseProgramField(log, message, tagIdx);
+            } else {
+                message = message.substring(message.indexOf(" ") + 1);
             }
 
             log.setMessage(message);
