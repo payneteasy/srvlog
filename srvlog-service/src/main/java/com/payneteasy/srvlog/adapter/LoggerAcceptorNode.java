@@ -20,6 +20,7 @@ public abstract class LoggerAcceptorNode<T> implements Runnable {
         this.socket = socket;
         this.logger = logger;
         try {
+            this.socket.setKeepAlive(true);
             ois = new ObjectInputStream(
                     new BufferedInputStream(socket.getInputStream()));
         } catch(InterruptedIOException e) {

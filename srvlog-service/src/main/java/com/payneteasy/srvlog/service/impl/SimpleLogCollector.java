@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,12 @@ public class SimpleLogCollector implements ILogCollector {
 
     @Override
     public void saveLog(LogData logData) {
+        if (logData.getDate() == null) {
+            logData.setDate(new Date());
+        }
+        if (logData.getHost() == null){
+            throw new RuntimeException(MessageFormat.format("Cannot save logData without host: {0}", logData));
+        }
         logDao.saveLog(logData);
     }
 

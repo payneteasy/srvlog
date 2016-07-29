@@ -6,7 +6,10 @@ import ch.qos.logback.classic.util.LevelToSyslogSeverity;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
 
+import java.text.MessageFormat;
 import java.util.Date;
 
 /**
@@ -15,7 +18,6 @@ import java.util.Date;
 class LogbackAdapterUtils {
     public static LogData buildLogData(ServerLogbackEvent logEvent, String program) {
         LogData logData = new LogData();
-        String address = logEvent.getHost().getHostAddress();
         logData.setHost(AdapterHelper.extractHostname(logEvent.getHost()));
         logData.setSeverity(LevelToSyslogSeverity.convert(logEvent.getLogEvent()));
         logData.setFacility(LogFacility.user.getValue());
@@ -27,11 +29,19 @@ class LogbackAdapterUtils {
 
     static String getLogbackMessage(ILoggingEvent logEvent) {
         StringBuilder builder = new StringBuilder();
-        builder.append(logEvent.getMessage());
+        builder.append(logEvent.getFormattedMessage());
         if (logEvent.getThrowableProxy() != null) {
             builder.append("\n");
             builder.append(ThrowableProxyUtil.asString(logEvent.getThrowableProxy()));
         }
         return builder.toString();
+    }
+
+    public static String getLogbackProgram(ILoggingEvent logEvent, String defaultProgram) {
+        String program = null;
+        if (logEvent.getLoggerContextVO() != null && logEvent.getLoggerContextVO().getPropertyMap() != null) {
+            program = logEvent.getLoggerContextVO().getPropertyMap().get("program");
+        }
+        return program != null? program: defaultProgram;
     }
 }

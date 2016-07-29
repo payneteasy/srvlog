@@ -35,8 +35,8 @@
     <appender-ref ref="server"/>
   </logger>
 -->
-  <logger name="com.payneteasy.srvlog" level="INFO"/>
-  <root level="INFO">
+  <logger name="com.payneteasy.srvlog" level="DEBUG"/>
+  <root level="DEBUG">
     <appender-ref ref="console"/>
     <!--<appender-ref ref="file"/>-->
   </root>

@@ -30,9 +30,11 @@ public class LogbackUDPAdapter extends AbstractUDPLoggerAdapter {
     }
 
     void processEvent(ServerLogbackEvent logEvent) {
-        LogData logData = LogbackAdapterUtils.buildLogData(logEvent, getProgram());
+        logger.debug("Obtain message from syslog: {}", logEvent.getLogEvent().getFormattedMessage());
 
-        logger.info("New " + getLoggerTypeName() + " event caught");
+        LogData logData = LogbackAdapterUtils.buildLogData(logEvent, LogbackAdapterUtils.getLogbackProgram(logEvent.getLogEvent(), getProgram()));
+
+        logger.debug("Saving " + getLoggerTypeName() + " event: {}", logData);
         getLogCollector().saveLog(logData);
     }
 

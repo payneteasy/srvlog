@@ -47,12 +47,12 @@ public class SimpleLogCollectorTest {
         try {
             syslogAdapter.init();
             SyslogIF udpSyslogClient = createSyslog4jClient(testSyslogConfig);
-            udpSyslogClient.info("program[1234]:message"); //log level 6
+            udpSyslogClient.info("program[1234]: message"); //log level 6
             for (int i = 1; i <= 3; i++) {
                 try {
-                   verify(mockLogDao);
-                   messageRetrieved = true;
-                   break;
+                    verify(mockLogDao);
+                    messageRetrieved = true;
+                    break;
                 } catch (AssertionError e) {
                     System.out.printf("The message has not been retrieved. %s seconds passed.\n", i);
                     verificationError = e;
@@ -64,10 +64,21 @@ public class SimpleLogCollectorTest {
         } finally {
             syslogAdapter.destroy();
         }
-        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError !=null ? verificationError.getMessage(): null), messageRetrieved);
+        assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError != null ? verificationError.getMessage() : null), messageRetrieved);
 
 
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testLogDataWithoutHost() {
+        SimpleLogCollector logCollector = new SimpleLogCollector();
+
+        LogData testLogData = getTestLogData();
+        testLogData.setHost(null);
+        logCollector.saveLog(testLogData);
+    }
+
+
 
     private LogData getTestLogData() {
         LogData logData = new LogData();
@@ -75,8 +86,9 @@ public class SimpleLogCollectorTest {
         calendar.set(Calendar.MILLISECOND, 0);
         logData.setDate(new Date());
         logData.setSeverity(6);
+        logData.setHost("127.0.0.1");
         logData.setFacility(LogFacility.alert.getValue());
-        logData.setMessage("[1234]:message");
+        logData.setMessage("[1234]: message");
         logData.setProgram("program");
         return logData;
     }
@@ -87,6 +99,8 @@ public class SimpleLogCollectorTest {
         udpSyslogClient.getConfig().setSendLocalName(false);
         udpSyslogClient.getConfig().setSendLocalTimestamp(false);
         udpSyslogClient.getConfig().setPort(mockLogAdapterConfig.getSyslogPort());
+        //udpSyslogClient.getConfig().set
+        //udpSyslogClient.getConfig().setHost("localhost");
 
         udpSyslogClient.getConfig().setFacility(SyslogFacility.alert);
 
@@ -142,7 +156,7 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testSaveUnprocessedLogs(){
+    public void testSaveUnprocessedLogs() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
@@ -161,7 +175,7 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testHasUnprocessedLogs(){
+    public void testHasUnprocessedLogs() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
@@ -180,7 +194,7 @@ public class SimpleLogCollectorTest {
 
 
     @Test
-    public void testSaveHosts(){
+    public void testSaveHosts() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
@@ -200,7 +214,7 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testGetUnprocessedHostsName(){
+    public void testGetUnprocessedHostsName() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
@@ -275,10 +289,10 @@ public class SimpleLogCollectorTest {
         return new ArrayList<LogData>();
     }
 
-    private static List<HostData> getHostDataList(){
+    private static List<HostData> getHostDataList() {
         String hosts = "host1,12.12.12.13;host2,12.12.12.13";
         String[] arrayHosts = hosts.split(";");
-        List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length-1);
+        List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length - 1);
         for (String arrayHost : arrayHosts) {
             String[] currentHost = arrayHost.split(",");
             HostData hostData = new HostData();

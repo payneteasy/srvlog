@@ -49,6 +49,35 @@ public class LogbackTCPAdapterTest {
     }
 
     @Test
+    public void testSendLogbakLogWithArgumentsDirectly() throws IOException {
+        ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
+
+        LogbackTCPAdapter logbackAdapter = new LogbackTCPAdapter(mockLogCollector, "paynet", 4000);
+
+        Calendar c = buildReferenceCalendar();
+        LogData logData = buildReferenceLogDataWithArgumens(c);
+
+        mockLogCollector.saveLog(logData);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockLogCollector);
+
+        /*ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                Level.WARN, "This is test logging", null, null);
+*/
+
+
+        ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
+                Level.WARN, "clientOrderId={}", null, new Object[]{344567});
+
+        logbackAdapter.processEvent(new ServerLogbackEvent(logEvent, InetAddress.getLoopbackAddress()));
+
+        EasyMock.verify(mockLogCollector);
+
+    }
+
+
+
+    @Test
     public void testSendLog4jLogUsingTCP() throws IOException, InterruptedException {
 
         final CountDownLatch savedLatch = new CountDownLatch(1);
@@ -106,6 +135,23 @@ public class LogbackTCPAdapterTest {
         logData.setMessage("This is test logging");
         return logData;
     }
+
+    private LogData buildReferenceLogDataWithArgumens(Calendar c) {
+        LogData logData = new LogData();
+
+
+        logData.setDate(c.getTime());
+        logData.setFacility(LogFacility.user.getValue());
+        logData.setSeverity(LogLevel.WARN.getValue());
+
+        AdapterHelper.setHostName(InetAddress.getLoopbackAddress(), logData);
+
+        logData.setProgram("paynet");
+        logData.setMessage("clientOrderId=344567");
+        return logData;
+
+    }
+
 
     private Calendar buildReferenceCalendar() {
         Calendar c = Calendar.getInstance();
