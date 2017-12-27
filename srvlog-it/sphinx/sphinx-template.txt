@@ -11,7 +11,7 @@ source srvlog_logs_main
 	sql_pass		= @SRVLOG_DB_PASSWORD@
 	sql_db			= @SRVLOG_DB_DATABASE@
 	sql_port		= @SRVLOG_DB_PORT@
-	sql_sock        = @SRVLOG_DB_SOCK@
+
 
     sql_query_pre = SET NAMES utf8
     sql_query_pre = REPLACE INTO sph_counter SELECT 1, MAX(log_id) FROM logs

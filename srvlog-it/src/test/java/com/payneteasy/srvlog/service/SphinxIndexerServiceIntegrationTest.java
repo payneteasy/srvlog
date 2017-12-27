@@ -3,14 +3,13 @@ package com.payneteasy.srvlog.service;
 import com.payneteasy.srvlog.DatabaseUtil;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
-import com.payneteasy.srvlog.service.impl.SphinxIndexerService;
-import com.payneteasy.srvlog.util.DateRange;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sphx.api.SphinxException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -35,10 +34,12 @@ public class SphinxIndexerServiceIntegrationTest {
 
     @BeforeClass
     public static void setUpAll() throws IOException, InterruptedException {
-        DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
+        DatabaseUtil.cleanAndMigrateDatabase();
+        //DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
         context = new ClassPathXmlApplicationContext("classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml");
         DatabaseUtil.generateTestLogs(context.getBean(ILogCollector.class));
-        DatabaseUtil .runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"),new File("sphinx"));
+        DatabaseUtil.createSphinxConf();
+        //DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"),new File("sphinx"));
         File targetWorkingDir = new File("target");
         DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("indexer", "--config","test-sphinx.conf", "--all"), targetWorkingDir);
         sphinxDaemonProcess = DatabaseUtil.runCommand(Arrays.asList("searchd", "--config", "test-sphinx.conf"), targetWorkingDir);
@@ -174,57 +175,6 @@ public class SphinxIndexerServiceIntegrationTest {
         }
     }
 
-    public static void main(String[] args)  {
 
-        try {
-            DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"), new File("sphinx"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        /*SphinxIndexerService service = new SphinxIndexerService();
-        service.setHost("93.188.253.57");
-        service.setPort(9312);
-        service.setConnectTimeout(30000);
-
-        DateRange thisMonth = DateRange.thisMonth();
-        Map<Date, Long> dateLongMap = service.numberOfLogsByDate(thisMonth.getFromDate(), thisMonth.getToDate(), 0, 30);
-
-        System.out.println(dateLongMap.size());
-*/
-
-        /*SphinxClient client = new SphinxClient("93.188.253.57", 9312);
-        client.SetConnectTimeout(1000000);
-
-        client.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
-        client.SetLimits(0, 100);
-        //client.SetSelect("@count as mycount, @group as mygroup");
-        //DateRange lastMonth = DateRange.lastMonth();
-        //client.SetFilterRange("log_date", (lastMonth.getFromDate().getTime()/1000), lastMonth.getToDate().getTime()/1000);
-        client.SetGroupBy("log_date", SphinxClient.SPH_GROUPBY_DAY);
-        SphinxResult result = client.Query("");
-        System.out.println(result.warning);
-        System.out.println(result.error );
-
-        for (SphinxMatch sm: result.matches) {
-            System.out.println();
-            int i = 0;
-            for(Object o: sm.attrValues) {
-                if ("log_date".equalsIgnoreCase(result.attrNames[i])) {
-                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + new Date(((Long)o) * 1000) + ", " + o.getClass().getName());
-                } else {
-                    System.out.print(result.attrNames[i] + "("  + result.attrTypes[i] + ")"+ "=" + o + ", " + o.getClass().getName());
-                }
-                i++;
-            }
-
-            //System.out.println("count = " + sm.attrValues.get(0)+ ",  group = " + sm.attrValues.get(1));
-
-        }
-
-        System.out.println("\n " + result.matches.length + " results found");*/
-    }
 
 }

@@ -26,7 +26,7 @@ public class CommonIntegrationTest {
     }
 
     protected void createDatabase() throws IOException, InterruptedException {
-        DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
+        DatabaseUtil.cleanAndMigrateDatabase();
     }
 
     @After

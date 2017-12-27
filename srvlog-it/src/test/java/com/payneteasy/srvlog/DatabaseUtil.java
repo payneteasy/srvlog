@@ -4,15 +4,17 @@ import com.nesscomputing.syslog4j.SyslogIF;
 import com.nesscomputing.syslog4j.SyslogMessageIF;
 import com.nesscomputing.syslog4j.impl.message.pci.PCISyslogMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.data.LogFacility;
-import com.payneteasy.srvlog.data.LogLevel;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.ILogCollector;
+import org.flywaydb.core.internal.database.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -21,27 +23,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class DatabaseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseUtil.class);
-
-    public static void createDatabase(String[] createDbCommand) throws IOException, InterruptedException {
-        if("true".equals(System.getProperty("skip.createdb"))) {
-            LOG.warn("Skipped creating database");
-        } else {
-            LOG.info("Creating database structure ...  (use -Dskip.createdb=true to skip)");
-            Runtime runtime = Runtime.getRuntime();
-
-            Process process = runtime.exec(createDbCommand);
-            if(LOG.isInfoEnabled()) {
-                new Thread(new ProcessStreamReader(false, process.getInputStream())).start();
-            }
-            new Thread(new ProcessStreamReader(true, process.getErrorStream())).start();
-
-            int result = process.waitFor();
-            if(result!=0) {
-                throw new IllegalStateException("Error creating database [error_code="+result+"]");
-            }
-        }
-    }
-
 
     public static Process runCommand(List<String> parameters, File workingDir) throws IOException, InterruptedException {
         LOG.info("Running {}", parameters);
@@ -71,6 +52,13 @@ public class DatabaseUtil {
             throw new IllegalStateException("Error executing "+ parameters + "  [error_code="+result+"]");
         }
     }
+
+    public static void cleanAndMigrateDatabase() throws IOException {
+        SrvlogDbMigrator srvlogDbMigrator = SrvlogDbMigrator.getInstance(System.getProperty("configFile"));
+        srvlogDbMigrator.cleanDatabase();
+        srvlogDbMigrator.migrateDatabase();
+    }
+
 
 
     private static class ProcessStreamReader implements Runnable {
@@ -261,7 +249,29 @@ public class DatabaseUtil {
 
     }
 
-    public static void main(String[] args) {
-        DatabaseUtil.generateTestLogs(null);
+    public static void createSphinxConf() throws IOException {
+        //File sphinxTemplatePath = new File("sphinx/sphinx-template.txt");
+        //Path
+        //System.out.println();
+        Files.createDirectories(FileSystems.getDefault().getPath("target", "data"));
+        Files.createDirectories(FileSystems.getDefault().getPath("target", "log"));
+
+        SrvlogDbMigrator migrator = SrvlogDbMigrator.getInstance(System.getProperty("configFile"));
+        String sphinxTemplate = new String(Files.readAllBytes(FileSystems.getDefault().getPath("sphinx","sphinx-template.txt")));
+        sphinxTemplate = sphinxTemplate.replace("@SRVLOG_DB_HOST@", "127.0.0.1");
+        sphinxTemplate = sphinxTemplate.replace("@SRVLOG_DB_USERNAME@",migrator.getUser());
+        sphinxTemplate = sphinxTemplate.replace("@SRVLOG_DB_PASSWORD@",migrator.getPassword());
+        sphinxTemplate = sphinxTemplate.replace("@SRVLOG_DB_DATABASE@","srvlog");
+        sphinxTemplate = sphinxTemplate.replace("@SRVLOG_DB_PORT@","3306");
+        sphinxTemplate = sphinxTemplate.replace("@SPHINX_DIR@", FileSystems.getDefault().getPath("target").toAbsolutePath().toString().replace("//", "////"));
+        System.out.println(FileSystems.getDefault().getPath("target").toAbsolutePath().toString());
+        Files.write(FileSystems.getDefault().getPath("target", "test-sphinx.conf"), sphinxTemplate.getBytes("UTF-8"));
+        //System.out.println(sphinxTemplate);
     }
+
+
+    public static void main(String[] args) throws IOException {
+        DatabaseUtil.createSphinxConf();
+    }
+
 }

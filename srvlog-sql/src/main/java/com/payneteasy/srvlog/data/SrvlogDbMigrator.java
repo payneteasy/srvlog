@@ -5,8 +5,9 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -138,12 +139,7 @@ public class SrvlogDbMigrator {
 
         logger.info("Check for configFile first");
         String configFile = System.getProperty("configFile");
-        Properties props = new Properties();
-        if (configFile != null) {
-            logger.info("configFile=" + configFile + " found. Load properties");
-            props.load(SrvlogDbMigrator.class.getClassLoader().getResourceAsStream(configFile));
-        }
-        SrvlogDbMigrator dbMigrator = new SrvlogDbMigrator(props);
+        SrvlogDbMigrator dbMigrator = getInstance(configFile);
         if(args.length > 0 ) {
             String command = args[0];
             if (Objects.equals("clean", command)) {
@@ -176,6 +172,19 @@ public class SrvlogDbMigrator {
             );
         }
 
+    }
+
+    public static SrvlogDbMigrator getInstance(String configFile) throws IOException {
+        Properties props = new Properties();
+        if (configFile != null) {
+            logger.info("configFile=" + configFile + " found. Load properties");
+            try (Reader reader = Files.newBufferedReader(Paths.get(configFile))) {
+                props.load(reader);
+            }
+        } else {
+            logger.info("No configFile found.");
+        }
+        return new SrvlogDbMigrator(props);
     }
 
 }
