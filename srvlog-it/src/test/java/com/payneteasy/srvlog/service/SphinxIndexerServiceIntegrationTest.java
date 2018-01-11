@@ -35,11 +35,9 @@ public class SphinxIndexerServiceIntegrationTest {
     @BeforeClass
     public static void setUpAll() throws IOException, InterruptedException {
         DatabaseUtil.cleanAndMigrateDatabase();
-        //DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_database.sh"), null);
         context = new ClassPathXmlApplicationContext("classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml");
         DatabaseUtil.generateTestLogs(context.getBean(ILogCollector.class));
         DatabaseUtil.createSphinxConf();
-        //DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("bash", "./create_sphinx_conf.sh"),new File("sphinx"));
         File targetWorkingDir = new File("target");
         DatabaseUtil.runCommandAndWaitUntilFinished(Arrays.asList("indexer", "--config","test-sphinx.conf", "--all"), targetWorkingDir);
         sphinxDaemonProcess = DatabaseUtil.runCommand(Arrays.asList("searchd", "--config", "test-sphinx.conf"), targetWorkingDir);
