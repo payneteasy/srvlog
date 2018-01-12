@@ -62,6 +62,29 @@ public class SimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
     }
 
     @Test
+    public void testLargeMessageIsCut() {
+        LogData logData = new LogData();
+        logData.setDate(new Date());
+        logData.setFacility(1);
+        logData.setSeverity(1);
+        logData.setHost("localhost");
+        logData.setMessage(getLargeMessage());
+        logData.setProgram("program");
+        logCollector.saveLog(logData);
+        List<LogData> logDataList = logCollector.loadLatest(10, null);
+        assertEquals("Large message should be cut and saved",1, logDataList.size());
+        assertEquals("The length of the cut message is equal to 65535 (MariaDB Text type length)", 65535, logDataList.get(0).getMessage().length());
+    }
+
+    private String getLargeMessage() {
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < 65538; i++) {
+            builder.append('b');
+        }
+        return builder.toString();
+    }
+
+    @Test
     public void testSaveHosts(){
         List<HostData> newHostDataList = getHostDataList();
 
