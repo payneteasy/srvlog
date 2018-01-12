@@ -40,7 +40,8 @@ public class SimpleLogCollector implements ILogCollector {
             throw new RuntimeException(MessageFormat.format("Cannot save logData without host: {0}", logData));
         }
         //#9 Do cut off the message to store into the database
-        logData.setMessage(logData.getMessage().substring(1, 65536));
+        if (logData.getMessage()!=null && logData.getMessage().length() > 65535)
+            logData.setMessage(logData.getMessage().substring(1, 65536));
         logDao.saveLog(logData);
     }
 
