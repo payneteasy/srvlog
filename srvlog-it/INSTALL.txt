@@ -1,7 +1,0 @@
-In order to run integration tests it is required the following:
-1) sphinx installed in the system and path to ${sphinx_dir}/bin directory added to the PATH variable.
-If you have running instance of shpinx daemon, you need to stop it before running integration tests
-2) mysql instance is up and running. Root password needs to be specified in the srvlog-sql/functions.sh,
-in the SRVLOG_DB_ROOT_PASSWORD environment variable. Otherwise default root password is used.
-3) for cygwin users it is required to install tput plugin and add environment variable SHELLOPTS=igncr (to properly handle \r characters)
-4) When running tests using maven you should specify profile "integration-test", i.e. mvn clean test -P integration-test
