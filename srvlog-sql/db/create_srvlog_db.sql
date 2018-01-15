@@ -6,4 +6,4 @@ grant all privileges on srvlog.* to 'srvlog'@'localhost' identified by '123srvlo
 
 grant grant option on srvlog.* to 'srvlog'@'localhost';
 
-set global log_bin_trust_function_creators=1;
+set global log_bin_trust_function_creators=0;
