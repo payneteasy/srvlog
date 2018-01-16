@@ -41,11 +41,7 @@ public class SphinxIndexerService implements IIndexerService{
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
         SphinxClient sphinxClient = createSphinxClient();
 
-
-        setMatchMode(sphinxClient);
-
         setDate(from, to, sphinxClient);
-
 
         setAttributeFilter(facilities, sphinxClient, "facility");
 
@@ -140,7 +136,7 @@ public class SphinxIndexerService implements IIndexerService{
     public Map<LogLevel, Long> numberOfLogsBySeverity(Date from, Date to) throws IndexerServiceException {
         SphinxClient sphinxClient = new SphinxClient();
 
-        setMatchMode(sphinxClient);
+
 
         setDate(from, to, sphinxClient);
 
@@ -183,8 +179,6 @@ public class SphinxIndexerService implements IIndexerService{
     public Map<Date, Long> numberOfLogsByDate(Date from, Date to, Integer offset, Integer limit) throws IndexerServiceException {
 
         SphinxClient sphinxClient = createSphinxClient();
-
-        setMatchMode(sphinxClient);
 
         setDate(from, to, sphinxClient);
 
@@ -240,14 +234,7 @@ public class SphinxIndexerService implements IIndexerService{
         return resultMap;
     }
 
-    private void setMatchMode(SphinxClient sphinxClient) throws IndexerServiceException {
-        try {
-            sphinxClient.SetMatchMode(SphinxClient.SPH_MATCH_EXTENDED2);
-        } catch (SphinxException e) {
-            LOG.error("While trying setting sphinx match mode", e);
-            throw new IndexerServiceException("While trying setting sphinx match mode", e);
-        }
-    }
+
 
     private void setAttributeFilter(List<Integer> filterValues, SphinxClient sphinxClient, String attributeName) throws IndexerServiceException {
         if (filterValues != null && filterValues.size() > 0) {

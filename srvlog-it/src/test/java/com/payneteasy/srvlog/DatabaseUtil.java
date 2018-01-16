@@ -10,6 +10,7 @@ import org.flywaydb.core.internal.database.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -148,7 +149,7 @@ public class DatabaseUtil {
 
 
         Calendar c = Calendar.getInstance();
-        c.set(2012, Calendar.JANUARY, 1, 0, 0, 0);
+        c.set(2018, Calendar.JANUARY, 1, 0, 0, 0);
 
         List<Integer> facilityList = Arrays.asList(LogFacility.kern.getValue(),
                                                    LogFacility.user.getValue(),
@@ -269,9 +270,5 @@ public class DatabaseUtil {
         //System.out.println(sphinxTemplate);
     }
 
-
-    public static void main(String[] args) throws IOException {
-        DatabaseUtil.createSphinxConf();
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.service;
 
 import com.payneteasy.srvlog.DatabaseUtil;
+import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import org.junit.*;
@@ -75,7 +76,7 @@ public class SphinxIndexerServiceIntegrationTest {
     @Test
     public void testQueryByDates() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
-        c.set(2012, 0, 2, 0, 0, 0);
+        c.set(2018, 0, 2, 0, 0, 0);
         Date from = c.getTime();
         c.roll(Calendar.DAY_OF_YEAR, 1);
         Date to = c.getTime();
@@ -88,15 +89,16 @@ public class SphinxIndexerServiceIntegrationTest {
     @Test
     public void testQueryByDateTime() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
-        c.set(2012, 0, 2, 0, 0, 0);
+        c.set(2018, 0, 2, 0, 0, 0);
         Date from = c.getTime();
 
         c.roll(Calendar.HOUR_OF_DAY, 3);
+        c.roll(Calendar.MINUTE, 20);
         Date to = c.getTime();
 
-        List<Long> idList = indexerService.search(from, to, null, null, null, null, null, null);
-        assertEquals("4 log records should be found by datetime range specified", 4, idList.size());
-        //System.out.println("Number of ids = " + idList.size());
+        List<Long> idList = indexerService.search(from, to, null, null, null, null, 0, 10);
+
+        assertEquals("6 log records should be found by datetime range specified", 6, idList.size());
     }
 
 
@@ -119,7 +121,7 @@ public class SphinxIndexerServiceIntegrationTest {
     @Test
     public void testQueryLogsCountAndGroupResultsDaily() throws IndexerServiceException {
         Calendar c = Calendar.getInstance();
-        c.set(2012, 0, 2, 0, 0, 0);
+        c.set(2018, 0, 2, 0, 0, 0);
         Date from = c.getTime();
 
         c.roll(Calendar.MONTH, 1);
