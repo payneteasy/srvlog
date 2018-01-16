@@ -10,6 +10,6 @@ before_install:
 - ./install/install.sh
 before_script:
 - mysql -uroot < srvlog-sql/db/create_srvlog_db.sql
-- cat /etc/mysql/my.cnf
+- sudo cp srlog-it/travis/mariadb/my.cnf /etc/mysql/my.cnf
 - sudo service mysql restart
 script: mvn clean install -Pintegration-test
