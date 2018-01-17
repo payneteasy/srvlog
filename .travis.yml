@@ -12,4 +12,5 @@ before_script:
 - mysql -uroot < srvlog-sql/db/create_srvlog_db.sql
 - sudo cp srvlog-it/travis/mariadb/my.cnf /etc/mysql/my.cnf
 - sudo service mysql restart
-script: mvn clean install -Pintegration-test
+script:
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=vzarubin-github -Dsonar.login=cd26497501e4c4a6829c9109141a7fc8d378d6b8 -Pintegration-test
