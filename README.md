@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/payneteasy/srvlog.svg?branch=master)](https://travis-ci.org/payneteasy/srvlog)
+
 srvlog - **Lightweight Logs Collector System.**
 ===
 
