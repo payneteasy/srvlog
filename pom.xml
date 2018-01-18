@@ -33,7 +33,13 @@
         <org.springframework.version>4.1.3.RELEASE</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
-        <junit.version>5.0.2</junit.version>
+        <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
+
+        <jacoco.version>0.8.0</jacoco.version>
+
+        <sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.language>java</sonar.language>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     </properties>
 
     <dependencyManagement>
@@ -452,6 +458,25 @@
                     <use>false</use>
                     <excludePackageNames>com.payneteasy.*</excludePackageNames>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <destFile>${sonar.jacoco.reportPaths}</destFile>
+                    <dataFile>${sonar.jacoco.reportPaths}</dataFile>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>agent-for-ut</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
