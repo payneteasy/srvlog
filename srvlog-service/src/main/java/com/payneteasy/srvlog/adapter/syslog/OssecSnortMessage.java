@@ -82,7 +82,7 @@ public class OssecSnortMessage {
 
         snortMessage.setDate(matcher.group("DATE"));
         snortMessage.identifier = matcher.group("IDENTIFIER");
-        snortMessage.hash = md5().hashString(rawMessage, UTF_8).toString();
+        snortMessage.hash = md5().hashString(stripOssecDate(rawMessage), UTF_8).toString();
 
         return snortMessage;
     }
@@ -98,6 +98,10 @@ public class OssecSnortMessage {
         return new String(event.getRaw()).replaceFirst("^<\\d+>", "");
     }
 
+    private static String stripOssecDate(String rawMessage) {
+        return rawMessage.replaceFirst("^[A-Z][a-z]{2} +\\d{1,2} \\d{1,2}:\\d{2}:\\d{2} ", "");
+    }
+    
     /**
      * Date and time parser.
      *
@@ -230,3 +234,7 @@ public class OssecSnortMessage {
     }
 
 }
+
+
+//Raw message: Feb  5 15:18:05 log-1 ossec: Alert Level: 12; Rule: 20112 - MIDSE on FW; Location: (firewall) 10.0.1.1->/var/log/messages; classification:  ids,; srcip: 78.46.20.210; dstip: 93.188.253.57; Feb  5 15:18:04 firewall snort[11379]: [119:33:1] (http_inspect) UNESCAPED SPACE IN HTTP URI [Classification: Unknown Traffic] [Priority: 3] <eth1> {TCP} 78.46.20.210:51922 -> 93.188.253.57:80
+//Raw message: Feb  5 15:18:04 log-1 ossec: Alert Level: 12; Rule: 20112 - MIDSE on FW; Location: (firewall) 10.0.1.1->/var/log/messages; classification:  ids,; srcip: 78.46.20.210; dstip: 93.188.253.57; Feb  5 15:18:04 firewall snort[11379]: [119:33:1] (http_inspect) UNESCAPED SPACE IN HTTP URI [Classification: Unknown Traffic] [Priority: 3] <eth1> {TCP} 78.46.20.210:51922 -> 93.188.253.57:80

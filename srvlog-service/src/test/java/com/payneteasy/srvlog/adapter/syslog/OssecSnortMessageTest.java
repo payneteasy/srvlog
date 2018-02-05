@@ -24,7 +24,7 @@ public class OssecSnortMessageTest {
         OssecSnortMessage snortMessage = createOssecSnortMessage(MESSAGE);
 
         assertEquals("[1:2016979:3]", snortMessage.getIdentifier());
-        assertEquals("43121a82906a94c006faac0b9877af7d", snortMessage.getHash());
+        assertEquals("87a00f1e64a75d5b357d8ee3b4d71126", snortMessage.getHash());
     }
 
     @Test

@@ -255,7 +255,7 @@ public class SyslogAdapterTest {
         ossecLogData.setLogId(1L);
         ossecLogData.setDate(logData.getDate());
         ossecLogData.setIdentifier("[1:2016979:3]");
-        ossecLogData.setHash("43121a82906a94c006faac0b9877af7d");
+        ossecLogData.setHash("87a00f1e64a75d5b357d8ee3b4d71126");
 
         mockLogCollector.saveOssecLog(ossecLogData);
         EasyMock.expectLastCall();
