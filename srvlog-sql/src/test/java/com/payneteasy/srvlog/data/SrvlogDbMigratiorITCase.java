@@ -3,12 +3,14 @@ package com.payneteasy.srvlog.data;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Driver;
 import java.util.LinkedList;
 import java.util.Properties;
 
@@ -44,11 +46,15 @@ public class SrvlogDbMigratiorITCase {
         srvlogDbMigrator.cleanDatabase();
 
         final LinkedList<String> tableList = new LinkedList<>();
-        jdbc.query("show tables", resultSet -> {
+        query("show tables", resultSet -> {
             tableList.add(resultSet.getString(1));
         });
 
         assertEquals("After clean database should not contain any tables",0, tableList.size());
+    }
+
+    private void query(String sql, RowCallbackHandler rch) throws DataAccessException {
+        jdbc.query(sql, rch);
     }
 
     @Test
@@ -56,7 +62,7 @@ public class SrvlogDbMigratiorITCase {
         srvlogDbMigrator.migrateDatabase();
 
         final LinkedList<String> tableList = new LinkedList<>();
-        jdbc.query("show tables", resultSet -> {
+        query("show tables", resultSet -> {
             tableList.add(resultSet.getString(1));
         });
 
