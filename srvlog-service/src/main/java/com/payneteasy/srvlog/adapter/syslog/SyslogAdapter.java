@@ -200,7 +200,11 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     public void setLogCollector(ILogCollector logCollector) {
         this.logCollector = logCollector;
     }
-    
+
+    public void setSuricataMessageManager(SuricataMessageManager suricataMessageManager) {
+        this.suricataMessageManager = suricataMessageManager;
+    }
+
     private SnortMessageManager getSnortMessageManager() {
         if (snortMessageManager == null) {
             snortMessageManager = new SnortMessageManager(logCollector);

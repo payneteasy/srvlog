@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
 import com.nesscomputing.syslog4j.server.impl.event.SyslogServerEvent;
+import com.payneteasy.srvlog.adapter.syslog.surricata.SuricataMessageManager;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
@@ -42,6 +43,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2013, 11, 22, 05, 31, 55);
@@ -73,6 +75,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2013, 01, 17, 13, 50, 21);
@@ -103,6 +106,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2016, 02, 9, 17, 5, 07);
@@ -134,6 +138,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2016, 02, 9, 17, 5, 07);
@@ -163,6 +168,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2013, 11, 22, 05, 31, 55);
@@ -192,6 +198,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
         LogData logData = new LogData();
         Calendar c = Calendar.getInstance();
         c.set(2013, 11, 22, 05, 31, 55);
@@ -226,6 +233,7 @@ public class SyslogAdapterTest {
         adapter = new SyslogAdapter();
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
         adapter.setLogCollector(mockLogCollector);
+        adapter.setSuricataMessageManager(new SuricataMessageManager(mockLogCollector));
 
         LogData logData = new LogData();
 
