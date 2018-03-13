@@ -1,0 +1,47 @@
+{
+  "timestamp": "2018-03-12T22:26:28.098197+0300",
+  "flow_id": 388994456416613,
+  "in_iface": "eth2",
+  "event_type": "alert",
+  "src_ip": "10.0.2.8",
+  "src_port": 38210,
+  "dest_ip": "173.194.73.103",
+  "dest_port": 80,
+  "proto": "TCP",
+  "tx_id": 0,
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2008983,
+    "rev": 6,
+    "signature": "ET USER_AGENTS Suspicious User Agent (BlackSun)",
+    "category": "A Network Trojan was detected",
+    "severity": 1
+  },
+  "http": {
+    "hostname": "www.google.com",
+    "url": "/",
+    "http_user_agent": "BlackSun",
+    "http_content_type": "text/html",
+    "http_method": "GET",
+    "protocol": "HTTP/1.1",
+    "status": 302,
+    "redirect": "http://www.google.ru/?gfe_rd=cr&dcr=0&ei=ZNSmWtCfBe-uyAXhrYqYBA",
+    "length": 268,
+    "http_response_body": "PEhUTUw+PEhFQUQ+PG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7Y2hhcnNldD11dGYtOCI+CjxUSVRMRT4zMDIgTW92ZWQ8L1RJVExFPjwvSEVBRD48Qk9EWT4KPEgxPjMwMiBNb3ZlZDwvSDE+ClRoZSBkb2N1bWVudCBoYXMgbW92ZWQKPEEgSFJFRj0iaHR0cDovL3d3dy5nb29nbGUucnUvP2dmZV9yZD1jciZhbXA7ZGNyPTAmYW1wO2VpPVpOU21XdENmQmUtdXlBWGhyWXFZQkEiPmhlcmU8L0E+Lg0KPC9CT0RZPjwvSFRNTD4NCg=="
+  },
+  "app_proto": "http",
+  "flow": {
+    "pkts_toserver": 4,
+    "pkts_toclient": 3,
+    "bytes_toserver": 360,
+    "bytes_toclient": 723,
+    "start": "2018-03-12T22:26:28.061797+0300"
+  },
+  "payload": "R0VUIC8gSFRUUC8xLjENClVzZXItQWdlbnQ6IEJsYWNrU3VuDQpIb3N0OiB3d3cuZ29vZ2xlLmNvbQ0KQWNjZXB0OiAqLyoNCkhlbGxvNjogMTIzDQoNCg==",
+  "stream": 1,
+  "packet": "1MptBIdhALVtBHowCABFAAA02w5AAEAGXIQKAAIIrcJJZ5VCAFBsFqcgT5BODYAQAO0B1gAAAQEICgBuffEUr5dT",
+  "packet_info": {
+    "linktype": 1
+  }
+}

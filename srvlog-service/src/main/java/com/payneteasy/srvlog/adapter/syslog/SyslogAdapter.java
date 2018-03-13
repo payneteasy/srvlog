@@ -5,6 +5,7 @@ import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+import com.payneteasy.srvlog.adapter.syslog.surricata.SurricataMessageManager;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -34,6 +35,8 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     private ISyslogAdapterConfig logAdapterConfig;
 
     private SnortMessageManager snortMessageManager;
+
+    private SurricataMessageManager surricataMessageManager;
     
     private SyslogServerIF syslog4jInstance;
 
@@ -109,13 +112,16 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
         log.setFacility(event.getFacility() == null ? LogFacility.local0.getValue() : (event.getFacility().getValue() >> 3));
         log.setSeverity(event.getLevel() == null ? LogLevel.INFO.getValue() : (event.getLevel().getValue()));
-        
+
+        final String applicationName;
         if (event instanceof StructuredSyslogServerEvent) { //rfc5424
+            applicationName = ((StructuredSyslogServerEvent) event).getApplicationName();
             log.setHost(event.getHost());
-            log.setProgram(((StructuredSyslogServerEvent) event).getApplicationName());
+            log.setProgram(applicationName);
             log.setMessage(event.getMessage());
         }
         else {  //rfc3164
+            applicationName = null;
             log.setHost(event.getHost());
 
             String message = event.getMessage();
@@ -144,6 +150,9 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         }
         else if (getSnortMessageManager().isMessageFromSnort(rawMessage)) {
             getSnortMessageManager().processRawSnortMessage(rawMessage);
+        }
+        else if(surricataMessageManager.isMessageFromSurricata(applicationName)) {
+            surricataMessageManager.processRawMessage(rawMessage);
         }
         else {
             if (LOG.isDebugEnabled()) {
@@ -185,6 +194,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     public void setLogCollector(ILogCollector logCollector) {
         this.logCollector = logCollector;
+        surricataMessageManager = new SurricataMessageManager(logCollector);
     }
     
     private SnortMessageManager getSnortMessageManager() {
