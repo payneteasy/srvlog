@@ -14,24 +14,28 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Base64;
 
-public class SurricataMessageManager {
+@Service
+public class SuricataMessageManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SurricataMessageManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SuricataMessageManager.class);
 
     private final ILogCollector collector;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
 
-    public SurricataMessageManager(ILogCollector aCollector) {
+    @Autowired
+    public SuricataMessageManager(ILogCollector aCollector) {
         collector = aCollector;
     }
 
-    public boolean isMessageFromSurricata(String aApplicationName) {
-        return "surricata-eve".equals(aApplicationName);
+    public boolean isMessageFromSurricata(String aRawMessage) {
+        return aRawMessage.contains("suricata") && aRawMessage.contains("{");
     }
 
     public void processRawMessage(String aRawMessage) {
@@ -45,7 +49,7 @@ public class SurricataMessageManager {
     protected SnortLogData createSnortLogData(String aRawMessage) throws IOException {
         String               jsonText         = extractJson(aRawMessage);
         JsonNode             jsonRoot         = objectMapper.readTree(jsonText);
-        SurricataJsonMessage surricataMessage = objectMapper.convertValue(jsonRoot, SurricataJsonMessage.class);
+        SuricataJsonMessage surricataMessage = objectMapper.convertValue(jsonRoot, SuricataJsonMessage.class);
 
         replaceBase64ToUtf8(jsonRoot);
 
@@ -91,10 +95,10 @@ public class SurricataMessageManager {
         node.set(aName, new TextNode(text));
     }
 
-    private SnortLogData convertToSnort(String aJson, SurricataJsonMessage aEvent) {
+    private SnortLogData convertToSnort(String aJson, SuricataJsonMessage aEvent) {
         SnortLogData   snort = new SnortLogData();
-        SurricataAlert alert = aEvent.getAlert();
-        SurricataHttp  http  = aEvent.getHttp();
+        SuricataAlert alert = aEvent.getAlert();
+        SuricataHttp http  = aEvent.getHttp();
 
         snort.setProgram           ( "surricata"                  );
         snort.setSensorName        ( aEvent.getIn_iface()         );

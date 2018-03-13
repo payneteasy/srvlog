@@ -11,11 +11,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class SurricataJsonMessageTest {
+public class SuricataJsonMessageTest {
 
     @Test
     public void udp() throws IOException {
-        SurricataMessageManager manager = new SurricataMessageManager(null);
+        SuricataMessageManager manager = new SuricataMessageManager(null);
         SnortLogData snort = manager.createSnortLogData(read("surricata-01-broadcast.json"));
         assertNotNull( snort               );
         assertNotNull( snort.getDate()     );
@@ -40,7 +40,7 @@ public class SurricataJsonMessageTest {
 
     @Test
     public void http() throws IOException {
-        SurricataMessageManager manager = new SurricataMessageManager(null);
+        SuricataMessageManager manager = new SuricataMessageManager(null);
         SnortLogData snort = manager.createSnortLogData(read("surricata-02-http.json"));
         assertNotNull( snort               );
         assertNotNull( snort.getDate()     );

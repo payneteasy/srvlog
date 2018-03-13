@@ -5,7 +5,7 @@ import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
-import com.payneteasy.srvlog.adapter.syslog.surricata.SurricataMessageManager;
+import com.payneteasy.srvlog.adapter.syslog.surricata.SuricataMessageManager;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -36,7 +36,8 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     private SnortMessageManager snortMessageManager;
 
-    private SurricataMessageManager surricataMessageManager;
+    @Autowired
+    private SuricataMessageManager surricataMessageManager;
     
     private SyslogServerIF syslog4jInstance;
 
@@ -151,7 +152,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         else if (getSnortMessageManager().isMessageFromSnort(rawMessage)) {
             getSnortMessageManager().processRawSnortMessage(rawMessage);
         }
-        else if(surricataMessageManager.isMessageFromSurricata(applicationName)) {
+        else if(surricataMessageManager.isMessageFromSurricata(rawMessage)) {
             surricataMessageManager.processRawMessage(rawMessage);
         }
         else {
@@ -194,7 +195,6 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     public void setLogCollector(ILogCollector logCollector) {
         this.logCollector = logCollector;
-        surricataMessageManager = new SurricataMessageManager(logCollector);
     }
     
     private SnortMessageManager getSnortMessageManager() {

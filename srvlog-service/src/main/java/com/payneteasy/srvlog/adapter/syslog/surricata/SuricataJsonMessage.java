@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SurricataJsonMessage {
+public class SuricataJsonMessage {
 
     private Date           timestamp;
     private String         in_iface;
@@ -18,8 +18,8 @@ public class SurricataJsonMessage {
     private String         packet;
     private String         proto;
 
-    private SurricataAlert alert;
-    private SurricataHttp  http;
+    private SuricataAlert alert;
+    private SuricataHttp http;
 
     public Date getTimestamp() {
         return timestamp;
@@ -37,8 +37,8 @@ public class SurricataJsonMessage {
         return src_port;
     }
 
-    public SurricataAlert getAlert() {
-        return alert != null ? alert : new SurricataAlert();
+    public SuricataAlert getAlert() {
+        return alert != null ? alert : new SuricataAlert();
     }
 
     public String getDest_ip() {
@@ -63,7 +63,7 @@ public class SurricataJsonMessage {
 
     @Override
     public String toString() {
-        return "SurricataJsonMessage{" +
+        return "SuricataJsonMessage{" +
                 "timestamp=" + timestamp +
                 ", in_iface='" + in_iface + '\'' +
                 ", src_ip='" + src_ip + '\'' +
@@ -83,7 +83,7 @@ public class SurricataJsonMessage {
         return proto;
     }
 
-    public SurricataHttp getHttp() {
-        return http != null ? http : new SurricataHttp();
+    public SuricataHttp getHttp() {
+        return http != null ? http : new SuricataHttp();
     }
 }
