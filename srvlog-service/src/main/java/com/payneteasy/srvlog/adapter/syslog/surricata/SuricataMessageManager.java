@@ -14,13 +14,10 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Base64;
 
-@Service
 public class SuricataMessageManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(SuricataMessageManager.class);
@@ -29,7 +26,6 @@ public class SuricataMessageManager {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
 
-    @Autowired
     public SuricataMessageManager(ILogCollector aCollector) {
         collector = aCollector;
     }

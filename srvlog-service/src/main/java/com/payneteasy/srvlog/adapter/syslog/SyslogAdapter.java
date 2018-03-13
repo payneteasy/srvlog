@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import com.google.common.base.Preconditions;
 import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
@@ -20,6 +21,8 @@ import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Date: 03.01.13 Time: 16:07
  */
@@ -36,13 +39,14 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
     private SnortMessageManager snortMessageManager;
 
-    @Autowired
-    private SuricataMessageManager surricataMessageManager;
+    private SuricataMessageManager suricataMessageManager;
     
     private SyslogServerIF syslog4jInstance;
 
     @PostConstruct
     public void init() {
+        suricataMessageManager = new SuricataMessageManager(checkNotNull(logCollector, "No logCollector"));
+
         int port = logAdapterConfig.getSyslogPort();
         String protocol = logAdapterConfig.getSyslogProtocol();
         LOG.info("  Starting syslog4j server on port = {} and on protocol = {} ...", port, protocol );
@@ -152,8 +156,8 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         else if (getSnortMessageManager().isMessageFromSnort(rawMessage)) {
             getSnortMessageManager().processRawSnortMessage(rawMessage);
         }
-        else if(surricataMessageManager.isMessageFromSurricata(rawMessage)) {
-            surricataMessageManager.processRawMessage(rawMessage);
+        else if(suricataMessageManager.isMessageFromSurricata(rawMessage)) {
+            suricataMessageManager.processRawMessage(rawMessage);
         }
         else {
             if (LOG.isDebugEnabled()) {
