@@ -1,10 +1,12 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
+import com.google.common.base.Preconditions;
 import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
 import com.nesscomputing.syslog4j.server.SyslogServerSessionlessEventHandlerIF;
 import com.nesscomputing.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+import com.payneteasy.srvlog.adapter.syslog.surricata.SuricataMessageManager;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
@@ -18,6 +20,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Date: 03.01.13 Time: 16:07
@@ -34,11 +38,15 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     private ISyslogAdapterConfig logAdapterConfig;
 
     private SnortMessageManager snortMessageManager;
+
+    private SuricataMessageManager suricataMessageManager;
     
     private SyslogServerIF syslog4jInstance;
 
     @PostConstruct
     public void init() {
+        suricataMessageManager = new SuricataMessageManager(checkNotNull(logCollector, "No logCollector"));
+
         int port = logAdapterConfig.getSyslogPort();
         String protocol = logAdapterConfig.getSyslogProtocol();
         LOG.info("  Starting syslog4j server on port = {} and on protocol = {} ...", port, protocol );
@@ -109,13 +117,16 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
 
         log.setFacility(event.getFacility() == null ? LogFacility.local0.getValue() : (event.getFacility().getValue() >> 3));
         log.setSeverity(event.getLevel() == null ? LogLevel.INFO.getValue() : (event.getLevel().getValue()));
-        
+
+        final String applicationName;
         if (event instanceof StructuredSyslogServerEvent) { //rfc5424
+            applicationName = ((StructuredSyslogServerEvent) event).getApplicationName();
             log.setHost(event.getHost());
-            log.setProgram(((StructuredSyslogServerEvent) event).getApplicationName());
+            log.setProgram(applicationName);
             log.setMessage(event.getMessage());
         }
         else {  //rfc3164
+            applicationName = null;
             log.setHost(event.getHost());
 
             String message = event.getMessage();
@@ -144,6 +155,9 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         }
         else if (getSnortMessageManager().isMessageFromSnort(rawMessage)) {
             getSnortMessageManager().processRawSnortMessage(rawMessage);
+        }
+        else if(suricataMessageManager.isMessageFromSurricata(rawMessage)) {
+            suricataMessageManager.processRawMessage(rawMessage);
         }
         else {
             if (LOG.isDebugEnabled()) {
@@ -186,7 +200,11 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     public void setLogCollector(ILogCollector logCollector) {
         this.logCollector = logCollector;
     }
-    
+
+    public void setSuricataMessageManager(SuricataMessageManager suricataMessageManager) {
+        this.suricataMessageManager = suricataMessageManager;
+    }
+
     private SnortMessageManager getSnortMessageManager() {
         if (snortMessageManager == null) {
             snortMessageManager = new SnortMessageManager(logCollector);
