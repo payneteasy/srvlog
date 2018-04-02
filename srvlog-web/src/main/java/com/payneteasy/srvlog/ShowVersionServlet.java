@@ -36,7 +36,7 @@ public class ShowVersionServlet extends HttpServlet{
     @Override
     public void init(ServletConfig config) throws ServletException {
         Properties properties = new Properties();
-        InputStream in = getClass().getResourceAsStream("/META-INF/maven/com.payneteasy.srvlog/srvlog-web/pom.properties");
+        InputStream in = config.getServletContext().getResourceAsStream("/META-INF/maven/com.payneteasy.srvlog/srvlog-web/pom.properties");
         if(in == null) {
             version = "no input stream";
             return;
