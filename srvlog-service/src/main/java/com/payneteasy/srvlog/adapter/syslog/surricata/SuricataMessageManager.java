@@ -31,12 +31,17 @@ public class SuricataMessageManager {
     }
 
     public boolean isMessageFromSurricata(String aRawMessage) {
-        return aRawMessage.contains("suricata") && aRawMessage.contains("{");
+        return aRawMessage.contains("suricata") && aRawMessage.contains("{") && aRawMessage.contains("flow_id");
     }
 
     public void processRawMessage(String aRawMessage) {
         try {
-            collector.saveSnortLog(createSnortLogData(aRawMessage));
+            SnortLogData snortLogData = createSnortLogData(aRawMessage);
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Suricata raw message: {}", aRawMessage);
+                LOG.debug("Suricata snort log: {}",  snortLogData);
+            }
+            collector.saveSnortLog(snortLogData);
         } catch (IOException e) {
             LOG.error("Cannot process {}", aRawMessage, e);
         }
@@ -96,7 +101,7 @@ public class SuricataMessageManager {
         SuricataAlert alert = aEvent.getAlert();
         SuricataHttp http  = aEvent.getHttp();
 
-        snort.setProgram           ( "surricata"                  );
+        snort.setProgram           ( "suricata"                   );
         snort.setSensorName        ( aEvent.getIn_iface()         );
         snort.setDate              ( aEvent.getTimestamp()        );
         snort.setPriority          ( alert.getSeverity()          ); // [Priority: 2 ]
