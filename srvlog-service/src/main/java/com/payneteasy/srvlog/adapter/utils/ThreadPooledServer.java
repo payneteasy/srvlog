@@ -20,7 +20,7 @@ public class ThreadPooledServer implements Runnable {
 
     private final int serverPort;
     private final IRunnableFactory workerFactory;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(10,
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(1_000,
             new CustomizableThreadFactory("tcp-logger-processor-"));
 
     private ServerSocket serverSocket = null;

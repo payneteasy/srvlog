@@ -22,7 +22,7 @@
     </encoder>
   </appender>
 -->
-  <logger name="com.payneteasy" level="INFO"/>
+  <logger name="com.payneteasy" level="DEBUG"/>
   <logger name="org.apache.wicket" level="INFO"/>
   <root level="INFO">
     <appender-ref ref="console"/>
