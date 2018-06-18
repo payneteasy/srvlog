@@ -20,7 +20,7 @@ public class SuricataJsonMessageTest {
         assertNotNull( snort               );
         assertNotNull( snort.getDate()     );
         assertNotNull( snort.getPayload () );
-        assertEquals ( "surricata"                       , snort.getProgram          () );
+        assertEquals ( "suricata"                       , snort.getProgram          () );
         assertEquals ( "eth2"                            , snort.getSensorName       () );
         assertEquals ( 2                                 , snort.getPriority         () );
         assertEquals ( "ET SCAN NMAP OS Detection Probe" , snort.getClassification   () );
@@ -45,7 +45,7 @@ public class SuricataJsonMessageTest {
         assertNotNull( snort               );
         assertNotNull( snort.getDate()     );
         assertNotNull( snort.getPayload () );
-        assertEquals ( "surricata"                       , snort.getProgram          () );
+        assertEquals ( "suricata"                       , snort.getProgram          () );
         assertEquals ( "eth2"                            , snort.getSensorName       () );
         assertEquals ( 1                                 , snort.getPriority         () );
         assertEquals ( "ET USER_AGENTS Suspicious User Agent (BlackSun)" , snort.getClassification());
