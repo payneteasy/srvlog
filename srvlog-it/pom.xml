@@ -6,11 +6,11 @@
     <parent>
         <groupId>com.payneteasy</groupId>
         <artifactId>srvlog</artifactId>
-        <version>1.2-2</version>
+        <version>1.2-3-SNAPSHOT</version>
     </parent>
     <groupId>com.payneteasy.srvlog</groupId>
     <artifactId>srvlog-it</artifactId>
-    <version>1.2-2</version>
+    <version>1.2-3-SNAPSHOT</version>
     <name>srvlog-it ${project.version}</name>
 
     <properties>
@@ -192,7 +192,7 @@
         <dependency>
             <groupId>com.payneteasy.srvlog</groupId>
             <artifactId>srvlog-sql</artifactId>
-            <version>1.2-2</version>
+            <version>1.2-3-SNAPSHOT</version>
         </dependency>
 
 
