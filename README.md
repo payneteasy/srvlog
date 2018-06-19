@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/payneteasy/srvlog.svg?branch=master)](https://travis-ci.org/payneteasy/srvlog)
+[![CircleCI](https://circleci.com/gh/payneteasy/srvlog.svg?style=svg)](https://circleci.com/gh/payneteasy/srvlog)
 
 srvlog - **Lightweight Logs Collector System.**
 ===
