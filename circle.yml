@@ -20,12 +20,10 @@ jobs:
           - v1-dependencies-
 
       - run: ./install/install.sh
-      - run: ./mvnw dependency:go-offline
+      - run: ./mvnw test
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      - run: ./mvnw test
 
