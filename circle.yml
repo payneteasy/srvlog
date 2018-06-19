@@ -20,6 +20,7 @@ jobs:
           - v1-dependencies-
 
       - run: ./mvnw dependency:go-offline
+      - run: ./install/install.sh
 
       - save_cache:
           paths:
