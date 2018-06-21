@@ -27,7 +27,7 @@ public class OssecSnortMessage {
     private final static Pattern MESSAGE_REGEX = new Pattern(
         "({DATE}[A-Z][a-z]{2} +\\d{1,2} \\d{1,2}:\\d{2}:\\d{2})" +
         ".+? ossec: Alert Level:.+?" +
-        "snort\\[\\d+\\]: " +
+        "(snort|suricata)\\[\\d+\\]: " +
         "({IDENTIFIER}\\[\\d+:\\d+:\\d+\\])"
     );
 
