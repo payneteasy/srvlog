@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
 import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
@@ -8,19 +7,26 @@ import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.data.SnortLogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.wicket.component.HexViewerPanel;
-import static java.lang.String.valueOf;
-import java.util.List;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.time.DateFormatUtils.format;
+import com.payneteasy.srvlog.wicket.component.JsonViewerPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
+import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.time.DateFormatUtils.format;
 
 /**
  * Page contains processed snort messages.
@@ -28,6 +34,8 @@ import org.apache.wicket.util.string.StringValue;
  * @author imenem
  */
 public class SnortLogMonitorPage extends BasePage {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SnortLogMonitorPage.class);
 
     @SpringBean
     private ILogCollector logCollector;
@@ -97,7 +105,13 @@ public class SnortLogMonitorPage extends BasePage {
                 );
                 li.add(new Label("alert-cause", snortLogData.getAlertCause()));
                 li.add(new Label("ip-header", getHeaderInfo(snortLogData)));
-                li.add(new HexViewerPanel("payload", snortLogData.getPayload()));
+
+                LOG.debug("Program = {}, classification = {}, id = {}", snortLogData.getProgram(), snortLogData.getClassification(), snortLogData.getId());
+                
+                Panel payload = "suricata".equals(snortLogData.getProgram())
+                        ? new JsonViewerPanel("payload", snortLogData.getPayload())
+                        : new HexViewerPanel("payload", snortLogData.getPayload());
+                li.add(payload);
 
                 addHttpHeaders(li, snortLogData);
             }
