@@ -30,7 +30,7 @@
         <jetty.version>8.1.8.v20121106</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.security.version>4.1.5.RELEASE</spring.security.version>
-        <org.springframework.version>4.3.14.RELEASE</org.springframework.version>
+        <org.springframework.version>4.3.22.RELEASE</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
