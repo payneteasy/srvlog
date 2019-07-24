@@ -10,8 +10,11 @@ import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.core.request.mapper.CryptoMapper;
+import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -25,7 +28,9 @@ public class SrvlogUIApplication extends WebApplication{
     @Override
     protected void init() {
         super.init();
+        getSecuritySettings().setCryptFactory(new KeyInSessionSunJceCryptFactory());
         IRequestMapper cryptoMapper = new CryptoMapper(getRootRequestMapper(), this);
+
         setRootRequestMapper(cryptoMapper);
 
         getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -36,6 +41,8 @@ public class SrvlogUIApplication extends WebApplication{
             resourceFinders.addAll(getResourceSettings().getResourceFinders());
             getResourceSettings().setResourceFinders(resourceFinders);
         }
+
+        getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("http://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js")));
 
         String skipSpringSecurity = getServletContext().getInitParameter("skipSpringSecurity");
         if(skipSpringSecurity!=null && !isTrue(skipSpringSecurity)){

@@ -26,15 +26,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <wicket.version>6.25.0</wicket.version>
-        <jetty.version>8.1.8.v20121106</jetty.version>
+        <wicket.version>7.14.0</wicket.version>
+        <jetty.version>9.4.19.v20190610</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.security.version>4.1.5.RELEASE</spring.security.version>
         <org.springframework.version>4.3.22.RELEASE</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.9.8</jackson.version>
+        <jackson.version>2.9.9.1</jackson.version>
+        <jackson-core.version>2.9.9</jackson-core.version>
         <guava.version>24.1.1-jre</guava.version>
 
         <jacoco.version>0.8.0</jacoco.version>
@@ -77,7 +78,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-core.version}</version>
             </dependency>
 
             <dependency>
@@ -129,6 +130,12 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>${jetty.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
                 <version>${jetty.version}</version>
                 <scope>provided</scope>
@@ -152,11 +159,16 @@
                 <version>${jetty.version}</version>
             </dependency>
 
-            <dependency>
+            <!--<dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.0.1</version>
                 <scope>provided</scope>
+            </dependency>-->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
             </dependency>
 
             <!-- SLF4J -->

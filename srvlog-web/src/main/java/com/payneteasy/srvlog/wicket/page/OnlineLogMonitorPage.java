@@ -73,17 +73,7 @@ public class OnlineLogMonitorPage extends BasePage {
             protected List<HostData> load() {
                 return logCollector.loadHosts();
             }
-        }, new IChoiceRenderer<HostData>() {
-            @Override
-            public Object getDisplayValue(HostData object) {
-                return object.getHostname();
-            }
-
-            @Override
-            public String getIdValue(HostData object, int index) {
-                return object.getHostname();
-            }
-        });
+        }, new ChoiceRenderer<>("hostname"));
         hostChoices.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

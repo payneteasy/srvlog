@@ -80,11 +80,4 @@
         <url-pattern>/management/version.txt</url-pattern>
     </servlet-mapping>
 
-    <session-config>
-        <cookie-config>
-            <http-only>true</http-only>
-            <secure>true</secure>
-        </cookie-config>
-    </session-config>
-
 </web-app>

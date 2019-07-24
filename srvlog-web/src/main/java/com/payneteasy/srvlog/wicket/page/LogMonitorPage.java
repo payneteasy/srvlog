@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -86,17 +87,7 @@ public class LogMonitorPage extends BasePage {
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
                 "severity-choice"
                 , new PropertyModel<List<LogLevel>>(filterModel, "severities")
-                , LogLevel.getLogEnumList(), new IChoiceRenderer<LogLevel>() {
-            @Override
-            public Object getDisplayValue(LogLevel object) {
-                return object.name();
-            }
-
-            @Override
-            public String getIdValue(LogLevel object, int index) {
-                return object.name();
-            }
-        });
+                , LogLevel.getLogEnumList(), new ChoiceRenderer<>("name"));
         form.add(severityChoice);
 
         //FACILITY CHOICE FILTER
@@ -104,17 +95,7 @@ public class LogMonitorPage extends BasePage {
         ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<LogFacility>(
                 "facility-choice"
                 , new PropertyModel<List<LogFacility>>(filterModel, "facilities")
-                , LogFacility.getLogEnumList(), new IChoiceRenderer<LogFacility>() {
-            @Override
-            public Object getDisplayValue(LogFacility object) {
-                return object.name();
-            }
-
-            @Override
-            public String getIdValue(LogFacility object, int index) {
-                return object.name();
-            }
-        });
+                , LogFacility.getLogEnumList(), new ChoiceRenderer<>("name"));
         form.add(facilityChoice);
 
         //HOST CHOICE FILTER
@@ -122,18 +103,7 @@ public class LogMonitorPage extends BasePage {
         ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<HostData>(
                 "hostData-choice"
                 , new PropertyModel<List<HostData>>(filterModel, "hosts")
-                , hostData
-                , new IChoiceRenderer<HostData>() {
-            @Override
-            public Object getDisplayValue(HostData object) {
-                return object.getHostname();
-            }
-
-            @Override
-            public String getIdValue(HostData object, int index) {
-                return object.getHostname();
-            }
-        });
+                , hostData, new ChoiceRenderer<>("hostname"));
         form.add(hostDataChoice);
 
         //LIST LOG DATA

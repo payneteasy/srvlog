@@ -9,6 +9,7 @@ import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,17 +39,8 @@ public class DateRangePanel extends Panel{
                 "date-range-type"
                 , new PropertyModel<DateRangeType>(dateRangeModel, "dateRangeType")
                 , Arrays.asList(DateRangeType.values())
-                , new IChoiceRenderer<DateRangeType>() {
-            @Override
-            public Object getDisplayValue(DateRangeType object) {
-                return object.name();
-            }
-
-            @Override
-            public String getIdValue(DateRangeType object, int index) {
-                return object.name();
-            }
-        });
+                , new ChoiceRenderer<>("name")
+                );
         add(dateRangeType);
         dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override

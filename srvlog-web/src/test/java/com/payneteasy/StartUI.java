@@ -5,7 +5,7 @@ import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.webapp.*;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class StartUI {
     private  static final Logger LOG = LoggerFactory.getLogger(StartUI.class);
 
     public static void main(String[] args) throws MalformedURLException {
-        new StartUI().startServerUI();
+       new StartUI().startServerUI();
     }
 
     private void startServerUI() throws MalformedURLException {
@@ -35,19 +35,25 @@ public class StartUI {
 
 
 
-        SocketConnector connector = new SocketConnector();
+        ServerConnector connector = new ServerConnector(server);
         // Set some timeout options to make debugging easier.
-        connector.setMaxIdleTime(1000 * 60 * 60);
-        connector.setSoLingerTime(-1);
+        connector.setIdleTimeout(1000 * 60 * 60);
+        //connector.setSoLingerTime(-1);
         connector.setPort(Integer.parseInt(System.getProperty("jetty.port", "8080")));
 
         server.setConnectors(new Connector[]{connector});
 
-        WebAppContext srvacc = new WebAppContext();
-        srvacc.setTempDirectory(tempDir);
-        srvacc.setServer(server);
-        srvacc.setContextPath("/");
-        srvacc.setWar("src/main/webapp");
+        WebAppContext srvlog = new WebAppContext();
+        srvlog.setTempDirectory(tempDir);
+        srvlog.setServer(server);
+        srvlog.setContextPath("/");
+        srvlog.setWar("src/main/webapp");
+
+
+        srvlog.getSessionHandler().setHttpOnly(false);
+        srvlog.getSessionHandler().setSecureRequestOnly(false);
+        srvlog.getSessionHandler().setUsingCookies(true);
+
         EnvConfiguration envConfiguration = new EnvConfiguration();
         envConfiguration.setJettyEnvXml(new File("src/test/resources/jetty/jetty-env-ui.xml").toURI().toURL());
         Configuration[] configurations = new Configuration[]{
@@ -59,12 +65,13 @@ public class StartUI {
                 new PlusConfiguration(),
                 new JettyWebXmlConfiguration()
         };
-        srvacc.setConfigurations(configurations);
+        srvlog.setConfigurations(configurations);
 
 
         ContextHandlerCollection webapps = new ContextHandlerCollection();
-        webapps.setHandlers(new Handler[]{srvacc});
+        webapps.setHandlers(new Handler[]{srvlog});
         server.setHandler(webapps);
+
 
         try {
             LOG.info(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");

@@ -4,7 +4,7 @@ import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +34,9 @@ public class WebContainerUtils {
 
         for (int i = 0; i < ports.length; i++) {
             int port = ports[i];
-            SocketConnector connector = new SocketConnector();
+            ServerConnector connector = new ServerConnector(server);
             // Set some timeout options to make debugging easier.
-            connector.setMaxIdleTime(1000 * 60 * 60);
-            connector.setSoLingerTime(-1);
+            connector.setIdleTimeout(1000 * 60 * 60);
             connector.setPort(Integer.parseInt(System.getProperty("jetty.port", String.valueOf(port))));
             connectors[i] = connector;
         }
@@ -101,7 +100,7 @@ public class WebContainerUtils {
         // wait for started
         for (int i = 0; i < 60 && !server.isStarted(); i++) {
             if (i == 0) {
-                LOG.info("Waiting jetty server on port {} to be started...", server.getConnectors()[0].getPort());
+                LOG.info("Waiting jetty server on port {} to be started...", ((ServerConnector)server.getConnectors()[0]).getPort());
             }
             LOG.info("   waiting {}", i);
             Thread.sleep(500);
