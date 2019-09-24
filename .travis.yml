@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk8
+- openjdk8
 sudo: true
 addons:
   mariadb: '10.0'
