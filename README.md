@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/payneteasy/srvlog.svg?branch=master)](https://travis-ci.org/payneteasy/srvlog)
 [![CircleCI](https://circleci.com/gh/payneteasy/srvlog.svg?style=svg)](https://circleci.com/gh/payneteasy/srvlog)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.payneteasy%3Asrvlog&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.payneteasy%3Asrvlog)
 
 srvlog - **Lightweight Logs Collector System.**
 ===
