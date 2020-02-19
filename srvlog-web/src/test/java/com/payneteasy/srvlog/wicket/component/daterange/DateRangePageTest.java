@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.wicket.component.daterange;
 
-import com.google.common.collect.Lists;
 import com.payneteasy.srvlog.util.DateRangeType;
 import junit.framework.Assert;
 import org.apache.wicket.Page;
@@ -12,6 +11,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public class DateRangePageTest {
 
             @Override
             protected void init() {
-                List<IResourceFinder> resourceFinders = Lists.newArrayList();
+                List<IResourceFinder> resourceFinders = new ArrayList<>();
                 resourceFinders.add(new Path("../srvlog-web/src/test/java"));
                 resourceFinders.addAll(getResourceSettings().getResourceFinders());
                 getResourceSettings().setResourceFinders(resourceFinders);

@@ -4,7 +4,7 @@
 
     <groupId>com.payneteasy</groupId>
     <artifactId>srvlog</artifactId>
-    <version>1.2-4-SNAPSHOT</version>
+    <version>2.1-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>srvlog ${version}</name>
 
@@ -56,8 +56,7 @@
 
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
-                <artifactId>srvlog-web</artifactId>
-                <type>war</type>
+                <artifactId>srvlog-sql</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -65,7 +64,6 @@
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-web</artifactId>
                 <version>${project.version}</version>
-                <classifier>classes</classifier>
             </dependency>
 
             <dependency>
@@ -121,43 +119,50 @@
                 <version>${wicket.version}</version>
             </dependency>
 
-            <!--  JETTY DEPENDENCIES FOR TESTING  -->
+            <!--  JETTY DEPENDENCIES  -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlets</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jmx</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-plus</artifactId>
-                <scope>provided</scope>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jndi</artifactId>
-                <scope>provided</scope>
                 <version>${jetty.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
 
             <!--<dependency>
                 <groupId>javax.servlet</groupId>
@@ -170,6 +175,14 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.1.0</version>
             </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.9</version>
+            </dependency>
+
 
             <!-- SLF4J -->
             <dependency>

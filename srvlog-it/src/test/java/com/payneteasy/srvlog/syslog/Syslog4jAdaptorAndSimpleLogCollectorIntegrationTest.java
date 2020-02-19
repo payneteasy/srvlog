@@ -34,7 +34,7 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
     @Override
     protected void createSpringContext() {
         context =  new ClassPathXmlApplicationContext(
-                "classpath:spring/spring-test-datasource.xml",
+                "classpath:spring/spring-datasource.xml",
                 "classpath:spring/spring-dao.xml",
                 "classpath:spring/spring-service.xml",
                 "classpath:spring/spring-log-adapter.xml"
