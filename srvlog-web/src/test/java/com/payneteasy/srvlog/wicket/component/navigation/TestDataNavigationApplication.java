@@ -1,12 +1,12 @@
 package com.payneteasy.srvlog.wicket.component.navigation;
 
-import com.google.common.collect.Lists;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public class TestDataNavigationApplication extends WebApplication {
 
     @Override
     protected void init() {
-        List<IResourceFinder> resourceFinders = Lists.newArrayList();
+        List<IResourceFinder> resourceFinders = new ArrayList<>();
         resourceFinders.add(new Path("../srvlog-web/src/test/java"));
         resourceFinders.addAll(getResourceSettings().getResourceFinders());
         getResourceSettings().setResourceFinders(resourceFinders);

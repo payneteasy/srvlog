@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.wicket;
 
-import com.google.common.collect.Lists;
 import com.payneteasy.srvlog.wicket.page.DashboardPage;
 import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
@@ -19,6 +18,7 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +36,7 @@ public class SrvlogUIApplication extends WebApplication{
         getResourceSettings().setThrowExceptionOnMissingResource(false);
 
         if (this.getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT) {
-            List<IResourceFinder> resourceFinders = Lists.newArrayList();
+            List<IResourceFinder> resourceFinders = new ArrayList<>();
             resourceFinders.add(new Path("../srvlog-web/src/main/java"));
             resourceFinders.addAll(getResourceSettings().getResourceFinders());
             getResourceSettings().setResourceFinders(resourceFinders);

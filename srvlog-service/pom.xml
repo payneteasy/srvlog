@@ -10,7 +10,7 @@
 
   <parent>
     <groupId>com.payneteasy</groupId>
-    <version>1.2-4-SNAPSHOT</version>
+    <version>1.2-5-SNAPSHOT</version>
     <artifactId>srvlog</artifactId>
   </parent>
 
@@ -101,11 +101,22 @@
           <artifactId>commons-io</artifactId>
       </dependency>
 
+       <dependency>
+           <groupId>com.payneteasy.logging-extensions</groupId>
+           <artifactId>logging-extensions</artifactId>
+           <scope>test</scope>
+       </dependency>
+
       <dependency>
-          <groupId>com.payneteasy.logging-extensions</groupId>
-          <artifactId>logging-extensions</artifactId>
-          <scope>test</scope>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
       </dependency>
+
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-1.2-api</artifactId>
+      </dependency>
+
         <dependency>
             <groupId>net.sourceforge.jregex</groupId>
             <artifactId>jregex</artifactId>

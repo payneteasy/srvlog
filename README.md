@@ -7,7 +7,6 @@ srvlog - **Lightweight Logs Collector System.**
 Supported logs formats and channels:
 1) syslog;
 2) logback;
-3) log4j;
 3) snort payloads correlated with ossec alerts.
 
 All logs are being collected in MariaDB database 
