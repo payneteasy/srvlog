@@ -34,7 +34,7 @@
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.9.10.2</jackson.version>
+        <jackson.version>2.9.10.3</jackson.version>
         <jackson-core.version>2.9.9</jackson-core.version>
         <guava.version>24.1.1-jre</guava.version>
 
@@ -216,13 +216,7 @@
             <dependency>
                 <groupId>com.payneteasy.logging-extensions</groupId>
                 <artifactId>logging-extensions</artifactId>
-                <version>1.0-1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>1.0-4</version>
             </dependency>
 
 

@@ -15,17 +15,8 @@
 
     <context:property-placeholder location="${ext.properties.dir:classpath*:}/syslog4j.properties,
             ${ext.properties.dir:classpath*:}/sphinxclient.properties,
-            ${ext.properties.dir:classpath*:}/log4jAdapter.properties,
             ${ext.properties.dir:classpath*:}/logbackAdapter.properties"
                                   ignore-resource-not-found="true"
     />
-
-<!--
-    <context:property-placeholder location="classpath*:syslog4j.properties, file:///${syslogProperties},
-    classpath*:sphinxclient.properties, file:///${sphinxclientProperties},
-    classpath*:log4jAdapter.properties, file:///${log4jAdapterProperties},
-    classpath*:logbackAdapter.properties, file:///${logbackAdapterProperties}"
-                                  ignore-resource-not-found="true" />
--->
 
 </beans>
