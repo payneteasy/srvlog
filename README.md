@@ -11,7 +11,7 @@ Supported logs formats and channels:
 3) snort payloads correlated with ossec alerts.
 
 All logs are being collected in MariaDB database 
-(MySQL also supported) and then indexed and searched 
+(MySQL supported too) and then indexed and searched 
 by Sphinx. The middle-layer and front-end is written 
 in pure Java hence it can be installed on many OS platforms 
 which supported by Java, MariaDB and Sphinx. 
