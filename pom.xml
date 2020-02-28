@@ -21,8 +21,23 @@
             <id>spring.test-mvc</id>
             <url>http://repo.springsource.org/libs-milestone</url>
         </repository>
-
     </repositories>
+
+
+    <scm>
+        <connection>scm:git:https://github.com/payneteasy/srvlog.git</connection>
+        <developerConnection>scm:git:git@github.com:payneteasy/srvlog.git</developerConnection>
+        <url>https://github.com/payneteasy/srvlog</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+       <repository>
+         <id>github-payneteasy</id>
+         <name>GitHub Payneteay Apache Maven Packages</name>
+         <url>https://maven.pkg.github.com/payneteasy/srvlog</url>
+       </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -561,6 +576,15 @@
                     <!-- CircleCI build workaround -->
                     <reuseForks>true</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
 
