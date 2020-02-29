@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.payneteasy</groupId>
-        <version>1.2-6-SNAPSHOT</version>
+        <version>1.2-5-SNAPSHOT</version>
         <artifactId>srvlog</artifactId>
     </parent>
     <groupId>com.payneteasy.srvlog</groupId>
     <artifactId>srvlog-sql</artifactId>
+    <version>1.2-4-SNAPSHOT</version>
     <name>srvlog-sql ${project.version}</name>
     <packaging>jar</packaging>
     <properties>
@@ -108,7 +111,8 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.payneteasy.srvlog.data.SrvlogDbMigrator</mainClass>
                                 </transformer>
                             </transformers>

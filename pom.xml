@@ -4,7 +4,7 @@
 
     <groupId>com.payneteasy</groupId>
     <artifactId>srvlog</artifactId>
-    <version>1.2-6-SNAPSHOT</version>
+    <version>1.2-5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>srvlog ${version}</name>
 
@@ -370,7 +370,7 @@
             <dependency>
                 <groupId>com.nesscomputing</groupId>
                 <artifactId>ness-syslog4j</artifactId>
-                <version>0.9.47-NESS-8</version>
+                <version>0.9.47-NESS-8-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>log4j</groupId>
