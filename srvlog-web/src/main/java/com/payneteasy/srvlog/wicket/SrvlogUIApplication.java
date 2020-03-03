@@ -42,7 +42,7 @@ public class SrvlogUIApplication extends WebApplication{
             getResourceSettings().setResourceFinders(resourceFinders);
         }
 
-        getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("http://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js")));
+        getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js")));
 
         String skipSpringSecurity = getServletContext().getInitParameter("skipSpringSecurity");
         if(skipSpringSecurity!=null && !isTrue(skipSpringSecurity)){
