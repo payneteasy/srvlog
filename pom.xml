@@ -21,8 +21,23 @@
             <id>spring.test-mvc</id>
             <url>http://repo.springsource.org/libs-milestone</url>
         </repository>
-
     </repositories>
+
+
+    <scm>
+        <connection>scm:git:https://github.com/payneteasy/srvlog.git</connection>
+        <developerConnection>scm:git:git@github.com:payneteasy/srvlog.git</developerConnection>
+        <url>https://github.com/payneteasy/srvlog</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+       <repository>
+         <id>github-payneteasy</id>
+         <name>GitHub Payneteay Apache Maven Packages</name>
+         <url>https://maven.pkg.github.com/payneteasy/srvlog</url>
+       </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,7 +49,7 @@
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.9.9.2</jackson.version>
+        <jackson.version>2.9.10.3</jackson.version>
         <jackson-core.version>2.9.9</jackson-core.version>
         <guava.version>24.1.1-jre</guava.version>
 
@@ -67,10 +82,9 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.8.1</version>
-                <scope>test</scope>
+                <groupId>com.payneteasy.srvlog</groupId>
+                <artifactId>srvlog-it</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -94,7 +108,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.22.Final</version>
+                <version>4.1.45.Final</version>
             </dependency>
             
             <!--WICKET CORE-->
@@ -119,11 +133,12 @@
                 <version>${wicket.version}</version>
             </dependency>
 
-            <!--  JETTY DEPENDENCIES  -->
+            <!--  JETTY DEPENDENCIES FOR TESTING  -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -135,20 +150,22 @@
                 <artifactId>jetty-servlets</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
                 <version>${jetty.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jmx</artifactId>
                 <version>${jetty.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-plus</artifactId>
+                <scope>provided</scope>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -162,7 +179,6 @@
                 <artifactId>jetty-webapp</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
-
 
             <!--<dependency>
                 <groupId>javax.servlet</groupId>
@@ -217,7 +233,7 @@
             <dependency>
                 <groupId>com.payneteasy.logging-extensions</groupId>
                 <artifactId>logging-extensions</artifactId>
-                <version>1.0-1</version>
+                <version>1.0-4</version>
             </dependency>
 
 
@@ -356,7 +372,31 @@
             <dependency>
                 <groupId>com.nesscomputing</groupId>
                 <artifactId>ness-syslog4j</artifactId>
-                <version>0.9.47-NESS-8-SNAPSHOT</version>
+                <version>0.9.47-NESS-8</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.13.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-1.2-api</artifactId>
+                <version>2.13.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.9</version>
             </dependency>
 
             <!--Easy Mock -->
@@ -537,6 +577,15 @@
                     <!-- CircleCI build workaround -->
                     <reuseForks>true</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
 

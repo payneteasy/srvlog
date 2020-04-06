@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/payneteasy/srvlog.svg?branch=master)](https://travis-ci.org/payneteasy/srvlog)
 [![CircleCI](https://circleci.com/gh/payneteasy/srvlog.svg?style=svg)](https://circleci.com/gh/payneteasy/srvlog)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.payneteasy%3Asrvlog&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.payneteasy%3Asrvlog)
 
 srvlog - **Lightweight Logs Collector System.**
 ===
@@ -7,11 +8,10 @@ srvlog - **Lightweight Logs Collector System.**
 Supported logs formats and channels:
 1) syslog;
 2) logback;
-3) log4j;
 3) snort payloads correlated with ossec alerts.
 
 All logs are being collected in MariaDB database 
-(MySQL also supported) and then indexed and searched 
+(MySQL supported too) and then indexed and searched 
 by Sphinx. The middle-layer and front-end is written 
 in pure Java hence it can be installed on many OS platforms 
 which supported by Java, MariaDB and Sphinx. 

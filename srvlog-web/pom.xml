@@ -152,7 +152,7 @@
             <artifactId>srvlog-service</artifactId>
         </dependency>
 
-        <!-- DBCP -->
+        <!-- DBCP test -->
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
