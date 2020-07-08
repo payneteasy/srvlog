@@ -6,7 +6,7 @@
     <artifactId>srvlog</artifactId>
     <version>2.1-1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>srvlog ${version}</name>
+    <name>srvlog ${project.version}</name>
 
 
     <modules>
@@ -391,12 +391,6 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
                 <version>2.13.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.9</version>
             </dependency>
 
             <!--Easy Mock -->
