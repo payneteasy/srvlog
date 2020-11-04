@@ -36,6 +36,11 @@ jobs:
             sudo apt-get install default-mysql-client
       - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
       - run: ./mvnw test -Pintegration-test
+      - run:
+          name: Run Sonar Report
+          command: |
+             mvn jacoco:report
+             mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=vzarubin-github -Dsonar.login=${SONAR_TOKEN}
       - save_cache:
           paths:
             - ~/.m2
