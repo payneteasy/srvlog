@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Wait for db
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
-      - run: mysql -uroot < srvlog-sql/db/create_srvlog_db.sql
+      - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
       - run: ./mvnw test -Pintegration-test
 
       - save_cache:
