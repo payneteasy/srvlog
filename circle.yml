@@ -34,9 +34,7 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get install default-mysql-client
-            sudo cp srvlog-it/travis/mariadb/my.cnf /etc/mysql/my.cnf
-            sudo service mysql restart
-      - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
+      - run: mysql -h localhost -uroot < srvlog-sql/db/create_srvlog_db.sql
       - run: ./mvnw test -Pintegration-test
       - save_cache:
           paths:
