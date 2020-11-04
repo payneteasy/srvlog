@@ -1,11 +1,11 @@
 language: java
 jdk:
 - openjdk8
-services:
-  - mysql
 sudo: true
 addons:
   mariadb: '10.1'
+services:
+  - mysql
 before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq sphinxsearch
