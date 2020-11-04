@@ -18,9 +18,11 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
+      - run: sudo apt-get update -qq
+      - run: sudo apt-get install -qq sphinxsearch
       - run: ./install/install.sh
-      - run: ./mvnw test
+      - run: mysql -uroot < srvlog-sql/db/create_srvlog_db.sql
+      - run: ./mvnw test -Pintegration-test
 
       - save_cache:
           paths:
