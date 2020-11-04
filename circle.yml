@@ -22,10 +22,6 @@ jobs:
       - run: sudo apt-get update -qq
       - run: sudo apt-get install -qq sphinxsearch
       - run: ./install/install.sh
-      - run: 
-          name: Install MySQL CLI
-          command: |
-            sudo apt-get install default-mysql-client
       - run:
           name: install dockerize
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -34,9 +30,14 @@ jobs:
       - run:
           name: Wait for db
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run: 
+          name: Install MySQL CLI
+          command: |
+            sudo apt-get install default-mysql-client
+            sudo cp srvlog-it/travis/mariadb/my.cnf /etc/mysql/my.cnf
+            sudo service mysql restart
       - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
       - run: ./mvnw test -Pintegration-test
-
       - save_cache:
           paths:
             - ~/.m2
