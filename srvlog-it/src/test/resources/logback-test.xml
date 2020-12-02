@@ -24,6 +24,8 @@
 -->
   <logger name="com.payneteasy.srvlog.adapter" level="DEBUG"/>
   <logger name="com.payneteasy.srvlog" level="INFO"/>
+  <logger name="com.payneteasy.srvlog.logsender" level="DEBUG"/>
+  
   <root level="INFO">
     <appender-ref ref="console"/>
     <!--<appender-ref ref="file"/>-->
