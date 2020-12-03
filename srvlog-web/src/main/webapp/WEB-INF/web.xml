@@ -23,6 +23,11 @@
         <param-value>true</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>save-logs-token</param-name>
+        <param-value>test-token-197dc68c-34e5-11eb-9fbd-7bb165d4566c</param-value>
+    </context-param>
+
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
@@ -70,6 +75,7 @@
     </filter-mapping>
 
 
+    <!-- GET /management/version.txt -->
     <servlet>
         <servlet-name>showVersionNumber</servlet-name>
         <servlet-class>com.payneteasy.srvlog.ShowVersionServlet</servlet-class>
@@ -78,6 +84,18 @@
     <servlet-mapping>
         <servlet-name>showVersionNumber</servlet-name>
         <url-pattern>/management/version.txt</url-pattern>
+    </servlet-mapping>
+
+    <!-- POST /save-logs -->
+    <servlet>
+        <servlet-name>saveLogs</servlet-name>
+        <servlet-class>com.payneteasy.srvlog.servlet.SaveLogsServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>saveLogs</servlet-name>
+        <url-pattern>/save-logs/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
