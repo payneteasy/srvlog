@@ -19,7 +19,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 
 public class SaveLogsServlet extends HttpServlet {
 
@@ -47,9 +46,6 @@ public class SaveLogsServlet extends HttpServlet {
         if(saveLogsService == null) {
             throw new ServletException("No ILogCollector found");
         }
-
-        // disable cookies
-        getServletContext().setSessionTrackingModes(Collections.emptySet());
 
         token = getServletContext().getInitParameter("save-logs-token").trim();
 
