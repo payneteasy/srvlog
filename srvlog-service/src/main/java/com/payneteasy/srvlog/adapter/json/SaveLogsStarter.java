@@ -4,7 +4,6 @@ import com.payneteasy.http.server.HttpServer;
 import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
@@ -25,8 +25,9 @@ public class SaveLogsStarter {
     private final String           token;
     private final String           path;
 
-    private HttpServer server;
-    private Thread     thread;
+    private HttpServer      server;
+    private Thread          thread;
+    private ExecutorService clientExecutor;
 
     @Autowired
     public SaveLogsStarter(ISaveLogsService saveLogsService
@@ -47,11 +48,13 @@ public class SaveLogsStarter {
 
         SaveLogsHttpRequestHandler handler = new SaveLogsHttpRequestHandler(saveLogsService, path, token);
 
+        clientExecutor = Executors.newCachedThreadPool();
+
         try {
             server = new HttpServer(
                     new InetSocketAddress(ipAddress, port)
                     , new HttpLoggerSlf()
-                    , Executors.newCachedThreadPool()
+                    , clientExecutor
                     , handler
                     , 10_000
             );
@@ -69,15 +72,24 @@ public class SaveLogsStarter {
     public void destroy() {
         LOG.info("Shutting down json adapter ...");
         if(server != null) {
+            LOG.debug("Stopping server ...");
             server.stop();
         } else {
             LOG.warn("Server is null");
         }
 
         if(thread != null) {
+            LOG.debug("Interrupting thread ...");
             thread.interrupt();
         } else {
             LOG.warn("Thread is null");
+        }
+
+        if(clientExecutor != null) {
+            LOG.debug("Shutdown executor ...");
+            clientExecutor.shutdown();
+        } else {
+            LOG.warn("Executors is null");
         }
     }
 }
