@@ -28,10 +28,9 @@
         <param-value>test-token-197dc68c-34e5-11eb-9fbd-7bb165d4566c</param-value>
     </context-param>
 
+    <!-- Added more context listeners to PriorityServletContextListener -->
     <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
+        <listener-class>com.payneteasy.srvlog.servlet.PriorityServletContextListener</listener-class>
     </listener>
 
 
@@ -44,10 +43,6 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <listener>
-        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
-    </listener>
 
     <!-- WICKET FILTER -->
     <filter>
@@ -86,16 +81,5 @@
         <url-pattern>/management/version.txt</url-pattern>
     </servlet-mapping>
 
-    <!-- POST /save-logs -->
-    <servlet>
-        <servlet-name>saveLogs</servlet-name>
-        <servlet-class>com.payneteasy.srvlog.servlet.SaveLogsServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>saveLogs</servlet-name>
-        <url-pattern>/save-logs/*</url-pattern>
-    </servlet-mapping>
 
 </web-app>

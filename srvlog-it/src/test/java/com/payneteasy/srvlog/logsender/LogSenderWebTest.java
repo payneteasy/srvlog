@@ -21,7 +21,7 @@ public class LogSenderWebTest extends CommonUiIntegrationTest {
 
     @Test
     public void sendLog() {
-        SaveLogsClient   client   = new SaveLogsClient("http://localhost:8080");
+        SaveLogsClient   client   = new SaveLogsClient("http://localhost:28080");
         SaveLogsRequest  request  = createSampleRequest();
         SaveLogsResponse response = client.saveLogs("127.0.0.1", request);
         Assert.assertEquals(request.getRequestId(), response.getRequestId());

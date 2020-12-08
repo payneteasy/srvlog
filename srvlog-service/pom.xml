@@ -35,12 +35,18 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
       </dependency>
-<!--
+
       <dependency>
           <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
+          <artifactId>jul-to-slf4j</artifactId>
       </dependency>
--->
+
+      <!--
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </dependency>
+      -->
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>jcl-over-slf4j</artifactId>
@@ -137,7 +143,16 @@
           <artifactId>netty-buffer</artifactId>
       </dependency>
 
+      <dependency>
+          <groupId>com.payneteasy.http-server</groupId>
+          <artifactId>http-server-impl</artifactId>
+      </dependency>
 
+      <dependency>
+          <groupId>com.payneteasy</groupId>
+          <artifactId>startup-parameters</artifactId>
+      </dependency>
+      
   </dependencies>
 
     <build>
