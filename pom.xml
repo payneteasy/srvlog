@@ -54,7 +54,7 @@
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.9.10.6</jackson.version>
+        <jackson.version>2.9.10.8</jackson.version>
         <jackson-core.version>2.9.10</jackson-core.version>
         <guava.version>24.1.1-jre</guava.version>
         <jacoco.version>0.8.5</jacoco.version>
@@ -416,7 +416,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>2.7</version>
             </dependency>
 
 
@@ -490,7 +490,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.46.Final</version>
+                <version>4.1.61.Final</version>
             </dependency>
 
             <dependency>
