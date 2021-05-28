@@ -52,6 +52,13 @@ jobs:
       - image: circleci/openjdk:11-jdk
     steps:
       - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: ./install/install.sh
       - attach_workspace:
             at: .
       - run:
