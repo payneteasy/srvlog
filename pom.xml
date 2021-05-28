@@ -62,6 +62,7 @@
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.language>java</sonar.language>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.java.binaries>target</sonar.java.binaries>
     </properties>
 
     <dependencyManagement>
