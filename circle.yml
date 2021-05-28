@@ -35,6 +35,10 @@ jobs:
           command: |
             sudo apt-get install default-mysql-client
       - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
+  sonar:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
       - run:
           name: Test and Run Sonar Report
           command: |
@@ -43,4 +47,11 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
+
+  workflows:
+    version: 2
+    work:
+      jobs:
+        - build
+        - sonar
 
