@@ -48,10 +48,10 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
-  workflows:
-    version: 2
-    work:
-      jobs:
-        - build
-        - sonar
+workflows:
+  version: 2
+  work:
+    jobs:
+      - build
+      - sonar
 
