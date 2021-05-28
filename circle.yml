@@ -64,5 +64,6 @@ workflows:
     jobs:
       - build
       - sonar:
-          requires: build
+          requires:
+            - build
 
