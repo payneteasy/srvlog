@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Date: 08.01.13
  * Time: 17:07
  */
-public class CommonIntegrationTest {
+public abstract class CommonIntegrationTest {
 
     protected ClassPathXmlApplicationContext context;
 

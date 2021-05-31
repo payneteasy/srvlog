@@ -62,9 +62,4 @@ public class LogDataTest {
         Assert.assertNotSame(logData1, logData2);
     }
 
-    @Test
-    public void testDate() {
-        Long date = 20130124L;
-        System.out.println(new Date(date * 12 * 60 * 60 * 1000));
-    }
 }

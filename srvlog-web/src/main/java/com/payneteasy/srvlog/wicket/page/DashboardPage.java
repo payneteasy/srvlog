@@ -197,7 +197,7 @@ public class DashboardPage extends BasePage {
         }
     }
 
-    public static String SEVERITY = "SEVERITY";
-    public static String DATE_RANGE_TYPE = "DATE_RANGE_TYPE";
+    public static final String SEVERITY = "SEVERITY";
+    public static final String DATE_RANGE_TYPE = "DATE_RANGE_TYPE";
 
 }

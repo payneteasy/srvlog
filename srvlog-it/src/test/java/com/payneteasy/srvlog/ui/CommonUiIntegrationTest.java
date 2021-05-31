@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Date: 09.01.13
  */
-public class CommonUiIntegrationTest extends CommonIntegrationTest{
+public abstract class CommonUiIntegrationTest extends CommonIntegrationTest{
     private static final Logger LOG = LoggerFactory.getLogger(CommonUiIntegrationTest.class);
 
     private Server server;
@@ -65,11 +65,4 @@ public class CommonUiIntegrationTest extends CommonIntegrationTest{
         return server;
     }
 
-    public static void main(String[] args) {
-        try {
-            new CommonUiIntegrationTest().startWebapps();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

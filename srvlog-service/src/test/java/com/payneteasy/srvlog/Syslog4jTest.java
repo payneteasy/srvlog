@@ -83,12 +83,6 @@ public class Syslog4jTest {
         assertEquals("Syslog Adapter has to properly handle messages", HELLO_SYSLOG, eventHandler.message);
     }
 
-    @Test
-    @Ignore
-    public void sendFromFile()  {
-
-    }
-
     public class SyslogEventHandler implements SyslogServerSessionlessEventHandlerIF {
 
         public String message;
