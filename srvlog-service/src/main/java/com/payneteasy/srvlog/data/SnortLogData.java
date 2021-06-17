@@ -8,12 +8,14 @@ import com.payneteasy.srvlog.adapter.syslog.ProtocolHeader;
 import static com.payneteasy.srvlog.adapter.syslog.ProtocolHeader.createProtocolHeader;
 import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
 import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
-import static org.springframework.util.StringUtils.isEmpty;
+
 
 /**
  * Data transfer object.
