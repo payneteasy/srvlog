@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.payneteasy</groupId>
-        <version>1.2-15</version>
+        <version>1.2-16-SNAPSHOT</version>
         <artifactId>srvlog</artifactId>
     </parent>
     <groupId>com.payneteasy.srvlog</groupId>
     <artifactId>srvlog-sql</artifactId>
-    <version>1.2-15</version>
+    <version>1.2-16-SNAPSHOT</version>
     <name>srvlog-sql ${project.version}</name>
     <packaging>jar</packaging>
     <properties>
