@@ -19,11 +19,13 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+      #- run: sudo apt-get update -qq
+      #- run: sudo apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
+      #- run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
       - run: sudo apt-get update -qq
-      - run: sudo apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
-      - run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
-      - run: sudo apt-get update -qq
-      - run: sudo apt-get install sphinxsearch
+      - run: wget https://sphinxsearch.com/files/sphinxsearch_2.2.11-release-1~xenial_amd64.deb
+      - run: sudo dpkg -i sphinxsearch_2.2.11-release-1~xenial_amd64.deb
+      #- run: sudo apt-get install sphinxsearch
       - run: ./install/install.sh
       - run:
           name: install dockerize
