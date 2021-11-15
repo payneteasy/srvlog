@@ -23,6 +23,7 @@ jobs:
       #- run: sudo apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
       #- run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
       - run: sudo apt-get update -qq
+      - run: sudo apt-get install mysql-client unixodbc libpq5
       - run: wget https://sphinxsearch.com/files/sphinxsearch_2.2.11-release-1~xenial_amd64.deb
       - run: sudo dpkg -i sphinxsearch_2.2.11-release-1~xenial_amd64.deb
       #- run: sudo apt-get install sphinxsearch
