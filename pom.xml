@@ -50,7 +50,7 @@
         <jetty.version>9.4.19.v20190610</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.security.version>5.5.0</spring.security.version>
-        <org.springframework.version>5.3.8</org.springframework.version>
+        <org.springframework.version>5.3.13</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>7.0.42</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
@@ -497,7 +497,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.61.Final</version>
+                <version>4.1.68.Final</version>
             </dependency>
 
             <dependency>
