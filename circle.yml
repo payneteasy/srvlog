@@ -2,7 +2,6 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/base:2021.11
       - image: circleci/openjdk:8-jdk
       - image: circleci/mariadb:latest
 
@@ -25,7 +24,7 @@ jobs:
       # - run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
       # - run: sudo apt-get update -qq
       # - run: sudo apt-get install libmysqlclient20 unixodbc libpq5
-      - run: sudo apt-get install sphinxsearch
+      # - run: sudo apt-get install sphinxsearch
       - run: ./install/install.sh
       - run:
           name: install dockerize
@@ -45,7 +44,8 @@ jobs:
       - run:
           name: Test
           command: |
-             mvn clean verify -Pintegration-test
+             # mvn clean verify -Pintegration-test
+             mvn clean verify
       - persist_to_workspace:
           root: .
           paths:
