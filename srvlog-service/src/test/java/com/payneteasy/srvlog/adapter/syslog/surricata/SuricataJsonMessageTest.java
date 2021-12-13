@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -67,6 +68,6 @@ public class SuricataJsonMessageTest {
     }
 
     private String read(String aFilename) throws IOException {
-        return FileUtils.readFileToString(new File("src/test/resources/surricata", aFilename));
+        return FileUtils.readFileToString(new File("src/test/resources/surricata", aFilename), StandardCharsets.UTF_8);
     }
 }
