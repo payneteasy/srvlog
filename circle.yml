@@ -24,7 +24,7 @@ jobs:
       #- run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
       - run: sudo apt-get update -qq
       # - run: sudo apt-get install libmysqlclient20 unixodbc libpq5
-      #- run: sudo apt-get install sphinxsearch
+      - run: sudo apt-get install sphinxsearch
       - run: ./install/install.sh
       - run:
           name: install dockerize
@@ -39,8 +39,8 @@ jobs:
           command: |
             sudo apt-get install default-mysql-client
       - run: mysql -h 127.0.0.1 -uroot < srvlog-sql/db/create_srvlog_db.sql
-      - run: wget https://sphinxsearch.com/files/sphinxsearch_2.3.2-beta-1~xenial_amd64.deb
-      - run: sudo dpkg -i sphinxsearch_2.3.2-beta-1~xenial_amd64.deb
+      #- run: wget https://sphinxsearch.com/files/sphinxsearch_2.3.2-beta-1~xenial_amd64.deb
+      #- run: sudo dpkg -i sphinxsearch_2.3.2-beta-1~xenial_amd64.deb
       - run:
           name: Test
           command: |
