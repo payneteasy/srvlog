@@ -19,7 +19,9 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-      #- run: sudo apt-get update -qq
+      - run: sudo apt-get update -qq
+      - run: sudo apt install software-properties-common
+      - run: sudo apt-get update -qq
       #- run: sudo apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
       - run: sudo add-apt-repository ppa:builds/sphinxsearch-rel22
       - run: sudo apt-get update -qq
