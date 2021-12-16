@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.payneteasy</groupId>
         <artifactId>srvlog</artifactId>
-        <version>1.2-18-SNAPSHOT</version>
+        <version>1.2-18</version>
     </parent>
     <groupId>com.payneteasy.srvlog</groupId>
     <artifactId>srvlog-it</artifactId>
@@ -191,7 +191,7 @@
         <dependency>
             <groupId>com.payneteasy.srvlog</groupId>
             <artifactId>srvlog-sql</artifactId>
-            <version>1.2-18-SNAPSHOT</version>
+            <version>1.2-18</version>
         </dependency>
 
 
