@@ -105,12 +105,20 @@ public class SrvlogDbMigrator {
     }
 
     private Flyway buildFlywayInstance() {
+        Flyway fw = Flyway.configure()
+                .dataSource(url, user, password)
+                .baselineVersion(MigrationVersion.fromVersion(baselineVersion))
+                .baselineDescription(baselineDescription)
+                .schemas(schemas)
+                .sqlMigrationSuffixes(sqlMigrationSuffixes).load();
+/*
         Flyway fw = new Flyway();
         fw.setDataSource(url, user, password);
         fw.setBaselineVersion(MigrationVersion.fromVersion(baselineVersion));
         fw.setBaselineDescription(baselineDescription);
         fw.setSchemas(schemas);
         fw.setSqlMigrationSuffixes(sqlMigrationSuffixes);
+*/
         return fw;
     }
 
