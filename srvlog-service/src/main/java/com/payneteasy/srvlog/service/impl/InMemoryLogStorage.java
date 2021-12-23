@@ -5,13 +5,13 @@ import com.payneteasy.srvlog.data.LogData;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-class InMemoryLogList {
+class InMemoryLogStorage {
 
     private final List<LogData> logList;
 
     private final int maxCapacity;
 
-    public InMemoryLogList(int maxCapacity) {
+    public InMemoryLogStorage(int maxCapacity) {
         this.logList = new CopyOnWriteArrayList<>();
         this.maxCapacity = maxCapacity;
     }
@@ -36,5 +36,9 @@ class InMemoryLogList {
 
     public int size() {
         return logList.size();
+    }
+
+    public List<LogData> asLogList() {
+        return logList;
     }
 }

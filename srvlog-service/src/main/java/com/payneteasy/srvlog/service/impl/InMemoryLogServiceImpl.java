@@ -6,16 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Service
+@Service("inMemoryLogService")
 public class InMemoryLogServiceImpl implements IInMemoryLogService {
 
     private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1000;
 
-    private final ConcurrentMap<String, ConcurrentMap<String, InMemoryLogList>> logStorage = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, ConcurrentMap<String, InMemoryLogStorage>> logStorage = new ConcurrentHashMap<>();
     private final int programLogStorageCapacity;
 
     @Autowired
@@ -24,9 +26,23 @@ public class InMemoryLogServiceImpl implements IInMemoryLogService {
                 programLogStorageCapacity : DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY;
     }
 
+    @Override
     public void handleReceivedLogData(LogData logData) {
         if (saveLog(logData)) {
-            WebSocketLogEndpoint.broadcastLogData(logData);
+            WebSocketLogEndpoint.broadcastLogDataToSubscribers(logData);
+        }
+    }
+
+    @Override
+    public List<LogData> getLogDataListByHostAndProgram(String host, String program) {
+
+        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.get(host);
+        if (Objects.nonNull(hostLogStorage)) {
+            InMemoryLogStorage programLogStorage = hostLogStorage.get(program);
+
+            return Objects.nonNull(programLogStorage) ? programLogStorage.asLogList() : Collections.emptyList();
+        } else {
+            return Collections.emptyList();
         }
     }
 
@@ -37,12 +53,12 @@ public class InMemoryLogServiceImpl implements IInMemoryLogService {
 
         if (Objects.isNull(host) || Objects.isNull(program)) return false;
 
-        ConcurrentMap<String, InMemoryLogList> hostLogStorage = logStorage.computeIfAbsent(
+        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.computeIfAbsent(
                 host, h -> new ConcurrentHashMap<>()
         );
 
-        InMemoryLogList programLogList = hostLogStorage.computeIfAbsent(
-                program, p -> new InMemoryLogList(programLogStorageCapacity)
+        InMemoryLogStorage programLogList = hostLogStorage.computeIfAbsent(
+                program, p -> new InMemoryLogStorage(programLogStorageCapacity)
         );
 
         return programLogList.add(logData);

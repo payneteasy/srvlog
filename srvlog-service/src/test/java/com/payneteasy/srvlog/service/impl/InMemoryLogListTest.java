@@ -10,7 +10,7 @@ public class InMemoryLogListTest {
     @Test
     public void inMemoryLogListSimpleTest() {
 
-        InMemoryLogList inMemoryLogList = new InMemoryLogList(10);
+        InMemoryLogStorage inMemoryLogList = new InMemoryLogStorage(10);
 
         for (int i = 0; i < 30; i++) {
             LogData logData = new LogData();
