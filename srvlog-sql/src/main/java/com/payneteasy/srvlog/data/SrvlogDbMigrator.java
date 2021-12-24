@@ -111,14 +111,6 @@ public class SrvlogDbMigrator {
                 .baselineDescription(baselineDescription)
                 .schemas(schemas)
                 .sqlMigrationSuffixes(sqlMigrationSuffixes).load();
-/*
-        Flyway fw = new Flyway();
-        fw.setDataSource(url, user, password);
-        fw.setBaselineVersion(MigrationVersion.fromVersion(baselineVersion));
-        fw.setBaselineDescription(baselineDescription);
-        fw.setSchemas(schemas);
-        fw.setSqlMigrationSuffixes(sqlMigrationSuffixes);
-*/
         return fw;
     }
 
