@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,6 +27,23 @@ public class InMemoryLogServiceImpl implements IInMemoryLogService {
     public InMemoryLogServiceImpl(@Value("${programLogStorageCapacity}") int programLogStorageCapacity) {
         this.programLogStorageCapacity = programLogStorageCapacity > 0 ?
                 programLogStorageCapacity : DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY;
+    }
+
+    @Override
+    public List<String> getHostNameList() {
+        return new ArrayList<>(logStorage.keySet());
+    }
+
+    @Override
+    public List<String> getProgramNameList() {
+
+        Set<String> programNamesSet = new HashSet<>();
+
+        for (ConcurrentMap<String, InMemoryLogStorage> hostLogStorage : logStorage.values()) {
+            programNamesSet.addAll(hostLogStorage.keySet());
+        }
+
+        return new ArrayList<>(programNamesSet);
     }
 
     @Override

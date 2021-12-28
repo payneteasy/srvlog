@@ -7,8 +7,6 @@ import com.payneteasy.srvlog.service.IInMemoryLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@Component("webSocketEndpoint")
-@Scope(scopeName = "websocket")
 @ServerEndpoint("/ws-log")
 public class WebSocketLogEndpoint {
 
