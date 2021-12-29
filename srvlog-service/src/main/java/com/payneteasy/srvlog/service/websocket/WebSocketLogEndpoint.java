@@ -1,4 +1,4 @@
-package com.payneteasy.srvlog.service.impl;
+package com.payneteasy.srvlog.service.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,8 @@ import com.payneteasy.srvlog.service.IInMemoryLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Component("webSocketEndpoint")
+@Scope(scopeName = "websocket")
 @ServerEndpoint("/ws-log")
 public class WebSocketLogEndpoint {
 
@@ -44,7 +48,7 @@ public class WebSocketLogEndpoint {
     public void openConnection(Session session) {
         this.session = session;
         connections.add(this);
-        this.subscriptionState = SubscriptionState.INITIAL;
+        this.subscriptionState = WebSocketLogEndpoint.SubscriptionState.INITIAL;
     }
 
     @OnClose
@@ -56,7 +60,7 @@ public class WebSocketLogEndpoint {
     public void onMessage(String message) {
 
         try {
-            LogSubscriptionRequest logSubscriptionRequest = jsonMapper.readValue(message, LogSubscriptionRequest.class);
+            LogSubscriptionRequest logSubscriptionRequest = WebSocketLogEndpoint.jsonMapper.readValue(message, LogSubscriptionRequest.class);
             SubscriptionState subscriptionState = SubscriptionState.valueOf(logSubscriptionRequest.getSubscriptionState());
 
             if (SubscriptionState.INITIAL.equals(subscriptionState) || SubscriptionState.INITIAL.equals(this.subscriptionState)) {
@@ -132,7 +136,7 @@ public class WebSocketLogEndpoint {
             boolean isBroadcastCandidate;
 
             synchronized (connection) {
-                isBroadcastCandidate = SubscriptionState.ONLINE_BROADCASTING.equals(connection.subscriptionState)
+                isBroadcastCandidate = WebSocketLogEndpoint.SubscriptionState.ONLINE_BROADCASTING.equals(connection.subscriptionState)
                         && host.equalsIgnoreCase(connection.subscriptionHost)
                         && program.equalsIgnoreCase(connection.subscriptionProgram);
             }

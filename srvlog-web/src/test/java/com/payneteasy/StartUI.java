@@ -1,5 +1,6 @@
 package com.payneteasy;
 
+import com.payneteasy.srvlog.service.websocket.WebSocketLogEndpoint;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
@@ -8,6 +9,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.webapp.*;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +73,28 @@ public class StartUI {
         ContextHandlerCollection webapps = new ContextHandlerCollection();
         webapps.setHandlers(new Handler[]{srvlog});
         server.setHandler(webapps);
+
+        try
+        {
+            // Initialize javax.websocket layer
+            WebSocketServerContainerInitializer.configure(srvlog,
+                    (servletContext, wsContainer) ->
+                    {
+                        // This lambda will be called at the appropriate place in the
+                        // ServletContext initialization phase where you can initialize
+                        // and configure  your websocket container.
+
+                        // Configure defaults for container
+                        wsContainer.setDefaultMaxTextMessageBufferSize(65535);
+
+                        // Add WebSocket endpoint to javax.websocket layer
+                        wsContainer.addEndpoint(WebSocketLogEndpoint.class);
+                    });
+        }
+        catch (Throwable t)
+        {
+            t.printStackTrace(System.err);
+        }
 
 
         try {
