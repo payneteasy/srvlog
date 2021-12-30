@@ -17,7 +17,7 @@ function getLatestLogs () {
     if (selectedHostValue !== 'None' && selectedProgramValue !== 'None') {
 
         let webSocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        let webSocketLogUrl = webSocketProtocol + '//' + window.location.host + '/ws-log';
+        let webSocketLogUrl = webSocketProtocol + '//' + window.location.host + '/srvlog/ws-log';
 
         socket = new WebSocket(webSocketLogUrl);
 
