@@ -20,14 +20,17 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component("webSocketEndpoint")
 @Scope(scopeName = "websocket")
-@ServerEndpoint("/ws-log")
+@ServerEndpoint(WebSocketLogEndpoint.WS_LOG_EPNT_PATH)
 public class WebSocketLogEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketLogEndpoint.class);
+
+    public static final String WS_LOG_EPNT_PATH = "/ws-log";
 
     private static final Set<WebSocketLogEndpoint> connections = new CopyOnWriteArraySet<>();
 
@@ -95,10 +98,11 @@ public class WebSocketLogEndpoint {
 
         } catch (Exception e) {
 
-            logger.error("Error while handling web socket message", e);
+            String errorId = UUID.randomUUID().toString();
+            logger.error(String.format("Error while handling web socket message. Error id [%s]", errorId), e);
 
             LogSubscriptionResponse unsuccessfulResponse = new LogSubscriptionResponse(
-                    false, Collections.emptyList(), "Error while handling web socket message on server side"
+                    false, Collections.emptyList(), String.format("Error while handling web socket message on server side. Error id [%s]", errorId)
             );
 
             try {

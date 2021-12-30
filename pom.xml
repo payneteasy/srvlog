@@ -516,12 +516,14 @@
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>1.1</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
                 <artifactId>javax-websocket-server-impl</artifactId>
                 <version>${jetty.version}</version>
+                <scope>provided</scope>
             </dependency>
 
         </dependencies>

@@ -54,7 +54,7 @@ public class SimpleLogCollector implements ILogCollector {
         try {
             inMemoryLogService.handleReceivedLogData(logData);
         } catch (Exception e) {
-            logger.error("Error while handling log data in memory log service", e);
+            logger.error("Error while handling received log data in memory log service", e);
         }
 
         logDao.saveLog(logData);

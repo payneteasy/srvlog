@@ -5,10 +5,6 @@ let terminalIO;
 
 let socket;
 
-function initContent() {
-    getLatestLogs();
-}
-
 function getLatestLogs () {
 
     let selectedHostValue = $("#selected-host option:selected").text();
@@ -33,31 +29,34 @@ function getLatestLogs () {
         };
 
         socket.onclose = function (event) {
+
             if (event.wasClean) {
-                terminalIO.println('Socket connection was closed');
+                terminalIO.println('WEBSOCKET: Connection was closed');
             } else {
-                terminalIO.println('Socket connection was closed with unsuccessful code ' +
+                terminalIO.println('WEBSOCKET: Connection was closed with unsuccessful code ' +
                     '[' + event.code + '] and reason [' + event.reason + ']');
             }
         };
 
         socket.onmessage = function (event) {
-            let logSubscriptionResponse = JSON.parse(event.data);
-            if (logSubscriptionResponse.success) {
-                logSubscriptionResponse.logDataList.forEach(function (item, index, array) {
 
+            let logSubscriptionResponse = JSON.parse(event.data);
+
+            if (logSubscriptionResponse.success) {
+
+                logSubscriptionResponse.logDataList.forEach(function (item, index, array) {
                     let logDate = new Date(item.date);
                     terminalIO.println(logDate.toLocaleString() + ' ' + logDate.getMilliseconds()
-                        + 'ms' + ' [' + item.host + '] [' + item.program + '] ' + '[' + item.id + '] '
-                        + item.message);
+                        + 'ms' + ' [' + item.host + '] [' + item.program + '] ' + item.message);
                 });
+
             } else {
-                terminalIO.println('Log subscription error message: [' + logSubscriptionResponse.errorMessage + ']');
+                terminalIO.println('WEBSOCKET: Log subscription error message: [' + logSubscriptionResponse.errorMessage + ']');
             }
         };
 
         socket.onerror = function (error) {
-            terminalIO.println('Socket error has occurred')
+            terminalIO.println('WEBSOCKET: Error has occurred')
         }
     }
 }
@@ -113,5 +112,4 @@ function setupHterm() {
 window.onload = async function() {
     await lib.init();
     setupHterm();
-    initContent();
 };

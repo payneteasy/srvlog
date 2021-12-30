@@ -14,7 +14,7 @@ public class WebSocketEndpointsConfiguration implements ServerApplicationConfig 
         Set<ServerEndpointConfig> result = new HashSet<>();
 
         if (endpointClasses.contains(WebSocketLogEndpoint.class)) {
-            result.add(ServerEndpointConfig.Builder.create(WebSocketLogEndpoint.class, "/ws-log").build());
+            result.add(ServerEndpointConfig.Builder.create(WebSocketLogEndpoint.class, WebSocketLogEndpoint.WS_LOG_EPNT_PATH).build());
         }
 
         return result;
