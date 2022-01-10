@@ -4,7 +4,7 @@
 
     <groupId>com.payneteasy</groupId>
     <artifactId>srvlog</artifactId>
-    <version>1.2-17-SNAPSHOT</version>
+    <version>1.2-21-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>srvlog ${project.version}</name>
 
@@ -49,10 +49,10 @@
         <wicket.version>7.18.0</wicket.version>
         <jetty.version>9.4.44.v20210927</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
-        <spring.security.version>5.5.0</spring.security.version>
+        <spring.security.version>5.5.1</spring.security.version>
         <org.springframework.version>5.3.13</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
-        <tomcat.version>7.0.42</tomcat.version>
+        <tomcat.version>7.0.107</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
         <jackson.version>2.9.10.8</jackson.version>
         <jackson-core.version>2.9.10</jackson-core.version>
@@ -103,7 +103,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.8.1</version>
+                <version>4.13.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -370,13 +370,13 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.13.0</version>
+                <version>2.17.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
-                <version>2.13.0</version>
+                <version>2.17.0</version>
             </dependency>
 
             <dependency>
@@ -497,7 +497,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.68.Final</version>
+                <version>4.1.72.Final</version>
             </dependency>
 
             <dependency>
@@ -532,19 +532,6 @@
 
     <build>
         <plugins>
-
-            <!--<plugin>
-              <groupId>org.owasp</groupId>
-              <artifactId>dependency-check-maven</artifactId>
-              <version>1.2.10</version>
-              <executions>
-                  <execution>
-                      <goals>
-                          <goal>check</goal>
-                      </goals>
-                  </execution>
-              </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -593,13 +580,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-<!--
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPaths}</destFile>
-                    <dataFile>${sonar.jacoco.reportPaths}</dataFile>
-                    <append>true</append>
-                </configuration>
--->
                 <executions>
                     <execution>
                         <id>prepare-and-report</id>

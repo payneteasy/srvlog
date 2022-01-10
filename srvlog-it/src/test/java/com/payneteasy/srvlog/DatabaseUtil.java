@@ -6,11 +6,9 @@ import com.nesscomputing.syslog4j.impl.message.pci.PCISyslogMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.ILogCollector;
-import org.flywaydb.core.internal.database.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
