@@ -170,11 +170,19 @@
             <scope>test</scope>
         </dependency>
 
+	<dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>javax-websocket-server-impl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
+
 
         <!--commons dbcp-->
         <dependency>
