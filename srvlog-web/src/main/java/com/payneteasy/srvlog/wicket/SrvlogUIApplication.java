@@ -5,7 +5,6 @@ import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.LoginPage;
 import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
 import com.payneteasy.srvlog.wicket.page.SnortLogMonitorPage;
-import com.payneteasy.srvlog.wicket.page.TerminalPage;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -56,7 +55,6 @@ public class SrvlogUIApplication extends WebApplication{
         mountPage("logs", LogMonitorPage.class);
         mountPage("snort-logs", SnortLogMonitorPage.class);
         mountPage("online-logs", OnlineLogMonitorPage.class);
-        mountPage("terminal", TerminalPage.class);
 
         mountPage("login", LoginPage.class);
     }
