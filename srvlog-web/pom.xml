@@ -211,12 +211,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>javax-websocket-server-impl</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
 
     </dependencies>
 

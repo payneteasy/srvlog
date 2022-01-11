@@ -15,13 +15,8 @@
 
     <context:property-placeholder location="${ext.properties.dir:classpath*:}/syslog4j.properties,
             ${ext.properties.dir:classpath*:}/sphinxclient.properties,
-            ${ext.properties.dir:classpath*:}/logbackAdapter.properties,
-            ${ext.properties.dir:classpath*:}/inMemoryLog.properties"
+            ${ext.properties.dir:classpath*:}/logbackAdapter.properties"
                                   ignore-resource-not-found="true"
     />
-
-    <bean id="webSocketEndpoint" class="com.payneteasy.srvlog.service.websocket.WebSocketLogEndpoint">
-        <property name="inMemoryLogService" ref="inMemoryLogService"></property>
-    </bean>
 
 </beans>
