@@ -1,4 +1,4 @@
-package com.payneteasy.srvlog.service.websocket;
+package com.payneteasy.srvlog.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,8 +7,6 @@ import com.payneteasy.srvlog.service.IInMemoryLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -22,15 +20,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicReference;
 
-@Component("webSocketEndpoint")
-@Scope(scopeName = "websocket")
-@ServerEndpoint(WebSocketLogEndpoint.WS_LOG_EPNT_PATH)
+@ServerEndpoint(value = "/ws-log", configurator = ServletAwareConfig.class)
 public class WebSocketLogEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketLogEndpoint.class);
-
-    public static final String WS_LOG_EPNT_PATH = "/ws-log";
 
     private static final Set<WebSocketLogEndpoint> connections = new CopyOnWriteArraySet<>();
 
@@ -38,20 +33,15 @@ public class WebSocketLogEndpoint {
 
     private static IInMemoryLogService inMemoryLogService;
 
-    private Session session;
-    private volatile String subscriptionHost;
-    private volatile String subscriptionProgram;
-    private volatile SubscriptionState subscriptionState;
+    private final AtomicReference<Subscription> subscription = new AtomicReference<>();
 
-    private enum SubscriptionState {
-        INITIAL, ONLINE_BROADCASTING
-    }
+    private Session session;
 
     @OnOpen
     public void openConnection(Session session) {
         this.session = session;
         connections.add(this);
-        this.subscriptionState = WebSocketLogEndpoint.SubscriptionState.INITIAL;
+        this.subscription.set(Subscription.initialState());
     }
 
     @OnClose
@@ -64,9 +54,9 @@ public class WebSocketLogEndpoint {
 
         try {
             LogSubscriptionRequest logSubscriptionRequest = WebSocketLogEndpoint.jsonMapper.readValue(message, LogSubscriptionRequest.class);
-            SubscriptionState subscriptionState = SubscriptionState.valueOf(logSubscriptionRequest.getSubscriptionState());
+            Subscription.State subscriptionState = Subscription.State.valueOf(logSubscriptionRequest.getSubscriptionState());
 
-            if (SubscriptionState.INITIAL.equals(subscriptionState) || SubscriptionState.INITIAL.equals(this.subscriptionState)) {
+            if (Subscription.State.INITIAL.equals(subscriptionState) || Subscription.State.INITIAL.equals(subscription.get().getSubscriptionState())) {
 
                 String host = logSubscriptionRequest.getHost();
                 String program = logSubscriptionRequest.getProgram();
@@ -77,23 +67,25 @@ public class WebSocketLogEndpoint {
                             false, Collections.emptyList(), "Incorrect request parameters"
                     );
                     String incorrectRequestParametersResponseJson = jsonMapper.writeValueAsString(incorrectRequestParametersResponse);
-                    sendTextThruConnection(this, incorrectRequestParametersResponseJson);
+                    this.sendText(incorrectRequestParametersResponseJson);
 
                     return;
                 }
 
-                synchronized (this) {
-                    this.subscriptionHost = host;
-                    this.subscriptionProgram = program;
-                    this.subscriptionState = SubscriptionState.INITIAL;
-                }
+                subscription.set(new Subscription(host, program, Subscription.State.INITIAL));
 
                 List<LogData> logDataList = inMemoryLogService.getLogDataListByHostAndProgram(host, program);
                 LogSubscriptionResponse logSubscriptionResponse = new LogSubscriptionResponse(true, logDataList, null);
                 String logSubscriptionResponseJson = jsonMapper.writeValueAsString(logSubscriptionResponse);
-                sendTextThruConnection(this, logSubscriptionResponseJson);
+                this.sendText(logSubscriptionResponseJson);
 
-                this.subscriptionState = SubscriptionState.ONLINE_BROADCASTING;
+                Subscription oldSubscription = subscription.get();
+                subscription.set(new Subscription(
+                        oldSubscription.getSubscriptionHost(),
+                        oldSubscription.getSubscriptionProgram(),
+                        Subscription.State.ONLINE_BROADCASTING
+                    )
+                );
             }
 
         } catch (Exception e) {
@@ -107,7 +99,7 @@ public class WebSocketLogEndpoint {
 
             try {
                 String unsuccessfulResponseJson = jsonMapper.writeValueAsString(unsuccessfulResponse);
-                sendTextThruConnection(this, unsuccessfulResponseJson);
+                this.sendText(unsuccessfulResponseJson);
             } catch (IOException e2) {
                 logger.error("Error while sending web socket unsuccessful log subscription response", e2);
             }
@@ -137,17 +129,9 @@ public class WebSocketLogEndpoint {
 
         for (WebSocketLogEndpoint connection : connections) {
 
-            boolean isBroadcastCandidate;
-
-            synchronized (connection) {
-                isBroadcastCandidate = WebSocketLogEndpoint.SubscriptionState.ONLINE_BROADCASTING.equals(connection.subscriptionState)
-                        && host.equalsIgnoreCase(connection.subscriptionHost)
-                        && program.equalsIgnoreCase(connection.subscriptionProgram);
-            }
-
-            if (isBroadcastCandidate) {
+            if (connection.isBroadcastCandidateFor(host, program)) {
                 try {
-                    sendTextThruConnection(connection, logDataText);
+                    connection.sendText(logDataText);
                 } catch (IOException e) {
                     connections.remove(connection);
                     try {
@@ -160,10 +144,15 @@ public class WebSocketLogEndpoint {
         }
     }
 
-    private static void sendTextThruConnection(WebSocketLogEndpoint connection, String text) throws IOException {
-        synchronized (connection) {
-            connection.session.getBasicRemote().sendText(text);
-        }
+    private synchronized boolean isBroadcastCandidateFor(String host, String program) {
+        Subscription subscription = this.subscription.get();
+        return Subscription.State.ONLINE_BROADCASTING.equals(subscription.getSubscriptionState())
+                && host.equalsIgnoreCase(subscription.getSubscriptionHost())
+                && program.equalsIgnoreCase(subscription.getSubscriptionProgram());
+    }
+
+    private synchronized void sendText(String text) throws IOException {
+        this.session.getBasicRemote().sendText(text);
     }
 
     public void setInMemoryLogService(IInMemoryLogService inMemoryLogService) {
@@ -191,9 +180,9 @@ public class WebSocketLogEndpoint {
 
     private static class LogSubscriptionResponse {
 
-        private boolean success;
-        private List<LogData> logDataList;
-        private String errorMessage;
+        private final boolean success;
+        private final List<LogData> logDataList;
+        private final String errorMessage;
 
         public LogSubscriptionResponse(boolean success, List<LogData> logDataList, String errorMessage) {
             this.success = success;

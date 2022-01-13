@@ -1,6 +1,6 @@
 package com.payneteasy;
 
-import com.payneteasy.srvlog.service.websocket.WebSocketLogEndpoint;
+import com.payneteasy.srvlog.websocket.WebSocketLogEndpoint;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;

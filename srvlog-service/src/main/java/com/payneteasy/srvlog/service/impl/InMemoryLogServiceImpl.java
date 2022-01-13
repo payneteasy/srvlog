@@ -2,7 +2,6 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.IInMemoryLogService;
-import com.payneteasy.srvlog.service.websocket.WebSocketLogEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,8 @@ public class InMemoryLogServiceImpl implements IInMemoryLogService {
     @Override
     public void handleReceivedLogData(LogData logData) {
         if (saveLog(logData)) {
-            WebSocketLogEndpoint.broadcastLogDataToSubscribers(logData);
+            //TODO impl broadcasting
+            //WebSocketLogEndpoint.broadcastLogDataToSubscribers(logData);
         }
     }
 

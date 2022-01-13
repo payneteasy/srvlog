@@ -20,7 +20,7 @@
                                   ignore-resource-not-found="true"
     />
 
-    <bean id="webSocketEndpoint" class="com.payneteasy.srvlog.service.websocket.WebSocketLogEndpoint">
+    <bean id="webSocketEndpoint" class="com.payneteasy.srvlog.websocket.WebSocketLogEndpoint">
         <property name="inMemoryLogService" ref="inMemoryLogService"></property>
     </bean>
 
