@@ -1,4 +1,4 @@
-package com.payneteasy.srvlog.websocket;
+package com.payneteasy.srvlog.service.impl;
 
 public class Subscription {
 
@@ -30,5 +30,11 @@ public class Subscription {
 
     public State getSubscriptionState() {
         return subscriptionState;
+    }
+
+    public synchronized boolean isBroadcastCandidateFor(String host, String program) {
+        return Subscription.State.ONLINE_BROADCASTING.equals(this.getSubscriptionState())
+                && host.equalsIgnoreCase(this.getSubscriptionHost())
+                && program.equalsIgnoreCase(this.getSubscriptionProgram());
     }
 }

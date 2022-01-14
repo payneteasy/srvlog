@@ -5,8 +5,8 @@ import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
 import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
-import com.payneteasy.srvlog.service.IInMemoryLogService;
 import com.payneteasy.srvlog.service.IIndexerService;
+import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class SimpleLogCollector implements ILogCollector {
     private IIndexerService indexerService;
 
     @Autowired
-    private IInMemoryLogService inMemoryLogService;
+    private ILogBroadcastingService logBroadcastingService;
 
     @Override
     public void saveLog(LogData logData) {
@@ -52,7 +52,7 @@ public class SimpleLogCollector implements ILogCollector {
             logData.setMessage(logData.getMessage().substring(1, 65536));
 
         try {
-            inMemoryLogService.handleReceivedLogData(logData);
+            logBroadcastingService.handleReceivedLogData(logData);
         } catch (Exception e) {
             logger.error("Error while handling received log data in memory log service", e);
         }

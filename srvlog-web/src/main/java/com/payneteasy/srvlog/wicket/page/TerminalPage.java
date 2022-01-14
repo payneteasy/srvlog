@@ -1,6 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.service.IInMemoryLogService;
+import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -17,7 +17,7 @@ import java.util.List;
 public class TerminalPage extends BasePage {
 
     @SpringBean
-    private IInMemoryLogService inMemoryLogService;
+    private ILogBroadcastingService logBroadcastingService;
 
     public TerminalPage(PageParameters pageParameters) {
 
@@ -28,7 +28,7 @@ public class TerminalPage extends BasePage {
         Form<TerminalFilterModel> hostChoiceForm = new Form<>("hostChoice-form");
         add(hostChoiceForm);
 
-        List<String> hosts = inMemoryLogService.getHostNameList();
+        List<String> hosts = logBroadcastingService.getHostNameList();
 
         DropDownChoice<String> hostChoices = new DropDownChoice<>(
                 "choices-host",
@@ -48,7 +48,7 @@ public class TerminalPage extends BasePage {
         Form<TerminalFilterModel> programChoiceForm = new Form<>("programChoice-form");
         add(programChoiceForm);
 
-        List<String> programs = inMemoryLogService.getProgramNameList();
+        List<String> programs = logBroadcastingService.getProgramNameList();
 
         DropDownChoice<String> programChoices = new DropDownChoice<>(
                 "choices-program",

@@ -1,205 +1,46 @@
 package com.payneteasy.srvlog.websocket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.service.IInMemoryLogService;
-import org.apache.commons.lang3.StringUtils;
+import com.payneteasy.srvlog.service.ILogBroadcastingService;
+import com.payneteasy.srvlog.service.impl.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicReference;
 
 @ServerEndpoint(value = "/ws-log", configurator = ServletAwareConfig.class)
 public class WebSocketLogEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketLogEndpoint.class);
 
-    private static final Set<WebSocketLogEndpoint> connections = new CopyOnWriteArraySet<>();
+    static final String LOG_BROADCASTING_SERVICE_KEY = "logBroadcastingService";
 
-    private static final ObjectMapper jsonMapper = new ObjectMapper();
-
-    private static IInMemoryLogService inMemoryLogService;
-
-    private final AtomicReference<Subscription> subscription = new AtomicReference<>();
-
-    private Session session;
+    private ILogBroadcastingService logBroadcastingService;
 
     @OnOpen
-    public void openConnection(Session session) {
-        this.session = session;
-        connections.add(this);
-        this.subscription.set(Subscription.initialState());
+    public void openConnection(Session session, EndpointConfig config) {
+        this.logBroadcastingService = (ILogBroadcastingService) config.getUserProperties().get(LOG_BROADCASTING_SERVICE_KEY);
+        logBroadcastingService.saveBroadcastingSession(session, Subscription.initialState());
     }
 
     @OnClose
-    public void closeConnection() {
-        connections.remove(this);
+    public void closeConnection(Session session) {
+        logBroadcastingService.removeBroadcastingSession(session);
     }
 
     @OnMessage
-    public void onMessage(String message) {
-
-        try {
-            LogSubscriptionRequest logSubscriptionRequest = WebSocketLogEndpoint.jsonMapper.readValue(message, LogSubscriptionRequest.class);
-            Subscription.State subscriptionState = Subscription.State.valueOf(logSubscriptionRequest.getSubscriptionState());
-
-            if (Subscription.State.INITIAL.equals(subscriptionState) || Subscription.State.INITIAL.equals(subscription.get().getSubscriptionState())) {
-
-                String host = logSubscriptionRequest.getHost();
-                String program = logSubscriptionRequest.getProgram();
-
-                if (StringUtils.isEmpty(host) || StringUtils.isEmpty(program)) {
-
-                    LogSubscriptionResponse incorrectRequestParametersResponse = new LogSubscriptionResponse(
-                            false, Collections.emptyList(), "Incorrect request parameters"
-                    );
-                    String incorrectRequestParametersResponseJson = jsonMapper.writeValueAsString(incorrectRequestParametersResponse);
-                    this.sendText(incorrectRequestParametersResponseJson);
-
-                    return;
-                }
-
-                subscription.set(new Subscription(host, program, Subscription.State.INITIAL));
-
-                List<LogData> logDataList = inMemoryLogService.getLogDataListByHostAndProgram(host, program);
-                LogSubscriptionResponse logSubscriptionResponse = new LogSubscriptionResponse(true, logDataList, null);
-                String logSubscriptionResponseJson = jsonMapper.writeValueAsString(logSubscriptionResponse);
-                this.sendText(logSubscriptionResponseJson);
-
-                Subscription oldSubscription = subscription.get();
-                subscription.set(new Subscription(
-                        oldSubscription.getSubscriptionHost(),
-                        oldSubscription.getSubscriptionProgram(),
-                        Subscription.State.ONLINE_BROADCASTING
-                    )
-                );
-            }
-
-        } catch (Exception e) {
-
-            String errorId = UUID.randomUUID().toString();
-            logger.error(String.format("Error while handling web socket message. Error id [%s]", errorId), e);
-
-            LogSubscriptionResponse unsuccessfulResponse = new LogSubscriptionResponse(
-                    false, Collections.emptyList(), String.format("Error while handling web socket message on server side. Error id [%s]", errorId)
-            );
-
-            try {
-                String unsuccessfulResponseJson = jsonMapper.writeValueAsString(unsuccessfulResponse);
-                this.sendText(unsuccessfulResponseJson);
-            } catch (IOException e2) {
-                logger.error("Error while sending web socket unsuccessful log subscription response", e2);
-            }
-        }
+    public void onMessage(Session session, String message) {
+        logBroadcastingService.handleLogBroadcastingRequest(session, message);
     }
 
     @OnError
-    public void onError(Throwable e) {
+    public void onError(Session session, Throwable e) {
+        logBroadcastingService.removeBroadcastingSession(session);
         logger.error("Error during web socket log communication", e);
-    }
-
-    public static void broadcastLogDataToSubscribers(LogData logData) {
-
-        String host = logData.getHost();
-        String program = logData.getProgram();
-
-        LogSubscriptionResponse logSubscriptionResponse = new LogSubscriptionResponse(
-                true, Collections.singletonList(logData), null
-        );
-
-        String logDataText = null;
-        try {
-            logDataText = jsonMapper.writeValueAsString(logSubscriptionResponse);
-        } catch (JsonProcessingException e) {
-            logger.error("Error while writing web socket json log data response", e);
-        }
-
-        for (WebSocketLogEndpoint connection : connections) {
-
-            if (connection.isBroadcastCandidateFor(host, program)) {
-                try {
-                    connection.sendText(logDataText);
-                } catch (IOException e) {
-                    connections.remove(connection);
-                    try {
-                        connection.session.close();
-                    } catch (IOException ce) {
-                        logger.warn("Error while closing web socket conversation due to IOException", ce);
-                    }
-                }
-            }
-        }
-    }
-
-    private synchronized boolean isBroadcastCandidateFor(String host, String program) {
-        Subscription subscription = this.subscription.get();
-        return Subscription.State.ONLINE_BROADCASTING.equals(subscription.getSubscriptionState())
-                && host.equalsIgnoreCase(subscription.getSubscriptionHost())
-                && program.equalsIgnoreCase(subscription.getSubscriptionProgram());
-    }
-
-    private synchronized void sendText(String text) throws IOException {
-        this.session.getBasicRemote().sendText(text);
-    }
-
-    public void setInMemoryLogService(IInMemoryLogService inMemoryLogService) {
-        WebSocketLogEndpoint.inMemoryLogService = inMemoryLogService;
-    }
-
-    private static class LogSubscriptionRequest {
-
-        private String host;
-        private String program;
-        private String subscriptionState;
-
-        public String getHost() {
-            return host;
-        }
-
-        public String getProgram() {
-            return program;
-        }
-
-        public String getSubscriptionState() {
-            return subscriptionState;
-        }
-    }
-
-    private static class LogSubscriptionResponse {
-
-        private final boolean success;
-        private final List<LogData> logDataList;
-        private final String errorMessage;
-
-        public LogSubscriptionResponse(boolean success, List<LogData> logDataList, String errorMessage) {
-            this.success = success;
-            this.logDataList = logDataList;
-            this.errorMessage = errorMessage;
-        }
-
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public List<LogData> getLogDataList() {
-            return logDataList;
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
     }
 }

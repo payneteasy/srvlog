@@ -10,14 +10,7 @@ public class WebSocketEndpointsConfiguration implements ServerApplicationConfig 
 
     @Override
     public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> endpointClasses) {
-
-        Set<ServerEndpointConfig> result = new HashSet<>();
-
-        if (endpointClasses.contains(WebSocketLogEndpoint.class)) {
-            result.add(ServerEndpointConfig.Builder.create(WebSocketLogEndpoint.class, "/ws-log").build());
-        }
-
-        return result;
+        return null;
     }
 
     @Override
