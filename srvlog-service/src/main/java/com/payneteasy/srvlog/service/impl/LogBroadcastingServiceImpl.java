@@ -2,10 +2,6 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lmax.disruptor.EventHandler;
-import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.dsl.Disruptor;
-import com.lmax.disruptor.util.DaemonThreadFactory;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +15,6 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("logBroadcastingService")
-public class LogBroadcastingServiceImpl implements ILogBroadcastingService, EventHandler<LogDataEvent> {
+public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     private static final Logger logger = LoggerFactory.getLogger(LogBroadcastingServiceImpl.class);
 
@@ -40,7 +35,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService, Even
 
     private final ConcurrentMap<Session, AtomicReference<Subscription>> subscriptionStorage = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<String, ConcurrentMap<String, Disruptor<LogDataEvent>>> logStorage = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, ConcurrentMap<String, InMemoryLogStorage>> logStorage = new ConcurrentHashMap<>();
 
     private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1024;
 
@@ -66,7 +61,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService, Even
 
         Set<String> programNamesSet = new HashSet<>();
 
-        for (ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage : logStorage.values()) {
+        for (ConcurrentMap<String, InMemoryLogStorage> hostLogStorage : logStorage.values()) {
             programNamesSet.addAll(hostLogStorage.keySet());
         }
 
@@ -76,30 +71,11 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService, Even
     @Override
     public List<LogData> getLogDataListByHostAndProgram(String host, String program) {
 
-        ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage = logStorage.get(host);
-
+        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.get(host);
         if (Objects.nonNull(hostLogStorage)) {
-            Disruptor<LogDataEvent> programLogStorage = hostLogStorage.get(program);
+            InMemoryLogStorage programLogStorage = hostLogStorage.get(program);
 
-            if (Objects.nonNull(programLogStorage)) {
-
-                RingBuffer<LogDataEvent> ringBuffer = programLogStorage.getRingBuffer();
-                int ringBufferSize = ringBuffer.getBufferSize();
-                List<LogData> logDataList = new ArrayList<>();
-
-                for (int i = 0; i < ringBufferSize; i++) {
-                    LogDataEvent logDataEvent = ringBuffer.get(i);
-                    if (Objects.nonNull(logDataEvent) && Objects.nonNull(logDataEvent.getLogData())) {
-                        logDataList.add(logDataEvent.getLogData());
-                    }
-                }
-
-                logDataList.sort(Comparator.comparing(LogData::getDate));
-
-                return logDataList;
-            } else {
-                return Collections.emptyList();
-            }
+            return Objects.nonNull(programLogStorage) ? programLogStorage.asLogList() : Collections.emptyList();
         } else {
             return Collections.emptyList();
         }
@@ -113,25 +89,17 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService, Even
 
         if (Objects.isNull(host) || Objects.isNull(program)) return;
 
-        ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage = logStorage.computeIfAbsent(
+        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.computeIfAbsent(
                 host, h -> new ConcurrentHashMap<>()
         );
 
-        Disruptor<LogDataEvent> programLogList = hostLogStorage.computeIfAbsent(
-                program, p -> {
-                    Disruptor<LogDataEvent> disruptor = new Disruptor<>(
-                            LogDataEvent::new,
-                            programLogStorageCapacity,
-                            DaemonThreadFactory.INSTANCE
-                    );
-                    disruptor.handleEventsWith(this);
-                    disruptor.start();
-
-                    return disruptor;
-                }
+        InMemoryLogStorage programLogList = hostLogStorage.computeIfAbsent(
+                program, p -> new InMemoryLogStorage(programLogStorageCapacity)
         );
 
-        programLogList.publishEvent((event, sequence) -> new LogDataEvent().setLogData(logData));
+        if (programLogList.add(logData)) {
+            broadcastLogDataToSubscribers(logData);
+        }
     }
 
     @Override
@@ -240,11 +208,6 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService, Even
     @Override
     public void removeBroadcastingSession(Session session) {
         subscriptionStorage.remove(session);
-    }
-
-    @Override
-    public void onEvent(LogDataEvent event, long sequence, boolean endOfBatch) {
-        broadcastLogDataToSubscribers(event.getLogData());
     }
 
     private static class LogBroadcastingRequest {
