@@ -156,7 +156,11 @@
       <dependency>
           <groupId>javax.websocket</groupId>
           <artifactId>javax.websocket-api</artifactId>
-          <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>com.lmax</groupId>
+          <artifactId>disruptor</artifactId>
       </dependency>
 
   </dependencies>

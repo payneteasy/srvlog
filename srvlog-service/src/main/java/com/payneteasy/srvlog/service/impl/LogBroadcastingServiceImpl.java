@@ -3,24 +3,20 @@ package com.payneteasy.srvlog.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payneteasy.srvlog.data.LogData;
+import com.payneteasy.srvlog.service.IInMemoryLogService;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -35,32 +31,21 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     private final ConcurrentMap<Session, AtomicReference<Subscription>> subscriptionStorage = new ConcurrentHashMap<>();
 
-    private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1000;
-
-    private final ConcurrentMap<String, ConcurrentMap<String, InMemoryLogStorage>> logStorage = new ConcurrentHashMap<>();
-    private final int programLogStorageCapacity;
+    private final IInMemoryLogService inMemoryLogService;
 
     @Autowired
-    public LogBroadcastingServiceImpl(@Value("${programLogStorageCapacity}") int programLogStorageCapacity) {
-        this.programLogStorageCapacity = programLogStorageCapacity > 0 ?
-                programLogStorageCapacity : DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY;
+    public LogBroadcastingServiceImpl(IInMemoryLogService inMemoryLogService) {
+        this.inMemoryLogService = inMemoryLogService;
     }
 
     @Override
     public List<String> getHostNameList() {
-        return new ArrayList<>(logStorage.keySet());
+        return inMemoryLogService.getHostNameList();
     }
 
     @Override
     public List<String> getProgramNameList() {
-
-        Set<String> programNamesSet = new HashSet<>();
-
-        for (ConcurrentMap<String, InMemoryLogStorage> hostLogStorage : logStorage.values()) {
-            programNamesSet.addAll(hostLogStorage.keySet());
-        }
-
-        return new ArrayList<>(programNamesSet);
+        return inMemoryLogService.getProgramNameList();
     }
 
     @Override
@@ -72,33 +57,11 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     @Override
     public List<LogData> getLogDataListByHostAndProgram(String host, String program) {
-
-        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.get(host);
-        if (Objects.nonNull(hostLogStorage)) {
-            InMemoryLogStorage programLogStorage = hostLogStorage.get(program);
-
-            return Objects.nonNull(programLogStorage) ? programLogStorage.asLogList() : Collections.emptyList();
-        } else {
-            return Collections.emptyList();
-        }
+        return inMemoryLogService.getLogDataListByHostAndProgram(host, program);
     }
 
     private boolean saveLog(LogData logData) {
-
-        String host = logData.getHost();
-        String program = logData.getProgram();
-
-        if (Objects.isNull(host) || Objects.isNull(program)) return false;
-
-        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.computeIfAbsent(
-                host, h -> new ConcurrentHashMap<>()
-        );
-
-        InMemoryLogStorage programLogList = hostLogStorage.computeIfAbsent(
-                program, p -> new InMemoryLogStorage(programLogStorageCapacity)
-        );
-
-        return programLogList.add(logData);
+        return inMemoryLogService.saveLog(logData);
     }
 
     @Override
@@ -113,7 +76,8 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             LogBroadcastingRequest logBroadcastingRequest = jsonMapper.readValue(requestText, LogBroadcastingRequest.class);
             Subscription.State subscriptionState = Subscription.State.valueOf(logBroadcastingRequest.getSubscriptionState());
 
-            if (Subscription.State.INITIAL.equals(subscriptionState) || Subscription.State.INITIAL.equals(subscriptionStorage.get(session).get().getSubscriptionState())) {
+            if (Subscription.State.INITIAL.equals(subscriptionState) || Subscription.State.INITIAL
+                    .equals(subscriptionStorage.get(session).get().getSubscriptionState())) {
 
                 String host = logBroadcastingRequest.getHost();
                 String program = logBroadcastingRequest.getProgram();
@@ -125,22 +89,16 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                     );
                     String incorrectRequestParametersResponseJson = jsonMapper.writeValueAsString(incorrectRequestParametersResponse);
 
-                    synchronized (session) {
-                        session.getBasicRemote().sendText(incorrectRequestParametersResponseJson);
-                    }
+                    session.getBasicRemote().sendText(incorrectRequestParametersResponseJson);
 
                     return;
                 }
-
-                subscriptionStorage.get(session).set(new Subscription(host, program, Subscription.State.INITIAL));
 
                 List<LogData> logDataList = getLogDataListByHostAndProgram(host, program);
                 LogBroadcastingResponse logBroadcastingResponse = new LogBroadcastingResponse(true, logDataList, null);
                 String logBroadcastingResponseJson = jsonMapper.writeValueAsString(logBroadcastingResponse);
 
-                synchronized (session) {
-                    session.getBasicRemote().sendText(logBroadcastingResponseJson);
-                }
+                session.getBasicRemote().sendText(logBroadcastingResponseJson);
 
                 Subscription oldSubscription = subscriptionStorage.get(session).get();
 
@@ -163,9 +121,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
             try {
                 String unsuccessfulResponseJson = jsonMapper.writeValueAsString(unsuccessfulResponse);
-                synchronized (session) {
-                    session.getBasicRemote().sendText(unsuccessfulResponseJson);
-                }
+                session.getBasicRemote().sendText(unsuccessfulResponseJson);
             } catch (IOException e2) {
                 logger.error("Error while sending web socket unsuccessful log subscription response", e2);
             }
@@ -189,7 +145,8 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             logger.error("Error while writing web socket json log data response", e);
         }
 
-        Iterator<Map.Entry<Session, AtomicReference<Subscription>>> subscriptionIterator = subscriptionStorage.entrySet().iterator();
+        Iterator<Map.Entry<Session, AtomicReference<Subscription>>> subscriptionIterator =
+                subscriptionStorage.entrySet().iterator();
 
         while (subscriptionIterator.hasNext()) {
             Map.Entry<Session, AtomicReference<Subscription>> subscriptionEntry = subscriptionIterator.next();
