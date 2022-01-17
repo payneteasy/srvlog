@@ -20,7 +20,5 @@ public interface ILogBroadcastingService {
 
     void handleLogBroadcastingRequest(Session session, String requestText);
 
-    void broadcastLogDataToSubscribers(LogData logData);
-
     void removeBroadcastingSession(Session session);
 }

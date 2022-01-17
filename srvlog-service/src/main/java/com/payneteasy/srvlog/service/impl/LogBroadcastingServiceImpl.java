@@ -2,28 +2,37 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lmax.disruptor.EventHandler;
+import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.util.DaemonThreadFactory;
 import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.service.IInMemoryLogService;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("logBroadcastingService")
-public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
+public class LogBroadcastingServiceImpl implements ILogBroadcastingService, EventHandler<LogDataEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(LogBroadcastingServiceImpl.class);
 
@@ -31,37 +40,98 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     private final ConcurrentMap<Session, AtomicReference<Subscription>> subscriptionStorage = new ConcurrentHashMap<>();
 
-    private final IInMemoryLogService inMemoryLogService;
+    private final ConcurrentMap<String, ConcurrentMap<String, Disruptor<LogDataEvent>>> logStorage = new ConcurrentHashMap<>();
+
+    private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1024;
+
+    private final int programLogStorageCapacity;
 
     @Autowired
-    public LogBroadcastingServiceImpl(IInMemoryLogService inMemoryLogService) {
-        this.inMemoryLogService = inMemoryLogService;
+    public LogBroadcastingServiceImpl(@Value("${programLogStorageCapacity}") int programLogStorageCapacity) {
+        if (Integer.bitCount(programLogStorageCapacity) != 1)
+        {
+            throw new IllegalArgumentException("programLogStorageCapacity parameter must be a power of 2");
+        }
+        this.programLogStorageCapacity = programLogStorageCapacity > 0 ?
+                programLogStorageCapacity : DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY;
     }
 
     @Override
     public List<String> getHostNameList() {
-        return inMemoryLogService.getHostNameList();
+        return new ArrayList<>(logStorage.keySet());
     }
 
     @Override
     public List<String> getProgramNameList() {
-        return inMemoryLogService.getProgramNameList();
-    }
 
-    @Override
-    public void handleReceivedLogData(LogData logData) {
-        if (saveLog(logData)) {
-            broadcastLogDataToSubscribers(logData);
+        Set<String> programNamesSet = new HashSet<>();
+
+        for (ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage : logStorage.values()) {
+            programNamesSet.addAll(hostLogStorage.keySet());
         }
+
+        return new ArrayList<>(programNamesSet);
     }
 
     @Override
     public List<LogData> getLogDataListByHostAndProgram(String host, String program) {
-        return inMemoryLogService.getLogDataListByHostAndProgram(host, program);
+
+        ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage = logStorage.get(host);
+
+        if (Objects.nonNull(hostLogStorage)) {
+            Disruptor<LogDataEvent> programLogStorage = hostLogStorage.get(program);
+
+            if (Objects.nonNull(programLogStorage)) {
+
+                RingBuffer<LogDataEvent> ringBuffer = programLogStorage.getRingBuffer();
+                int ringBufferSize = ringBuffer.getBufferSize();
+                List<LogData> logDataList = new ArrayList<>();
+
+                for (int i = 0; i < ringBufferSize; i++) {
+                    LogDataEvent logDataEvent = ringBuffer.get(i);
+                    if (Objects.nonNull(logDataEvent) && Objects.nonNull(logDataEvent.getLogData())) {
+                        logDataList.add(logDataEvent.getLogData());
+                    }
+                }
+
+                logDataList.sort(Comparator.comparing(LogData::getDate));
+
+                return logDataList;
+            } else {
+                return Collections.emptyList();
+            }
+        } else {
+            return Collections.emptyList();
+        }
     }
 
-    private boolean saveLog(LogData logData) {
-        return inMemoryLogService.saveLog(logData);
+    @Override
+    public void handleReceivedLogData(LogData logData) {
+
+        String host = logData.getHost();
+        String program = logData.getProgram();
+
+        if (Objects.isNull(host) || Objects.isNull(program)) return;
+
+        ConcurrentMap<String, Disruptor<LogDataEvent>> hostLogStorage = logStorage.computeIfAbsent(
+                host, h -> new ConcurrentHashMap<>()
+        );
+
+        Disruptor<LogDataEvent> programLogList = hostLogStorage.computeIfAbsent(
+                program, p -> {
+                    Disruptor<LogDataEvent> disruptor = new Disruptor<>(
+                            LogDataEvent::new,
+                            programLogStorageCapacity,
+                            DaemonThreadFactory.INSTANCE
+                    );
+                    disruptor.handleEventsWith(this);
+                    disruptor.start();
+
+                    return disruptor;
+                }
+        );
+
+        programLogList.publishEvent((event, sequence) -> new LogDataEvent().setLogData(logData));
     }
 
     @Override
@@ -128,7 +198,6 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
         }
     }
 
-    @Override
     public void broadcastLogDataToSubscribers(LogData logData) {
 
         String host = logData.getHost();
@@ -171,6 +240,11 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
     @Override
     public void removeBroadcastingSession(Session session) {
         subscriptionStorage.remove(session);
+    }
+
+    @Override
+    public void onEvent(LogDataEvent event, long sequence, boolean endOfBatch) {
+        broadcastLogDataToSubscribers(event.getLogData());
     }
 
     private static class LogBroadcastingRequest {

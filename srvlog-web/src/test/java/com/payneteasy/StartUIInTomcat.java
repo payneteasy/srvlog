@@ -45,7 +45,7 @@ public class StartUIInTomcat {
         }
 
 
-        tomcat.addWebapp("/", new File(webappDirLocation).getAbsolutePath());
+        tomcat.addWebapp("/srvlog", new File(webappDirLocation).getAbsolutePath());
 
 
         tomcat.start();
