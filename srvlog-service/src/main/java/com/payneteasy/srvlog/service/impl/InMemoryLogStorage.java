@@ -2,8 +2,10 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.data.LogData;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 class InMemoryLogStorage {
 
@@ -21,16 +23,30 @@ class InMemoryLogStorage {
 
         logDataBuffer[currentLogDataPointer] = logData;
 
-        if (currentLogDataPointer == bufferSize - 1) {
-            currentLogDataPointer = 0;
-        } else {
+        if (currentLogDataPointer < bufferSize - 1) {
             currentLogDataPointer++;
+        } else {
+            currentLogDataPointer = 0;
         }
 
         return true;
     }
 
     public synchronized List<LogData> asLogList() {
-        return Arrays.asList(logDataBuffer);
+
+        List<LogData> logDataList = new ArrayList<>();
+
+        for (int i = 0; i < bufferSize; i++) {
+            LogData logData = logDataBuffer[i];
+            if (Objects.nonNull(logData)) {
+                logDataList.add(logData);
+            }
+        }
+
+        if (logDataList.size() > 1) {
+            logDataList.sort(Comparator.comparing(LogData::getDate));
+        }
+
+        return logDataList;
     }
 }

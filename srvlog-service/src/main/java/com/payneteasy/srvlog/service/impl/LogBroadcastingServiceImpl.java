@@ -37,16 +37,12 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     private final ConcurrentMap<String, ConcurrentMap<String, InMemoryLogStorage>> logStorage = new ConcurrentHashMap<>();
 
-    private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1024;
+    private static final int DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY = 1000;
 
     private final int programLogStorageCapacity;
 
     @Autowired
     public LogBroadcastingServiceImpl(@Value("${programLogStorageCapacity}") int programLogStorageCapacity) {
-        if (Integer.bitCount(programLogStorageCapacity) != 1)
-        {
-            throw new IllegalArgumentException("programLogStorageCapacity parameter must be a power of 2");
-        }
         this.programLogStorageCapacity = programLogStorageCapacity > 0 ?
                 programLogStorageCapacity : DEFAULT_PROGRAM_LOG_STORAGE_CAPACITY;
     }
@@ -108,6 +104,11 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
     }
 
     @Override
+    public void removeBroadcastingSession(Session session) {
+        subscriptionStorage.remove(session);
+    }
+
+    @Override
     public void handleLogBroadcastingRequest(Session session, String requestText) {
 
         try {
@@ -138,11 +139,9 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
                 session.getBasicRemote().sendText(logBroadcastingResponseJson);
 
-                Subscription oldSubscription = subscriptionStorage.get(session).get();
-
                 subscriptionStorage.get(session).set(new Subscription(
-                        oldSubscription.getSubscriptionHost(),
-                        oldSubscription.getSubscriptionProgram(),
+                        host,
+                        program,
                         Subscription.State.ONLINE_BROADCASTING
                     )
                 );
@@ -203,11 +202,6 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                 }
             }
         }
-    }
-
-    @Override
-    public void removeBroadcastingSession(Session session) {
-        subscriptionStorage.remove(session);
     }
 
     private static class LogBroadcastingRequest {
