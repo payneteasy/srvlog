@@ -78,27 +78,6 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
     }
 
     @Override
-    public void handleReceivedLogData(LogData logData) {
-
-        String host = logData.getHost();
-        String program = logData.getProgram();
-
-        if (Objects.isNull(host) || Objects.isNull(program)) return;
-
-        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.computeIfAbsent(
-                host, h -> new ConcurrentHashMap<>()
-        );
-
-        InMemoryLogStorage programLogList = hostLogStorage.computeIfAbsent(
-                program, p -> new InMemoryLogStorage(programLogStorageCapacity)
-        );
-
-        if (programLogList.add(logData)) {
-            broadcastLogDataToSubscribers(logData);
-        }
-    }
-
-    @Override
     public void saveBroadcastingSession(Session session, Subscription subscription) {
         subscriptionStorage.put(session, new AtomicReference<>(subscription));
     }
@@ -162,6 +141,27 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             } catch (IOException e2) {
                 logger.error("Error while sending web socket unsuccessful log subscription response", e2);
             }
+        }
+    }
+
+    @Override
+    public void handleReceivedLogData(LogData logData) {
+
+        String host = logData.getHost();
+        String program = logData.getProgram();
+
+        if (Objects.isNull(host) || Objects.isNull(program)) return;
+
+        ConcurrentMap<String, InMemoryLogStorage> hostLogStorage = logStorage.computeIfAbsent(
+                host, h -> new ConcurrentHashMap<>()
+        );
+
+        InMemoryLogStorage programLogList = hostLogStorage.computeIfAbsent(
+                program, p -> new InMemoryLogStorage(programLogStorageCapacity)
+        );
+
+        if (programLogList.add(logData)) {
+            broadcastLogDataToSubscribers(logData);
         }
     }
 

@@ -49,4 +49,8 @@ class InMemoryLogStorage {
 
         return logDataList;
     }
+
+    public int getPointerValue() {
+        return currentLogDataPointer;
+    }
 }

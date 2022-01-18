@@ -1,11 +1,14 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
@@ -64,6 +67,13 @@ public class TerminalPage extends BasePage {
 
         programChoices.setNullValid(true);
         programChoiceForm.add(programChoices);
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(new JavaScriptContentHeaderItem("let applicationContextPath = '"
+                + WebApplication.get().getServletContext().getContextPath() +  "';", null, null));
     }
 
     public static class TerminalFilterModel implements Serializable {

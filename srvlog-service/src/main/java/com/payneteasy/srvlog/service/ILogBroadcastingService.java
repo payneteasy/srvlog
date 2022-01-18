@@ -12,13 +12,13 @@ public interface ILogBroadcastingService {
 
     List<String> getProgramNameList();
 
-    void handleReceivedLogData(LogData logData);
-
     List<LogData> getLogDataListByHostAndProgram(String host, String program);
 
     void saveBroadcastingSession(Session session, Subscription subscription);
 
+    void removeBroadcastingSession(Session session);
+
     void handleLogBroadcastingRequest(Session session, String requestText);
 
-    void removeBroadcastingSession(Session session);
+    void handleReceivedLogData(LogData logData);
 }
