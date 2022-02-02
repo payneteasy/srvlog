@@ -204,47 +204,4 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
         }
     }
 
-    private static class LogBroadcastingRequest {
-
-        private String host;
-        private String program;
-        private String subscriptionState;
-
-        public String getHost() {
-            return host;
-        }
-
-        public String getProgram() {
-            return program;
-        }
-
-        public String getSubscriptionState() {
-            return subscriptionState;
-        }
-    }
-
-    private static class LogBroadcastingResponse {
-
-        private final boolean success;
-        private final List<LogData> logDataList;
-        private final String errorMessage;
-
-        public LogBroadcastingResponse(boolean success, List<LogData> logDataList, String errorMessage) {
-            this.success = success;
-            this.logDataList = logDataList;
-            this.errorMessage = errorMessage;
-        }
-
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public List<LogData> getLogDataList() {
-            return logDataList;
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-    }
 }
