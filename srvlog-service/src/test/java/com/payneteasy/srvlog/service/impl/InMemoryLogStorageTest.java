@@ -4,41 +4,51 @@ import com.payneteasy.srvlog.data.LogData;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class InMemoryLogStorageTest {
+
+    private static final int TEST_LOG_STORAGE_BUFFER_SIZE = 100;
+
+    private static final int TEST_LOG_QUANTITY =345;
+
+    private static final int BUFFER_POINTER_INITIAL_VALUE = 0;
 
     @Test
     public void inMemoryLogStorageTest() {
 
-        InMemoryLogStorage inMemoryLogStorage = new InMemoryLogStorage(2);
+        InMemoryLogStorage inMemoryLogStorage = new InMemoryLogStorage(TEST_LOG_STORAGE_BUFFER_SIZE);
 
-        LogData logData1 = new LogData();
-        logData1.setId(1L);
-        logData1.setDate(new Date());
-        inMemoryLogStorage.add(logData1);
+        assertEquals(BUFFER_POINTER_INITIAL_VALUE, inMemoryLogStorage.getPointerValue());
 
-        LogData logData2 = new LogData();
-        logData2.setId(2L);
-        logData2.setDate(new Date());
-        inMemoryLogStorage.add(logData2);
+        for (int i = 0; i < TEST_LOG_QUANTITY; i++) {
 
-        LogData logData3 = new LogData();
-        logData3.setId(3L);
-        logData3.setDate(new Date());
-        inMemoryLogStorage.add(logData3);
+            LogData logData = new LogData();
+            logData.setId((long) i);
+            logData.setDate(new Date(System.currentTimeMillis() + i));
 
-        assertEquals(1, inMemoryLogStorage.getPointerValue());
+            inMemoryLogStorage.add(logData);
+        }
 
-        List<LogData> logDataList = inMemoryLogStorage.asLogList();
+        int fullBufferCirclesNumber = TEST_LOG_QUANTITY / TEST_LOG_STORAGE_BUFFER_SIZE;
+        int currentCircleLogsNumber = TEST_LOG_QUANTITY % TEST_LOG_STORAGE_BUFFER_SIZE;
 
-        assertEquals(2, logDataList.size());
-        assertTrue(logDataList.contains(logData2));
-        assertTrue(logDataList.contains(logData3));
-        assertFalse(logDataList.contains(logData1));
+        assertEquals(currentCircleLogsNumber, inMemoryLogStorage.getPointerValue());
+
+        LogData[] logDataBuffer = inMemoryLogStorage.getLogDataBuffer();
+
+        for (int i = 0; i < currentCircleLogsNumber; i++) {
+            LogData logData = logDataBuffer[i];
+            assertEquals(Long.valueOf(TEST_LOG_STORAGE_BUFFER_SIZE * fullBufferCirclesNumber + i), logData.getId());
+        }
+
+        for (int i = currentCircleLogsNumber; i < TEST_LOG_STORAGE_BUFFER_SIZE; i++) {
+            LogData logData = logDataBuffer[i];
+            assertEquals(
+                    Long.valueOf(TEST_LOG_STORAGE_BUFFER_SIZE * fullBufferCirclesNumber + i - TEST_LOG_STORAGE_BUFFER_SIZE),
+                    logData.getId()
+            );
+        }
     }
 }
