@@ -54,7 +54,7 @@
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>8.5.73</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.9.10.8</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <jackson-core.version>2.9.10</jackson-core.version>
         <guava.version>24.1.1-jre</guava.version>
         <jacoco.version>0.8.5</jacoco.version>
