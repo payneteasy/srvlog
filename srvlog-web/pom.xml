@@ -182,12 +182,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-logging-juli</artifactId>
+            <artifactId>tomcat-embed-jasper</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
+            <artifactId>tomcat-embed-websocket</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -210,7 +210,11 @@
             <artifactId>tomcat-catalina</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 

@@ -72,7 +72,6 @@ public class StartUI {
         webapps.setHandlers(new Handler[]{srvlog});
         server.setHandler(webapps);
 
-
         try {
             LOG.info(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");
             server.start();

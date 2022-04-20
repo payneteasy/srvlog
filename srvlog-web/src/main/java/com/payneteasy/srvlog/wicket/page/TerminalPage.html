@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+
+<wicket:head>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" type="text/javascript"></script>
+    <script src='./js/hterm_all-1.91.js'></script>
+    <style>
+        #terminal {
+            display: block;
+            position: relative;
+            height: 80%;
+            width: 98%;
+            margin: 0px;
+            padding: 0px;
+            margin-left: 20px;
+        }
+    </style>
+</wicket:head>
+
+<wicket:extend>
+    <body>
+        <div class="container-fluid" id="page">
+            <ul class="inline">
+                <li>
+                    <h4 class="muted">Hosts:</h4>
+                </li>
+                <li>
+                    <form wicket:id="hostChoice-form">
+                        <select wicket:id="choices-host" id="selected-host" onchange="logParameterChanged()"></select>
+                    </form>
+                </li>
+
+                <li>
+                    <h4 class="muted">Programs:</h4>
+                </li>
+                <li>
+                    <form wicket:id="programChoice-form">
+                        <select wicket:id="choices-program" id="selected-program" onchange="logParameterChanged()"></select>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <div id='terminal'></div>
+
+        <script src='./js/terminal-1.0.0.js'></script>
+
+    </body>
+</wicket:extend>
+
+</html>

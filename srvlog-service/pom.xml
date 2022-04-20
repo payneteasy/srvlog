@@ -152,7 +152,12 @@
           <groupId>com.payneteasy</groupId>
           <artifactId>startup-parameters</artifactId>
       </dependency>
-      
+
+      <dependency>
+          <groupId>javax.websocket</groupId>
+          <artifactId>javax.websocket-api</artifactId>
+      </dependency>
+
   </dependencies>
 
     <build>

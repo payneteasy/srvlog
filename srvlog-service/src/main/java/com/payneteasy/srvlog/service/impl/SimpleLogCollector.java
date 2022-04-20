@@ -6,8 +6,11 @@ import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSig
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
+import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +28,16 @@ import java.util.List;
 @Service
 public class SimpleLogCollector implements ILogCollector {
 
+    private static final Logger logger = LoggerFactory.getLogger(SimpleLogCollector.class);
+
     @Autowired
     private ILogDao logDao;
 
     @Autowired
     private IIndexerService indexerService;
+
+    @Autowired
+    private ILogBroadcastingService logBroadcastingService;
 
     @Override
     public void saveLog(LogData logData) {
@@ -42,6 +50,13 @@ public class SimpleLogCollector implements ILogCollector {
         //#9 Do cut off the message to store into the database
         if (logData.getMessage()!=null && logData.getMessage().length() > 65535)
             logData.setMessage(logData.getMessage().substring(1, 65536));
+
+        try {
+            logBroadcastingService.handleReceivedLogData(logData);
+        } catch (Exception e) {
+            logger.error("Error while handling received log data in memory log service", e);
+        }
+
         logDao.saveLog(logData);
     }
 

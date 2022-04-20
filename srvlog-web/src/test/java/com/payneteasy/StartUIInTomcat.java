@@ -2,7 +2,6 @@ package com.payneteasy;
 
 
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.deploy.ContextResource;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
@@ -10,7 +9,6 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import java.io.File;
-import java.util.Date;
 
 
 /**
@@ -47,7 +45,7 @@ public class StartUIInTomcat {
         }
 
 
-        tomcat.addWebapp("/", new File(webappDirLocation).getAbsolutePath());
+        tomcat.addWebapp("/srvlog", new File(webappDirLocation).getAbsolutePath());
 
 
         tomcat.start();
