@@ -1,5 +1,6 @@
 package com.payneteasy.srvlog.service.impl;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.payneteasy.srvlog.data.LogData;
 
 import java.util.ArrayList;
@@ -50,10 +51,12 @@ class InMemoryLogStorage {
         return logDataList;
     }
 
+    @VisibleForTesting
     public int getPointerValue() {
         return currentLogDataPointer;
     }
 
+    @VisibleForTesting
     public LogData[] getLogDataBuffer() {
         return logDataBuffer;
     }

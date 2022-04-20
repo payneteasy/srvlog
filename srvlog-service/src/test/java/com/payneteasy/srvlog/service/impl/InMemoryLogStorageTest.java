@@ -11,7 +11,7 @@ public class InMemoryLogStorageTest {
 
     private static final int TEST_LOG_STORAGE_BUFFER_SIZE = 100;
 
-    private static final int TEST_LOG_QUANTITY =345;
+    private static final int TEST_LOG_QUANTITY = 345;
 
     private static final int BUFFER_POINTER_INITIAL_VALUE = 0;
 
