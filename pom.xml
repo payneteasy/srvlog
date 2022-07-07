@@ -47,7 +47,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wicket.version>7.18.0</wicket.version>
-        <jetty.version>9.4.44.v20210927</jetty.version>
+        <jetty.version>10.0.10</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.security.version>5.5.6</spring.security.version>
         <org.springframework.version>5.3.19</org.springframework.version>
