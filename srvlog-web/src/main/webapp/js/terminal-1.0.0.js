@@ -45,9 +45,16 @@ function getLatestLogs () {
             if (logSubscriptionResponse.success) {
 
                 logSubscriptionResponse.logDataList.forEach(function (item, index, array) {
+
                     let logDate = new Date(item.date);
-                    terminalIO.println(logDate.toLocaleString() + ' ' + logDate.getMilliseconds()
-                        + 'ms' + ' [' + item.host + '] [' + item.program + '] ' + item.message);
+
+                    if (isMultilineMessage(item.message)) {
+                        printMultilineMessage(logDate, item, terminalIO);
+                    } else {
+                        terminalIO.println(logDate.toLocaleString() + ' ' + logDate.getMilliseconds()
+                                            + 'ms' + ' [' + item.host + '] [' + item.program + '] ' + item.message);
+                    }
+
                 });
 
             } else {
@@ -59,6 +66,24 @@ function getLatestLogs () {
             terminalIO.println('WEBSOCKET: Error has occurred')
         }
     }
+}
+
+function isMultilineMessage(text) {
+    return text.indexOf('\n') > -1;
+}
+
+function printMultilineMessage(logDate, item, terminalIO) {
+
+    let lines = item.message.split(/\r?\n|\r|\n/g);
+
+    lines.forEach(function (line, index, array) {
+        if (index == 0) {
+            terminalIO.println(logDate.toLocaleString() + ' ' + logDate.getMilliseconds() + 'ms' +
+             ' [' + item.host + '] [' + item.program + '] ' + line);
+        } else {
+            terminalIO.println(line);
+        }
+    });
 }
 
 function logParameterChanged() {
