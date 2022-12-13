@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.adapter;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.payneteasy.srvlog.adapter.utils.IRunnableFactory;
 import com.payneteasy.srvlog.adapter.utils.ThreadPooledServer;
 import com.payneteasy.srvlog.service.ILogCollector;
