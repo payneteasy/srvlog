@@ -49,14 +49,14 @@
         <wicket.version>7.18.0</wicket.version>
         <jetty.version>9.4.44.v20210927</jetty.version>
         <slf4j.version>1.7.2</slf4j.version>
-        <spring.security.version>5.5.7</spring.security.version>
-        <org.springframework.version>5.3.20</org.springframework.version>
+        <spring.security.version>5.8.3</spring.security.version>
+        <org.springframework.version>5.3.27</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
         <tomcat.version>8.5.73</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
         <jackson.version>2.13.4.1</jackson.version>
-        <jackson-core.version>2.13.2</jackson-core.version>
-        <guava.version>29.0-jre</guava.version>
+        <jackson-core.version>2.15.0</jackson-core.version>
+        <guava.version>31.1-jre</guava.version>
         <jacoco.version>0.8.5</jacoco.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,../target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -497,7 +497,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.77.Final</version>
+                <version>4.1.92.Final</version>
             </dependency>
 
             <dependency>
@@ -534,7 +534,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
