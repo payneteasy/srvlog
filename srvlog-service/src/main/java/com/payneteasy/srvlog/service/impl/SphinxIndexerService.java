@@ -37,6 +37,9 @@ public class SphinxIndexerService implements IIndexerService{
     @Value( "${sphinxConnectTimeout}" )
     private int connectTimeout;
 
+    @Value( "${sphinxQueryIndexes}" )
+    private String sphinxQueryIndexes;
+
     @Override
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
         SphinxClient sphinxClient = createSphinxClient();
@@ -105,7 +108,7 @@ public class SphinxIndexerService implements IIndexerService{
     private SphinxResult querySphinx(String pattern, SphinxClient sphinxClient) throws IndexerServiceException {
         SphinxResult result;
         try {
-            result = sphinxClient.Query(pattern);
+            result = sphinxClient.Query(pattern, sphinxQueryIndexes);
         } catch (SphinxException e) {
             LOG.error("While sending query to Sphinx Daemon", e);
             throw new IndexerServiceException("While sending query to Sphinx Daemon", e);
