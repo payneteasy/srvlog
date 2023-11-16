@@ -23,7 +23,7 @@ Software requirements:
 1) JDK 1.8.x (1.9.x has not been tested yet);
 2) Java Application Container - Tomcat 7.x and higher, Jetty 8.1.x;
 2) MariaDB 10.0.x and higher;
-3) sphinxsearch 2.2.x and higher.
+3) sphinxsearch 3.6.1 and higher.
 
 Minimum system requirements:
 1) 4GB RAM;
