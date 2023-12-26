@@ -32,10 +32,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <!--<plugin>
@@ -90,7 +90,6 @@
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -98,7 +97,7 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>5.11.0</version>
+            <version>5.14.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -203,12 +202,6 @@
             <artifactId>selenium-java</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.payneteasy.srvlog</groupId>
-            <artifactId>srvlog-sql</artifactId>
-            <version>1.2-27-SNAPSHOT</version>
-        </dependency>
-
 
     </dependencies>
 

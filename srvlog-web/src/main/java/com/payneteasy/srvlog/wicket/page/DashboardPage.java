@@ -26,7 +26,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.json.simple.JSONArray;
 import org.springframework.security.access.annotation.Secured;
-import sun.awt.image.ImageWatched;
 
 import java.io.Serializable;
 import java.util.*;

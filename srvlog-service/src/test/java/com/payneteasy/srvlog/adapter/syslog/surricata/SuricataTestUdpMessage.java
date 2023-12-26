@@ -1,10 +1,11 @@
 package com.payneteasy.srvlog.adapter.syslog.surricata;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
-import org.apache.commons.io.HexDump;
-
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+import org.apache.xerces.impl.dv.util.HexBin;
 
 public class SuricataTestUdpMessage {
 
