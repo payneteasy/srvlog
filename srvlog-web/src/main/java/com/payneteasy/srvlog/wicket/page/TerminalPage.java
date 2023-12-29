@@ -73,7 +73,7 @@ public class TerminalPage extends BasePage {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("let applicationContextPath = '"
-                + WebApplication.get().getServletContext().getContextPath() +  "';", null, null));
+                + WebApplication.get().getServletContext().getContextPath() +  "';", null));
     }
 
     public static class TerminalFilterModel implements Serializable {

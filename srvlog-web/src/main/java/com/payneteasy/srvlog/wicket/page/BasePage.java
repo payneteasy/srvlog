@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -45,7 +44,7 @@ public class BasePage extends WebPage {
         addBarLink("terminal", TerminalPage.class);
 
 
-        IModel<Boolean> model = new LoadableDetachableModel<Boolean>() {
+        IModel<Boolean> model = new LoadableDetachableModel<>() {
             @Override
             protected Boolean load() {
                 return logCollector.hasUnprocessedLogs();
@@ -88,12 +87,7 @@ public class BasePage extends WebPage {
         WebMarkupContainer webMarkupContainer = new WebMarkupContainer(linkId+"-container");
         BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<Page>(linkId, pageClass);
         if(this.pageClass.equals(pageClass)){
-            webMarkupContainer.add(new AttributeModifier("class",  new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                   return "active";
-                }
-            }));
+            webMarkupContainer.add(new AttributeModifier("class", (IModel<Object>) () -> "active"));
         }
         webMarkupContainer.add(bookmarkablePageLink);
         add(webMarkupContainer);

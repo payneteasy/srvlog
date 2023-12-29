@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 
@@ -51,7 +52,7 @@ public class WebContainerUtils {
             , Server server
             , String webProjectPath
             , String jettyEnvFile
-    ) throws MalformedURLException {
+    ) throws IOException {
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setServer(server);
         webAppContext.setContextPath(CONTEXT);

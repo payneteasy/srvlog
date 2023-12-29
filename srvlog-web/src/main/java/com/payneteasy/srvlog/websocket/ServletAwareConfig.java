@@ -1,9 +1,9 @@
 package com.payneteasy.srvlog.websocket;
 
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;

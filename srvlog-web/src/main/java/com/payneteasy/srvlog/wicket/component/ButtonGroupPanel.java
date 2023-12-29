@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
@@ -55,14 +55,11 @@ public  class ButtonGroupPanel extends Panel{
                     };
                 }
                 groupButton.add(new Label("button-name", group));
-                groupButton.add(new AttributeAppender("class", new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        if (getCurrentIndex().equals(group)) {
-                            return "active";
-                        }
-                        return "";
+                groupButton.add(new AttributeAppender("class", (IModel<Object>) () -> {
+                    if (getCurrentIndex().equals(group)) {
+                        return "active";
                     }
+                    return "";
                 }, " "));
                 item.add(groupButton);
             }

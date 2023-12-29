@@ -4,9 +4,9 @@ package com.payneteasy;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+//import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
-import javax.naming.NamingException;
+//import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import java.io.File;
 
@@ -35,14 +35,14 @@ public class StartUIInTomcat {
         dataSource.setAccessToUnderlyingConnectionAllowed(true);
         dataSource.setTestOnBorrow(true);
         dataSource.setValidationQuery("call create_collections()");
-
+/* TODO check how to replace this functionality
         SimpleNamingContextBuilder builder = null;
         try {
             builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
             builder.bind("java:/comp/env/jdbc/srvlog", dataSource);
         } catch (NamingException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         tomcat.addWebapp("/srvlog", new File(webappDirLocation).getAbsolutePath());

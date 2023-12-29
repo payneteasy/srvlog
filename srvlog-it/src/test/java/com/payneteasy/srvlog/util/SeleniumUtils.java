@@ -1,10 +1,8 @@
 package com.payneteasy.srvlog.util;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -18,7 +16,7 @@ public class SeleniumUtils {
     public static final int MAX_WAIT_TIMEOUT = 20 * 1000; // twenty seconds
 
     public void initWebDriver() {
-        webDriver = new FirefoxDriver(new FirefoxBinary(), null);
+        webDriver = new FirefoxDriver();
         webDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
     }
 
@@ -91,16 +89,9 @@ public class SeleniumUtils {
     }
 
     private void clickElementWhenVisible(final By by) throws InterruptedException {
-        waitTillConditionIsTrue(new Condition() {
-            @Override
-            public boolean isTrue() {
-                try {
-                    webDriver.findElement(by).click();
-                    return true;
-                } catch (ElementNotVisibleException e) {
-                    return false;
-                }
-            }
+        waitTillConditionIsTrue(() -> {
+            webDriver.findElement(by).click();
+            return true;
         });
     }
 

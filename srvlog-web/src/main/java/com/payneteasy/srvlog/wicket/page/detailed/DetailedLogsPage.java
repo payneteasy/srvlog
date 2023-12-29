@@ -5,11 +5,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Date: 17.02.13 Time: 17:56
@@ -30,12 +27,7 @@ public class DetailedLogsPage extends BasePage {
         WebMarkupContainer webMarkupContainer = new WebMarkupContainer(linkId+"-container");
         BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<Page>(linkId, pageClass);
         if(this.sideBarPageClass.equals(pageClass)){
-            webMarkupContainer.add(new AttributeModifier("class",  new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                    return "active";
-                }
-            }));
+            webMarkupContainer.add(new AttributeModifier("class", (IModel<String>) () -> "active"));
         }
         webMarkupContainer.add(bookmarkablePageLink);
         add(webMarkupContainer);

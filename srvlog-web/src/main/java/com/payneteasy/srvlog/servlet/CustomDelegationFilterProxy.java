@@ -1,17 +1,17 @@
 package com.payneteasy.srvlog.servlet;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.ServletException;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 /**
  * Date: 28.01.13 Time: 12:10
  */
-public class CustomDelegationFilterProxy extends DelegatingFilterProxy{
+public class CustomDelegationFilterProxy extends DelegatingFilterProxy {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {

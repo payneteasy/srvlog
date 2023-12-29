@@ -19,7 +19,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -157,14 +156,11 @@ public class DashboardPage extends BasePage {
     }
 
     private void setActiveButton(AjaxLink ajaxLink, final FilterDate filterDate, final DateRangeType dateRangeType) {
-        ajaxLink.add(new AttributeAppender("class", new AbstractReadOnlyModel<String>() {
-            @Override
-            public String getObject() {
-               if(dateRangeType == filterDate.getDateRangeType()){
-                    return "active";
-               }
-               return "";
-            }
+        ajaxLink.add(new AttributeAppender("class", (IModel<Object>) () -> {
+           if(dateRangeType == filterDate.getDateRangeType()){
+                return "active";
+           }
+           return "";
         }, " "));
 
     }

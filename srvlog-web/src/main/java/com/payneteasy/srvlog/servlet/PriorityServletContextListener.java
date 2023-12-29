@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.servlet.ServletContextListener;
 
 public class PriorityServletContextListener implements ServletContextListener {
 
@@ -19,7 +19,7 @@ public class PriorityServletContextListener implements ServletContextListener {
 
     public PriorityServletContextListener() {
         this.listeners = new ArrayList<>();
-        listeners.add(new LogbackConfigListener());
+        //TODO configure logback for loggin during context init listeners.add(new LogbackConfigListener());
         listeners.add(new ContextLoaderListener());
     }
 
