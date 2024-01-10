@@ -57,6 +57,7 @@ public class WebContainerUtils {
         webAppContext.setServer(server);
         webAppContext.setContextPath(CONTEXT);
         webAppContext.setWar(webProjectPath + "/src/main/webapp");
+        webAppContext.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
 
         EnvConfiguration envConfiguration = new EnvConfiguration();
         envConfiguration.setJettyEnvXml(new File(jettyEnvFile).toURI().toURL());

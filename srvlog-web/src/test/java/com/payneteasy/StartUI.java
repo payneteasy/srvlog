@@ -48,6 +48,7 @@ public class StartUI {
         srvlog.setServer(server);
         srvlog.setContextPath("/");
         srvlog.setWar("src/main/webapp");
+        srvlog.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
 
 
         srvlog.getSessionHandler().setHttpOnly(false);
