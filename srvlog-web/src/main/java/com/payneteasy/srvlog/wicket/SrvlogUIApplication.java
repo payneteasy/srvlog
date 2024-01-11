@@ -11,6 +11,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
@@ -29,6 +31,14 @@ public class SrvlogUIApplication extends WebApplication{
     @Override
     protected void init() {
         super.init();
+        //TODO think what to do with wicket csp
+        getCspSettings().blocking().disabled();
+        /*getCspSettings().blocking().clear()
+                .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
+                .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF);*/
+
         getSecuritySettings().setCryptFactory(new KeyInSessionSunJceCryptFactory());
         IRequestMapper cryptoMapper = new CryptoMapper(getRootRequestMapper(), this);
 

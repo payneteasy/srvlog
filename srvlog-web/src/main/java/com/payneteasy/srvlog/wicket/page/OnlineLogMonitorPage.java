@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -24,7 +23,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.Serializable;
@@ -112,7 +111,7 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.add(listView);
 
 //        //update panel
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
                 animateLastTableRow(target);
@@ -126,7 +125,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
             }
         }
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
                 animateLastTableRow(target);
