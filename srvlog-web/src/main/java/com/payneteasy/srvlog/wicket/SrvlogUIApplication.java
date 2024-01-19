@@ -67,11 +67,6 @@ public class SrvlogUIApplication extends WebApplication{
 
         mountPage("login", LoginPage.class);
 
-        getHeaderResponseDecorators().add(
-                response -> new ResourceAggregator(
-                        new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container")
-                )
-        );
     }
 
 //    @Override

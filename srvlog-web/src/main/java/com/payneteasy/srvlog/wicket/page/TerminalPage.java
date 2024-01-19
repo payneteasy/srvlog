@@ -3,6 +3,7 @@ package com.payneteasy.srvlog.wicket.page;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -10,6 +11,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
 
@@ -74,6 +76,8 @@ public class TerminalPage extends BasePage {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("let applicationContextPath = '"
                 + WebApplication.get().getServletContext().getContextPath() +  "';", null));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/hterm_all-1.91.js")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/terminal-1.0.0.js")));
     }
 
     public static class TerminalFilterModel implements Serializable {

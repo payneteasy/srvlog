@@ -7,6 +7,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -14,9 +15,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.*;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
 
@@ -40,9 +39,6 @@ public class BasePage extends WebPage {
 
     public BasePage(PageParameters pageParameters, Class<? extends Page> pageClass) {
         this.pageClass = pageClass;
-
-
-
 
         //BAR MENU
         addBarLink("dashboard", DashboardPage.class);
@@ -94,7 +90,8 @@ public class BasePage extends WebPage {
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "main.css")));
+        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "css/main.css")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/bootstrap.min.js")));
     }
 
     private void addBarLink(String linkId, Class<? extends Page> pageClass){
