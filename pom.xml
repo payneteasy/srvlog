@@ -26,6 +26,12 @@
             <id>mpos-pne</id>
             <url>https://mpos.pne.io/maven2</url>
         </repository>
+
+        <repository>
+            <id>pne</id>
+            <name>payneteasy repo</name>
+            <url>https://maven.pne.io</url>
+        </repository>
     </repositories>
 
 
@@ -142,35 +148,24 @@
                 <version>8.0.0-M7</version>
             </dependency>
 
-            <!--  JETTY DEPENDENCIES FOR TESTING  -->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
-                <scope>provided</scope>
-            </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jmx</artifactId>
                 <version>${jetty.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-plus</artifactId>
-                <scope>provided</scope>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jndi</artifactId>
-                <scope>provided</scope>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -181,11 +176,6 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
-                <version>11.0.19</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-plus</artifactId>
                 <version>11.0.19</version>
             </dependency>
 
@@ -534,16 +524,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.payneteasy</groupId>
-                <artifactId>startup-parameters</artifactId>
-                <version>1.0-6</version>
-            </dependency>
-
-            <dependency>
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>1.1</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -562,9 +545,13 @@
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
                 <version>6.0.0</version>
-                <scope>provided</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.payneteasy</groupId>
+                <artifactId>startup-parameters</artifactId>
+                <version>1.0-10</version>
+            </dependency>
 
         </dependencies>
 
