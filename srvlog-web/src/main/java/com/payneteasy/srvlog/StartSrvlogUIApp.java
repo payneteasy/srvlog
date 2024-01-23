@@ -5,6 +5,7 @@ import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +26,10 @@ public class StartSrvlogUIApp {
 
             WebAppContext webAppContext = new WebAppContext();
             webAppContext.setContextPath(config.getJettyContext());
-            webAppContext.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
+            webAppContext.setDefaultsDescriptor("embedded-webapp/WEB-INF/web.xml");
             webAppContext.setDescriptor(config.webDescriptorPath());
-            webAppContext.setWar("src/main/webapp");
+            Resource webappResource = Resource.newClassPathResource("embedded-webapp");
+            webAppContext.setWarResource(webappResource);
 
             EnvConfiguration envConfiguration = new EnvConfiguration();
             envConfiguration.setJettyEnvXml(new File(config.getJettyEnvConfigPath()).toURI().toURL());
