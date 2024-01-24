@@ -11,11 +11,30 @@ import java.util.Map;
  */
 public enum LogFacility implements LogEnum{
 
-    kern(0), user(1), mail(2), daemon(3), auth(4), syslog(5),
-    lpr(6), news(7), uucp(8), cron(9), authpriv(10), ftp(11),
-    ntp(12), audit(13), alert(14), clock(15),
-    local0(16), local1(17), local2(18), local3(19), local4(20),
-    local5(21), local6(22), local7(23);
+    kern(0, "kern"),
+    user(1, "user"),
+    mail(2, "mail"),
+    daemon(3, "daemon"),
+    auth(4, "auth"),
+    syslog(5, "syslog"),
+    lpr(6, "lpr"),
+    news(7, "news"),
+    uucp(8, "uucp"),
+    cron(9, "cron"),
+    authpriv(10, "authpriv"),
+    ftp(11, "ftp"),
+    ntp(12, "ntp"),
+    audit(13, "audit"),
+    alert(14, "alert"),
+    clock(15, "clock"),
+    local0(16, "local0"),
+    local1(17, "local1"),
+    local2(18, "local2"),
+    local3(19, "local3"),
+    local4(20, "local4"),
+    local5(21, "local5"),
+    local6(22, "local6"),
+    local7(23, "local7");
 
     private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
     private static List<LogFacility> logFacilities = new ArrayList<LogFacility>();
@@ -29,14 +48,25 @@ public enum LogFacility implements LogEnum{
 
     private final Integer value;
 
-    private LogFacility(final Integer value)
+    private String facilityDisplayName;
+
+    private LogFacility(final Integer value, String facilityDisplayName)
     {
         this.value = value;
+        this.facilityDisplayName = facilityDisplayName;
     }
 
     public Integer getValue()
     {
         return value;
+    }
+
+    public String getFacilityDisplayName() {
+        return facilityDisplayName;
+    }
+
+    public void setFacilityDisplayName(String facilityDisplayName) {
+        this.facilityDisplayName = facilityDisplayName;
     }
 
     public static List<LogFacility> getLogEnumList() {

@@ -87,7 +87,7 @@ public class LogMonitorPage extends BasePage {
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
                 "severity-choice"
                 , new PropertyModel<List<LogLevel>>(filterModel, "severities")
-                , LogLevel.getLogEnumList(), new ChoiceRenderer<>("name"));
+                , LogLevel.getLogEnumList(), new ChoiceRenderer<>("levelDisplayName"));
         form.add(severityChoice);
 
         //FACILITY CHOICE FILTER
@@ -95,7 +95,7 @@ public class LogMonitorPage extends BasePage {
         ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<LogFacility>(
                 "facility-choice"
                 , new PropertyModel<List<LogFacility>>(filterModel, "facilities")
-                , LogFacility.getLogEnumList(), new ChoiceRenderer<>("name"));
+                , LogFacility.getLogEnumList(), new ChoiceRenderer<>("facilityDisplayName"));
         form.add(facilityChoice);
 
         //HOST CHOICE FILTER

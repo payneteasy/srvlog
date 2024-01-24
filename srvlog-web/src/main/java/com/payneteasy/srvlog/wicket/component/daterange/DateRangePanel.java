@@ -39,7 +39,7 @@ public class DateRangePanel extends Panel{
                 "date-range-type"
                 , new PropertyModel<DateRangeType>(dateRangeModel, "dateRangeType")
                 , Arrays.asList(DateRangeType.values())
-                , new ChoiceRenderer<>("name")
+                , new ChoiceRenderer<>("typeDisplayName")
                 );
         add(dateRangeType);
         dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {

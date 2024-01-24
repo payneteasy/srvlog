@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class StartSrvlogUIApp {
+public class StartSrvlogJettyServer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StartSrvlogUIApp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StartSrvlogJettyServer.class);
 
     public static void main(String[] args) throws Exception {
 
