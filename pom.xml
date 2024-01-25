@@ -8,7 +8,6 @@
     <packaging>pom</packaging>
     <name>srvlog ${project.version}</name>
 
-
     <modules>
         <module>srvlog-service</module>
         <module>srvlog-web</module>
@@ -34,7 +33,6 @@
         </repository>
     </repositories>
 
-
     <scm>
         <connection>scm:git:https://github.com/payneteasy/srvlog.git</connection>
         <developerConnection>scm:git:git@github.com:payneteasy/srvlog.git</developerConnection>
@@ -51,7 +49,13 @@
     </distributionManagement>
 
     <properties>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.shade.plugin.version>3.5.1</maven.shade.plugin.version>
+        <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+
         <wicket.version>10.0.0-M2</wicket.version>
         <jetty.version>11.0.19</jetty.version>
         <slf4j.version>2.0.9</slf4j.version>
@@ -59,12 +63,16 @@
         <spring.security.version>6.2.1</spring.security.version>
         <org.springframework.version>6.1.2</org.springframework.version>
         <jdbc-proc.version>1.1-2</jdbc-proc.version>
+        <mariadb.client.version>3.3.2</mariadb.client.version>
+        <org.flywaydb.version>10.4.1</org.flywaydb.version>
         <tomcat.version>11.0.0-M15</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
         <jackson.version>2.16.1</jackson.version>
         <jackson-core.version>2.16.1</jackson-core.version>
         <guava.version>33.0.0-jre</guava.version>
+        <selenium.version>4.16.1</selenium.version>
         <jacoco.version>0.8.11</jacoco.version>
+
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,../target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.language>java</sonar.language>
@@ -74,54 +82,44 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--our artifacts-->
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-sql</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-web</artifactId>
                 <type>war</type>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-web</artifactId>
                 <version>${project.version}</version>
                 <classifier>classes</classifier>
             </dependency>
-
             <dependency>
                 <groupId>com.payneteasy.srvlog</groupId>
                 <artifactId>srvlog-it</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-                <scope>test</scope>
+                <groupId>com.payneteasy.http-server</groupId>
+                <artifactId>http-server-impl</artifactId>
+                <version>1.0-4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.payneteasy</groupId>
+                <artifactId>startup-parameters</artifactId>
+                <version>1.0-10</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>5.10.1</version>
-                <scope>test</scope>
-            </dependency>
-            
-            <!--WICKET CORE-->
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-core</artifactId>
@@ -139,13 +137,13 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-tester</artifactId>
-                <version>${wicket.version}</version>
+                <artifactId>wicket-datetime</artifactId>
+                <version>8.0.0-M7</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-datetime</artifactId>
-                <version>8.0.0-M7</version>
+                <artifactId>wicket-tester</artifactId>
+                <version>${wicket.version}</version>
             </dependency>
 
             <dependency>
@@ -171,40 +169,25 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-webapp</artifactId>
-                <version>11.0.19</version>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-servlet</artifactId>
-                <version>11.0.19</version>
+                <version>${jetty.version}</version>
             </dependency>
 
-
-            <!--<dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
-                <scope>provided</scope>
-            </dependency>-->
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>4.0.1</version>
             </dependency>
 
-            <!-- SLF4J -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-<!--
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
--->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
@@ -215,74 +198,74 @@
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>1.4.14</version>
             </dependency>
-
             <dependency>
                 <groupId>com.payneteasy.logging-extensions</groupId>
                 <artifactId>logging-extensions</artifactId>
                 <version>1.0-4</version>
             </dependency>
+            <dependency>
+                <groupId>org.logback-extensions</groupId>
+                <artifactId>logback-ext-spring</artifactId>
+                <version>0.1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nesscomputing</groupId>
+                <artifactId>ness-syslog4j</artifactId>
+                <version>0.9.47-NESS-8</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${apache.log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-1.2-api</artifactId>
+                <version>${apache.log4j.version}</version>
+            </dependency>
 
-
-            <!-- Overriding version to get new tzdata -->
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>2.12.5</version>
             </dependency>
 
-            <!-- SPRING -->
-            <!--
-                Core utilities used by other modules.
-                Define this if you use Spring Utility APIs (org.springframework.core.*/org.springframework.util.*)
-            -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-
-
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${org.springframework.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-
-
-            <!-- SPRING SECURITY -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
@@ -352,43 +335,37 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <dependency>
-                <groupId>org.logback-extensions</groupId>
-                <artifactId>logback-ext-spring</artifactId>
-                <version>0.1.5</version>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${org.springframework.version}</version>
+                <scope>test</scope>
             </dependency>
 
-            <!-- proc jdbc -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.33</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>${mariadb.client.version}</version>
+            </dependency>
             <dependency>
                 <artifactId>jdbc-proc-daofactory</artifactId>
                 <groupId>com.googlecode.jdbc-proc.jdbc-proc</groupId>
                 <version>${jdbc-proc.version}</version>
             </dependency>
-
-            <!--syslog4j from ness computing-->
             <dependency>
-                <groupId>com.nesscomputing</groupId>
-                <artifactId>ness-syslog4j</artifactId>
-                <version>0.9.47-NESS-8</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>${org.flywaydb.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${apache.log4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-1.2-api</artifactId>
-                <version>${apache.log4j.version}</version>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-mysql</artifactId>
+                <version>${org.flywaydb.version}</version>
             </dependency>
 
             <dependency>
@@ -396,101 +373,20 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.14.0</version>
             </dependency>
-
-
-            <!--Easy Mock -->
-            <dependency>
-                <groupId>org.easymock</groupId>
-                <artifactId>easymock</artifactId>
-                <version>5.2.0</version>
-            </dependency>
-
-            <!-- mysql driver -->
-
-            <dependency>
-            	<groupId>mysql</groupId>
-            	<artifactId>mysql-connector-java</artifactId>
-            	<version>8.0.33</version>
-            </dependency>
-            <!--<dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version></version>
-            </dependency>-->
-
-            <!--json-->
             <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>
                 <version>1.1.1</version>
             </dependency>
-
-            <!--commons dbcp-->
             <dependency>
                 <groupId>commons-dbcp</groupId>
                 <artifactId>commons-dbcp</artifactId>
                 <version>1.4</version>
             </dependency>
-
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.15.1</version>
-            </dependency>
-
-
-            <!--Embeded Tomcat-->
-
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-core</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-jasper</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-websocket</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-catalina</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jasper</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jasper-el</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jsp-api</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-
-
-
-            <!--selenium-->
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-java</artifactId>
-                <version>4.16.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-api</artifactId>
-                <version>4.16.1</version>
             </dependency>
 
             <dependency>
@@ -498,7 +394,6 @@
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson-core.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
@@ -510,37 +405,26 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
                 <version>4.1.104.Final</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.payneteasy.http-server</groupId>
-                <artifactId>http-server-impl</artifactId>
-                <version>1.0-4</version>
-            </dependency>
-
             <dependency>
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>1.1</version>
             </dependency>
-
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
                 <version>1.3.2</version>
             </dependency>
-
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>2.12.2</version>
             </dependency>
-
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
@@ -548,9 +432,34 @@
             </dependency>
 
             <dependency>
-                <groupId>com.payneteasy</groupId>
-                <artifactId>startup-parameters</artifactId>
-                <version>1.0-10</version>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>5.2.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.10.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>${selenium.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
@@ -584,10 +493,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>17</source>
+                    <target>17</target>
                     <encoding>utf-8</encoding>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
