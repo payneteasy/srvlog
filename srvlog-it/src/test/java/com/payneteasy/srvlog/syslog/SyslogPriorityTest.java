@@ -3,7 +3,6 @@ package com.payneteasy.srvlog.syslog;
 import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogLevel;
 import com.nesscomputing.syslog4j.server.impl.event.SyslogServerEvent;
-import com.payneteasy.srvlog.data.LogFacility;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -18,7 +17,6 @@ public class SyslogPriorityTest {
 
     @Test
     public void testPriority() throws UnknownHostException {
-        int priority = 26;
         String message = "<26>Jan 12 00:00:00 ";
         SyslogServerEvent event = new SyslogServerEvent(message, InetAddress.getLocalHost());
         assertEquals(SyslogFacility.daemon, event.getFacility());
@@ -31,6 +29,5 @@ public class SyslogPriorityTest {
         System.out.println(i2);
         System.out.println(SyslogFacility.user.getValue());
 //        System.out.println((1 << 3) == (13 >> 3));
-
     }
 }

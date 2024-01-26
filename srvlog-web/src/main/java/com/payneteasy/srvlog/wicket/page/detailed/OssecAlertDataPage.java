@@ -22,17 +22,17 @@ public class OssecAlertDataPage extends DetailedFormPage{
     public OssecAlertDataPage(PageParameters pageParameters) {
         super(pageParameters, OssecAlertDataPage.class);
 
-        LoadableDetachableModel<List<OssecAlertData>> listDataModel = new LoadableDetachableModel<List<OssecAlertData>>() {
+        LoadableDetachableModel<List<OssecAlertData>> listDataModel = new LoadableDetachableModel<>() {
             @Override
             protected List<OssecAlertData> load() {
-                if(getForm().hasError()){
+                if (getForm().hasError()) {
                     return Collections.emptyList();
                 }
                 return logCollector.getOssecAlertData(getFilterDetailedModel().getDate());
             }
         };
 
-        final ListView<OssecAlertData> listView = new ListView<OssecAlertData>("list-view", listDataModel) {
+        final ListView<OssecAlertData> listView = new ListView<>("list-view", listDataModel) {
             @Override
             protected void populateItem(ListItem<OssecAlertData> item) {
                 OssecAlertData ossecAlertData = item.getModelObject();

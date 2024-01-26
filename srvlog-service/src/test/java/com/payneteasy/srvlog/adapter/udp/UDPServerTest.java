@@ -20,15 +20,12 @@ public class UDPServerTest {
 
     @Test
     public void test() throws IOException, InterruptedException {
-        final Map<String, Address> accepted = Collections.synchronizedMap(new HashMap<String, Address>());
+        final Map<String, Address> accepted = Collections.synchronizedMap(new HashMap<>());
         final CountDownLatch latch = new CountDownLatch(3);
 
-        UDPServer server = new UDPServer(3333, 100, new IDatagramProcessor() {
-            @Override
-            public void processDatagram(Datagram datagram) {
-                accepted.put(new String(datagram.getData(), UTF8), new Address(datagram.getSourceAddress().getHostName()));
-                latch.countDown();
-            }
+        UDPServer server = new UDPServer(3333, 100, datagram -> {
+            accepted.put(new String(datagram.getData(), UTF8), new Address(datagram.getSourceAddress().getHostName()));
+            latch.countDown();
         });
         server.start();
 
@@ -44,7 +41,7 @@ public class UDPServerTest {
 
         server.stop();
 
-        Map<String, Address> expected = new HashMap<String, Address>();
+        Map<String, Address> expected = new HashMap<>();
         expected.put("one", new Address("localhost"));
         expected.put("two", new Address("localhost"));
         expected.put("three", new Address("localhost"));

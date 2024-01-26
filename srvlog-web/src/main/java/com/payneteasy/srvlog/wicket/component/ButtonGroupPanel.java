@@ -29,14 +29,14 @@ public  class ButtonGroupPanel extends Panel{
         holderContainer.setOutputMarkupId(true);
         add(holderContainer);
 
-        ListView<Integer> listView = new ListView<Integer>("button-groups", indexers) {
+        ListView<Integer> listView = new ListView<>("button-groups", indexers) {
             @Override
             protected void populateItem(final ListItem<Integer> item) {
                 final Integer group = item.getModelObject();
                 final AbstractLink groupButton;
-                if(isAjax){
+                if (isAjax) {
                     item.setOutputMarkupId(true);
-                    groupButton = new AjaxLink<Void>("button"){
+                    groupButton = new AjaxLink<Void>("button") {
 
                         @Override
                         public void onClick(AjaxRequestTarget target) {
@@ -45,7 +45,7 @@ public  class ButtonGroupPanel extends Panel{
                             target.add(holderContainer);
                         }
                     };
-                }else {
+                } else {
                     groupButton = new Link<Void>("button") {
                         @Override
                         public void onClick() {

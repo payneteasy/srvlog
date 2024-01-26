@@ -1,26 +1,19 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
 import com.payneteasy.srvlog.util.DateRange;
-import com.payneteasy.srvlog.util.DateRangeType;
 import junit.framework.Assert;
-import org.apache.wicket.Component;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,8 +38,8 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         DateRange today = DateRange.today();
         List<LogData> searchLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), "search me", 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), "search me", 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(LogMonitorPage.class);
@@ -67,11 +60,11 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         DateRange today = DateRange.today();
         List<LogData> testLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(testLogData);
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 25, 26)).andReturn(testLogData);
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), null, 0, 26)).andReturn(testLogData);
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, 0, 26)).andReturn(testLogData);
 
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
@@ -95,7 +88,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
 
         List<LogData> searchLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(LogMonitorPage.class);
@@ -110,7 +103,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         DateRange today = DateRange.today();
         IndexerServiceException indexerServiceException = new IndexerServiceException("While calling indexing service", new Exception());
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andThrow(indexerServiceException);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
         EasyMock.replay(logCollector);
         wicketTester.startPage(LogMonitorPage.class);
         wicketTester.assertComponent("feedback-panel", FeedbackPanel.class);
@@ -126,8 +119,8 @@ public class LogMonitorPageTest extends AbstractWicketTester {
         DateRange today = DateRange.today();
         List<LogData> searchLogData = getTestLogData();
         EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0, 26)).andReturn(searchLogData);
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), Arrays.asList(LogFacility.kern.getValue(), LogFacility.user.getValue()), Arrays.asList(LogLevel.EMERGENCY.getValue()), new ArrayList<Integer>(), null, 0, 26)).andReturn(searchLogData);
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), Arrays.asList(LogFacility.kern.getValue(), LogFacility.user.getValue()), Arrays.asList(LogLevel.EMERGENCY.getValue()), new ArrayList<>(), null, 0, 26)).andReturn(searchLogData);
         EasyMock.replay(logCollector);
 
         wicketTester.startPage(LogMonitorPage.class);
@@ -152,7 +145,7 @@ public class LogMonitorPageTest extends AbstractWicketTester {
     }
 
     private List<LogData> getTestLogData() {
-        ArrayList<LogData> listData = new ArrayList<LogData>();
+        ArrayList<LogData> listData = new ArrayList<>();
         for (int i = 1; i <=30; i++) {
             LogData logData = new LogData();
             logData.setSeverity(1);

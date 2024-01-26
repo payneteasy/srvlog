@@ -36,7 +36,7 @@ public class DetailedLogsPage extends BasePage {
 
     private void addSideBarLink(String linkId, Class<? extends DetailedLogsPage> pageClass){
         WebMarkupContainer webMarkupContainer = new WebMarkupContainer(linkId+"-container");
-        BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<Page>(linkId, pageClass);
+        BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<>(linkId, pageClass);
         if(this.sideBarPageClass.equals(pageClass)){
             webMarkupContainer.add(new AttributeModifier("class", (IModel<String>) () -> "active"));
         }

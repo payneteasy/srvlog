@@ -1,20 +1,11 @@
 package com.payneteasy.srvlog.wicket;
 
-import com.payneteasy.srvlog.wicket.page.DashboardPage;
-import com.payneteasy.srvlog.wicket.page.LogMonitorPage;
-import com.payneteasy.srvlog.wicket.page.LoginPage;
-import com.payneteasy.srvlog.wicket.page.OnlineLogMonitorPage;
-import com.payneteasy.srvlog.wicket.page.SnortLogMonitorPage;
-import com.payneteasy.srvlog.wicket.page.TerminalPage;
+import com.payneteasy.srvlog.wicket.page.*;
 import com.payneteasy.srvlog.wicket.security.SrvlogAuthorizationStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
-import org.apache.wicket.csp.CSPDirective;
-import org.apache.wicket.csp.CSPDirectiveSrcValue;
-import org.apache.wicket.markup.head.ResourceAggregator;
-import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
@@ -32,6 +23,7 @@ import java.util.List;
 public class SrvlogUIApplication extends WebApplication{
     @Override
     protected void init() {
+
         super.init();
         //TODO think what to do with wicket csp
         getCspSettings().blocking().disabled();
@@ -58,31 +50,15 @@ public class SrvlogUIApplication extends WebApplication{
         }
 
         addSpringComponentInjector();
+
         //PAGES
         mountPage("main", DashboardPage.class);
         mountPage("logs", LogMonitorPage.class);
         mountPage("snort-logs", SnortLogMonitorPage.class);
         mountPage("online-logs", OnlineLogMonitorPage.class);
         mountPage("terminal", TerminalPage.class);
-
         mountPage("login", LoginPage.class);
-
     }
-
-//    @Override
-//    protected IRequestCycleProcessor newRequestCycleProcessor() {
-//
-//        return new WebRequestCycleProcessor() {
-//            protected IRequestCodingStrategy newRequestCodingStrategy() {
-//                return new CryptedUrlWebRequestCodingStrategy(
-//                        new WebRequestCodingStrategy());
-//            }
-//        };
-//    }
-
-
-
-
 
     protected void addSpringComponentInjector(){
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));

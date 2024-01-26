@@ -23,17 +23,17 @@ public class FirewallDropDataPage extends DetailedFormPage{
     public FirewallDropDataPage(PageParameters pageParameters) {
         super(pageParameters, FirewallDropDataPage.class);
 
-        LoadableDetachableModel<List<FireWallDropData>> listDataModel = new LoadableDetachableModel<List<FireWallDropData>>() {
+        LoadableDetachableModel<List<FireWallDropData>> listDataModel = new LoadableDetachableModel<>() {
             @Override
             protected List<FireWallDropData> load() {
-                if(getForm().hasError()){
+                if (getForm().hasError()) {
                     return Collections.emptyList();
                 }
                 return logCollector.getFirewallDropData(getFilterDetailedModel().getDate());
             }
         };
 
-        final ListView<FireWallDropData> listView = new ListView<FireWallDropData>("list-view", listDataModel) {
+        final ListView<FireWallDropData> listView = new ListView<>("list-view", listDataModel) {
             @Override
             protected void populateItem(ListItem<FireWallDropData> item) {
                 FireWallDropData firewallDropData = item.getModelObject();

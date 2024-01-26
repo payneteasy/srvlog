@@ -3,8 +3,6 @@ package com.payneteasy.srvlog.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class ComparisonUtilsTest {
     @Test
     public void testHostAddressesAreEqual() {

@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Date: 08.01.13
@@ -25,7 +24,7 @@ public abstract class CommonIntegrationTest {
         context =  new ClassPathXmlApplicationContext("classpath:spring/spring-test-datasource.xml","classpath:spring/spring-dao.xml", "classpath:spring/spring-service.xml");
     }
 
-    protected void createDatabase() throws IOException, InterruptedException {
+    protected void createDatabase() throws IOException {
         DatabaseUtil.cleanAndMigrateDatabase();
     }
 
@@ -34,7 +33,6 @@ public abstract class CommonIntegrationTest {
         if (context != null) {
             context.close();
         }
-
     }
 
 }

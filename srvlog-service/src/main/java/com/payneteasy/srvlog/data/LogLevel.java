@@ -20,9 +20,9 @@ public enum LogLevel implements LogEnum{
     INFO(6, "INFO"),
     DEBUG(7, "DEBUG");
 
-    private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
-    private static List<LogLevel> logLevelList = new ArrayList<LogLevel>();
-    private static Map<Integer, LogLevel> valueToLevel = new HashMap<Integer, LogLevel>();
+    private static Map<Integer, String> valueToName = new HashMap<>();
+    private static List<LogLevel> logLevelList = new ArrayList<>();
+    private static Map<Integer, LogLevel> valueToLevel = new HashMap<>();
 
     static {
         for (LogLevel ll: LogLevel.values()) {
@@ -35,7 +35,7 @@ public enum LogLevel implements LogEnum{
     private final Integer value;
     private String levelDisplayName;
 
-    private LogLevel(final Integer value, String levelDisplayName)
+    LogLevel(final Integer value, String levelDisplayName)
     {
         this.value = value;
         this.levelDisplayName = levelDisplayName;

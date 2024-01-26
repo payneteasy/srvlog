@@ -29,12 +29,7 @@ public class LogbackTCPAdapter extends AbstractTCPLoggerAdapter {
 
     @Override
     protected IRunnableFactory createWorkerFactory() {
-        return new IRunnableFactory() {
-            @Override
-            public Runnable createWorker(Socket clientSocket) {
-                return new LogbackNode(clientSocket, LogbackTCPAdapter.this);
-            }
-        };
+        return clientSocket -> new LogbackNode(clientSocket, LogbackTCPAdapter.this);
     }
 
     void processEvent(ServerLogbackEvent logEvent) {

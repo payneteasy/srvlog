@@ -56,13 +56,13 @@ public class DashboardPage extends BasePage {
             }
         });
 
-        IModel<List<Map.Entry<LogLevel, Long>>> logCountModel = new LoadableDetachableModel<List<Map.Entry<LogLevel, Long>>>() {
+        IModel<List<Map.Entry<LogLevel, Long>>> logCountModel = new LoadableDetachableModel<>() {
             @Override
             protected List<Map.Entry<LogLevel, Long>> load() {
                 try {
                     final DateRange dateRange = filterDate.getDateRange();
                     Map<LogLevel, Long> logLevelLongMap = indexerService.numberOfLogsBySeverity(dateRange.getFromDate(), dateRange.getToDate());
-                    List<Map.Entry<LogLevel, Long>> entries = new ArrayList<Map.Entry<LogLevel, Long>>(logLevelLongMap.entrySet());
+                    List<Map.Entry<LogLevel, Long>> entries = new ArrayList<>(logLevelLongMap.entrySet());
                     return entries;
                 } catch (IndexerServiceException e) {
                     error("Error while retrieving log data: " + e.getMessage());
@@ -74,12 +74,12 @@ public class DashboardPage extends BasePage {
         listHolderContainer.setOutputMarkupId(true);
         add(listHolderContainer);
 
-        ListView<Map.Entry<LogLevel, Long>> listView = new ListView<Map.Entry<LogLevel, Long>>("list-severity", logCountModel) {
+        ListView<Map.Entry<LogLevel, Long>> listView = new ListView<>("list-severity", logCountModel) {
             @Override
             protected void populateItem(ListItem<Map.Entry<LogLevel, Long>> item) {
                 final Map.Entry<LogLevel, Long> logCount = item.getModelObject();
-                final String name =  logCount.getKey().name();
-                Link<Void> link = new Link<Void>("link") {
+                final String name = logCount.getKey().name();
+                Link<Void> link = new Link<>("link") {
                     @Override
                     public void onClick() {
                         PageParameters parameters = new PageParameters();
@@ -131,7 +131,7 @@ public class DashboardPage extends BasePage {
 
     private AjaxLink addButtonGroup(final DateRangeType type, final FilterDate filterDate, final Component... componentsForUpdate) {
 
-        final AjaxLink<Void> link = new AjaxLink<Void>(type.name()) {
+        final AjaxLink<Void> link = new AjaxLink<>(type.name()) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 switch (type) {

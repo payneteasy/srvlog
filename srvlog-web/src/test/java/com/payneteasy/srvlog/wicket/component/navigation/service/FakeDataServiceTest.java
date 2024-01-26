@@ -22,8 +22,5 @@ public class FakeDataServiceTest {
         dataList = service.loadFakePageableList(10, 10);
 
         assertEquals(5, dataList.size());
-
-
     }
-
 }

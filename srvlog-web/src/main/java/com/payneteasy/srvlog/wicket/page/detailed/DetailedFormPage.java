@@ -32,7 +32,7 @@ public class DetailedFormPage extends DetailedLogsPage{
         form = new Form<Void>("form");
         add(form);
 
-        DateTextField dateTextField = new DateTextField("date-field", new PropertyModel<Date>(filterDetailedModel, "date"), new PatternDateConverter(DATE_PATTERN, false));
+        DateTextField dateTextField = new DateTextField("date-field", new PropertyModel<>(filterDetailedModel, "date"), new PatternDateConverter(DATE_PATTERN, false));
         dateTextField.add(new DatePicker());
         dateTextField.setRequired(true);
         form.add(dateTextField);

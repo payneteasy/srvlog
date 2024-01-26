@@ -18,7 +18,6 @@ import static java.lang.System.currentTimeMillis;
 
 public class LogSenderWebTest extends CommonUiIntegrationTest {
 
-
     @Test
     public void sendLog() {
         SaveLogsClient   client   = new SaveLogsClient("http://localhost:28080");

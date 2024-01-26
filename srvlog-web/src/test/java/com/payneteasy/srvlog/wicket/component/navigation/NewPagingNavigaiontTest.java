@@ -1,7 +1,6 @@
 package com.payneteasy.srvlog.wicket.component.navigation;
 
 import com.payneteasy.srvlog.wicket.component.navigation.service.FakeDataLoaderService;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;

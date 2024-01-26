@@ -68,9 +68,9 @@ public class OnlineLogMonitorPage extends BasePage {
         };
         add(timeDurationGroupButtonPanel);
 
-        Form<FilterModel> hostChoiceForm = new Form<FilterModel>("hostChoice-form");
+        Form<FilterModel> hostChoiceForm = new Form<>("hostChoice-form");
         add(hostChoiceForm);
-        DropDownChoice<HostData> hostChoices = new DropDownChoice<HostData>("choices-host",new PropertyModel<HostData>(filterModel, "hostData"), new LoadableDetachableModel<List<HostData>>() {
+        DropDownChoice<HostData> hostChoices = new DropDownChoice<>("choices-host", new PropertyModel<>(filterModel, "hostData"), new LoadableDetachableModel<List<HostData>>() {
             @Override
             protected List<HostData> load() {
                 return logCollector.loadHosts();
@@ -86,7 +86,7 @@ public class OnlineLogMonitorPage extends BasePage {
         hostChoices.setNullValid(true);
         hostChoiceForm.add(hostChoices);
 
-        IModel<List<LogData>> logDataModel = new LoadableDetachableModel<List<LogData>>() {
+        IModel<List<LogData>> logDataModel = new LoadableDetachableModel<>() {
             @Override
             protected List<LogData> load() {
                 return logCollector.loadLatest(filterModel.getLatestLogs(), checkForNullHost(filterModel.getHostData()));
@@ -96,7 +96,7 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.setOutputMarkupId(true);
         add(holderListView);
 
-        ListView<LogData> listView = new ListView<LogData>("search-log-data", logDataModel) {
+        ListView<LogData> listView = new ListView<>("search-log-data", logDataModel) {
             @Override
             protected void populateItem(ListItem<LogData> item) {
                 LogData logData = item.getModelObject();
@@ -105,7 +105,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
-                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
+                item.add(new Label("log-program", logData.getProgram() == null ? "-" : logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClassBySeverity(logLevel, item);
             }

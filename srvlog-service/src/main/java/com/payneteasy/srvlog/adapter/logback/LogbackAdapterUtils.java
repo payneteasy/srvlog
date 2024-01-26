@@ -6,10 +6,7 @@ import ch.qos.logback.classic.util.LevelToSyslogSeverity;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
-import org.slf4j.helpers.FormattingTuple;
-import org.slf4j.helpers.MessageFormatter;
 
-import java.text.MessageFormat;
 import java.util.Date;
 
 /**

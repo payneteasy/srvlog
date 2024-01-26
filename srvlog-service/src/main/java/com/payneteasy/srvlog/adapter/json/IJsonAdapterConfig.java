@@ -16,5 +16,4 @@ public interface IJsonAdapterConfig {
     @AStartupParameter(name = "JSON_ADAPTER_PATH", value = "/save-logs")
     String getPath();
 
-
 }

@@ -45,7 +45,6 @@ public class SeleniumUtils {
         passwordElement.sendKeys("admin");
 
         clickElementWhenVisible(By.xpath("//input[@type='submit']"));
-
     }
 
     public String url(String srvlogUiUri) {
@@ -65,12 +64,7 @@ public class SeleniumUtils {
     }
 
     private WebElement waitTillElementExists(final By by) throws InterruptedException {
-        waitTillConditionIsTrue(new Condition() {
-            @Override
-            public boolean isTrue() {
-                return elementExists(by);
-            }
-        });
+        waitTillConditionIsTrue(() -> elementExists(by));
         return webDriver.findElement(by);
     }
 
@@ -95,7 +89,7 @@ public class SeleniumUtils {
         });
     }
 
-    private static interface Condition {
+    private interface Condition {
         boolean isTrue();
     }
 }

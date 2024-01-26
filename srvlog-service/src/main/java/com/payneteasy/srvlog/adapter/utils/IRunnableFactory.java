@@ -8,6 +8,6 @@ import java.net.Socket;
  */
 public interface IRunnableFactory {
 
-    public Runnable createWorker(Socket clientSocket);
+    Runnable createWorker(Socket clientSocket);
 
 }

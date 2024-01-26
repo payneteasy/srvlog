@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.BeforeClass;
@@ -26,9 +25,6 @@ public class LoginPageTest{
         wicketTester.assertRenderedPage(LoginPage.class);
 
         wicketTester.assertComponent("loginForm", Form.class);
-//        Form form = (Form) wicketTester.getComponentFromLastRenderedPage("loginForm");
-//        assertEquals("", LoginPage.buildCheckUrl(""), form.getMarkupAttributes().getStringValue("action"));
-
 
         wicketTester.assertComponent("loginForm:j_username", RequiredTextField.class);
         TextField username = (TextField) wicketTester.getComponentFromLastRenderedPage("loginForm:j_username");
@@ -40,7 +36,6 @@ public class LoginPageTest{
         assertEquals("Password input field name property should be equal to j_password in order to support spring-security", "j_password", password.getInputName());
 
         wicketTester.assertComponent("loginForm:loginButton", Button.class);
-
     }
 
 }

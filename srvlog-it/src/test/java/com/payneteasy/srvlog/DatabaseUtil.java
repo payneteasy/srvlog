@@ -1,7 +1,6 @@
 package com.payneteasy.srvlog;
 
 import com.nesscomputing.syslog4j.SyslogIF;
-import com.nesscomputing.syslog4j.SyslogMessageIF;
 import com.nesscomputing.syslog4j.impl.message.pci.PCISyslogMessage;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
@@ -12,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Date: 04.01.13
@@ -23,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class DatabaseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseUtil.class);
 
-    public static Process runCommand(List<String> parameters, File workingDir) throws IOException, InterruptedException {
+    public static Process runCommand(List<String> parameters, File workingDir) throws IOException {
         LOG.info("Running {}", parameters);
         ProcessBuilder pb = new ProcessBuilder(parameters);
 
@@ -57,8 +53,6 @@ public class DatabaseUtil {
         srvlogDbMigrator.cleanDatabase();
         srvlogDbMigrator.migrateDatabase();
     }
-
-
 
     private static class ProcessStreamReader implements Runnable {
 
@@ -111,7 +105,7 @@ public class DatabaseUtil {
         List<String> hosts = Arrays.asList("host3", "host4");
 
         int numOfDates = 10;
-        List<Date> dates = new ArrayList<Date>(numOfDates);
+        List<Date> dates = new ArrayList<>(numOfDates);
 
         for (int i = 0; i < numOfDates; i++) {
             c.roll(Calendar.DAY_OF_YEAR, 1);
@@ -135,16 +129,10 @@ public class DatabaseUtil {
                     syslogClient.info("A info from syslog client");
                 }
             }
-
         }
     }
 
-
-
-
-
     public static void generateTestLogs(ILogCollector logCollector) {
-
 
         Calendar c = Calendar.getInstance();
         c.set(2018, Calendar.JANUARY, 1, 0, 0, 0);
@@ -161,11 +149,10 @@ public class DatabaseUtil {
 
         List<String> hosts = Arrays.asList("host1", "host2");
 
-
         addTestHostsToDatabase(logCollector);
 
         int numOfDates = 10;
-        List<Date> dates = new ArrayList<Date>(numOfDates);
+        List<Date> dates = new ArrayList<>(numOfDates);
 
         for (int i = 0; i < numOfDates; i++) {
             c.roll(Calendar.DAY_OF_YEAR, 1);
@@ -191,16 +178,13 @@ public class DatabaseUtil {
                     logCollector.saveLog(logData);
                     System.out.println(logData);
                 }
-
             }
-
         }
     }
 
     private static void addTestHostsToDatabase(ILogCollector logCollector) {
 
         List<HostData> hostDataList = logCollector.loadHosts();
-
 
         HostData host1 = new HostData();
         host1.setHostname("host1");
@@ -220,8 +204,6 @@ public class DatabaseUtil {
         if (!containsHost(hostDataList, localhost)) {
             logCollector.saveHost(localhost);
         }
-
-
     }
 
     private static boolean containsHost(List<HostData> hostDataList, HostData host) {
@@ -231,9 +213,7 @@ public class DatabaseUtil {
             }
         }
         return false;
-
     }
-
 
     public static void addLocalhostToHostList(ILogDao logDao) {
         HostData hostData = new HostData();
@@ -244,8 +224,6 @@ public class DatabaseUtil {
         HostData localhostAsIp = new HostData(); //trick for W7
         localhostAsIp.setHostname("127.0.0.1");
         logDao.saveHost(localhostAsIp);
-
-
     }
 
     public static void createSphinxConf() throws IOException {
@@ -267,6 +245,5 @@ public class DatabaseUtil {
         Files.write(FileSystems.getDefault().getPath("target", "test-sphinx.conf"), sphinxTemplate.getBytes("UTF-8"));
         //System.out.println(sphinxTemplate);
     }
-
 
 }

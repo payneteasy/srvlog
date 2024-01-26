@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
-import com.google.common.base.Preconditions;
 import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;

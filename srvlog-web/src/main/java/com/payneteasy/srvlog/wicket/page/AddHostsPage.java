@@ -4,7 +4,6 @@ import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -34,7 +33,7 @@ public class AddHostsPage extends BasePage{
         FormModel formModel = new FormModel();
 
         if(!pageParameters.isEmpty() && pageParameters.getNamedKeys().contains(BasePage.HAS_UNPROCESSED_HOSTS_PARAMETER)){
-            LinkedList<String> unprocessedHosts = new LinkedList<String>(logCollector.getUnprocessedHostsName());
+            LinkedList<String> unprocessedHosts = new LinkedList<>(logCollector.getUnprocessedHostsName());
             if(unprocessedHosts.isEmpty()) return;
             StringBuilder resultString = new StringBuilder();
             for (String unprocessedHost : unprocessedHosts) {
@@ -47,10 +46,10 @@ public class AddHostsPage extends BasePage{
         }
 
 
-        final Form<FormModel> form = new Form<FormModel>("form", new CompoundPropertyModel<FormModel>(formModel));
+        final Form<FormModel> form = new Form<>("form", new CompoundPropertyModel<>(formModel));
         add(form);
 
-        TextArea<String> textArea = new TextArea<String>("hosts");
+        TextArea<String> textArea = new TextArea<>("hosts");
         textArea.setRequired(true);
         form.add(textArea);
 
@@ -91,7 +90,7 @@ public class AddHostsPage extends BasePage{
         if(hostsDataArray.length <= 0){
             return false;
         }
-        List<HostData> hostDataList = new ArrayList<HostData>();
+        List<HostData> hostDataList = new ArrayList<>();
         for (String hostDataString : hostsDataArray) {
             String[] host = hostDataString.split(",");
             if(host.length > 2){

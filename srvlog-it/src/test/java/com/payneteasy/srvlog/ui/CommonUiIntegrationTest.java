@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
@@ -64,5 +63,4 @@ public abstract class CommonUiIntegrationTest extends CommonIntegrationTest{
     public Server getServer() {
         return server;
     }
-
 }

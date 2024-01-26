@@ -36,8 +36,8 @@ public enum LogFacility implements LogEnum{
     local6(22, "local6"),
     local7(23, "local7");
 
-    private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
-    private static List<LogFacility> logFacilities = new ArrayList<LogFacility>();
+    private static Map<Integer, String> valueToName = new HashMap<>();
+    private static List<LogFacility> logFacilities = new ArrayList<>();
 
     static {
         for (LogFacility lf: LogFacility.values()) {
@@ -50,7 +50,7 @@ public enum LogFacility implements LogEnum{
 
     private String facilityDisplayName;
 
-    private LogFacility(final Integer value, String facilityDisplayName)
+    LogFacility(final Integer value, String facilityDisplayName)
     {
         this.value = value;
         this.facilityDisplayName = facilityDisplayName;

@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collections;
 
 /**
@@ -126,6 +125,4 @@ public class WebContainerUtils {
             Thread.sleep(500);
         }
     }
-
-
 }

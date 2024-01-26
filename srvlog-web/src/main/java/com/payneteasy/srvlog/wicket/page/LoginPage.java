@@ -21,16 +21,16 @@ public class LoginPage extends WebPage {
     public LoginPage() {
         final String relativeUrl = getRequest().getContextPath();
 
-        Form<Void> loginForm = new Form<Void>("loginForm");
-        loginForm.add(new AttributeModifier("action", Model.<String>of(buildCheckUrl(relativeUrl))));
+        Form<Void> loginForm = new Form<>("loginForm");
+        loginForm.add(new AttributeModifier("action", Model.of(buildCheckUrl(relativeUrl))));
         add(loginForm);
 
         //login field
-        RequiredTextField<String> loginInputField = new RequiredTextField<String>(J_USERNAME, Model.<String>of(""));
+        RequiredTextField<String> loginInputField = new RequiredTextField<>(J_USERNAME, Model.of(""));
         loginForm.add(loginInputField);
 
         //password filed
-        PasswordTextField passwordInputField = new PasswordTextField(J_PASSWORD, Model.<String>of(""));
+        PasswordTextField passwordInputField = new PasswordTextField(J_PASSWORD, Model.of(""));
         loginForm.add(passwordInputField);
 
         //button

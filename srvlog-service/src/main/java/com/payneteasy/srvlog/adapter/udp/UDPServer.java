@@ -52,7 +52,7 @@ public class UDPServer {
         this.serverPort = serverPort;
         this.datagramProcessor = datagramProcessor;
 
-        queue = new LinkedBlockingQueue<Datagram>(queueCapacity);
+        queue = new LinkedBlockingQueue<>(queueCapacity);
     }
 
     public void start() {
@@ -63,17 +63,8 @@ public class UDPServer {
         started = true;
         channel = openAndBindChannel();
         logger.info("Started UDP acceptor on port {}", serverPort);
-        acceptorExecutor.execute(new Runnable() {
-            public void run() {
-                acceptDatagrams();
-            }
-        });
-        processingExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                processorLoop();
-            }
-        });
+        acceptorExecutor.execute(this::acceptDatagrams);
+        processingExecutor.execute(this::processorLoop);
     }
 
     private void processorLoop() {

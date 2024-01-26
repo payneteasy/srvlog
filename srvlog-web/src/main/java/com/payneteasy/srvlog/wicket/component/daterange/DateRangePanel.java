@@ -11,7 +11,6 @@ import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -35,12 +34,12 @@ public class DateRangePanel extends Panel{
         super(id);
         this.dateRangeModel = dateRangeModel;
 
-        final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<DateRangeType>(
+        final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<>(
                 "date-range-type"
-                , new PropertyModel<DateRangeType>(dateRangeModel, "dateRangeType")
+                , new PropertyModel<>(dateRangeModel, "dateRangeType")
                 , Arrays.asList(DateRangeType.values())
                 , new ChoiceRenderer<>("typeDisplayName")
-                );
+        );
         add(dateRangeType);
         dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -77,7 +76,7 @@ public class DateRangePanel extends Panel{
     }
 
     private DateTextField getExactlyDateTextField(String id, final DateRangeModel dateRangeModel, String expression) {
-        DateTextField dateTextField = new DateTextField(id, new PropertyModel<Date>(dateRangeModel, expression), new PatternDateConverter(DATE_PATTERN, false)) {
+        DateTextField dateTextField = new DateTextField(id, new PropertyModel<>(dateRangeModel, expression), new PatternDateConverter(DATE_PATTERN, false)) {
             @Override
             public boolean isVisible() {
                 return DateRangeType.EXACTLY_DATE == dateRangeModel.getDateRangeType();
@@ -89,7 +88,7 @@ public class DateRangePanel extends Panel{
     }
 
     private DateTimeField getExactlyDateTimeField(String id, final DateRangeModel dateRangeModel, String expression) {
-        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<Date>(dateRangeModel, expression)) {
+        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<>(dateRangeModel, expression)) {
             @Override
             protected boolean use12HourFormat() {
                 return false;

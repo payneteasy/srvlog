@@ -76,7 +76,7 @@ public abstract class AbstractWicketTester {
     }
 
     protected Map<LogLevel, Long> getDefaultLogsBySeverityMap(){
-        Map<LogLevel, Long> map = new TreeMap<LogLevel, Long>();
+        Map<LogLevel, Long> map = new TreeMap<>();
         for (LogLevel logLevel : LogLevel.values()) {
             map.put(logLevel, 1L);
         }

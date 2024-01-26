@@ -11,7 +11,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,7 +72,7 @@ public class AddHostsPageTest extends AbstractWicketTester{
     }
 
     private List<HostData> getHosts(){
-        List<HostData> hostDataList = new ArrayList<HostData>();
+        List<HostData> hostDataList = new ArrayList<>();
 
         HostData hostData1 = new HostData();
         hostData1.setHostname(HOST_NAME_1);

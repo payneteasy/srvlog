@@ -3,43 +3,35 @@ package com.payneteasy.srvlog.wicket.page;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
-import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
-import static com.payneteasy.srvlog.util.DateRangeType.EXACTLY_TIME;
 import com.payneteasy.srvlog.wicket.component.ButtonGroupPanel;
 import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel.DateRangeModel;
 import com.payneteasy.srvlog.wicket.component.navigation.PageableDataProvider;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableListView;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableNavigator;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.*;
+import org.apache.wicket.util.string.StringValue;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.*;
-
-import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
-import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel.DateRangeModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.payneteasy.srvlog.util.DateRangeType.EXACTLY_TIME;
+import static com.payneteasy.srvlog.utils.LogDataTableUtil.setHighlightCssClassBySeverity;
 import static java.util.Locale.ENGLISH;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.joda.time.DateTime;
 
 /**
  * Date: 11.01.13
@@ -73,18 +65,18 @@ public class LogMonitorPage extends BasePage {
             fillFilterModel(filterModel, pageParameters);
         }
 
-        final Form<FilterModel> form = new Form<FilterModel>("form", Model.of(filterModel));
+        final Form<FilterModel> form = new Form<>("form", Model.of(filterModel));
         add(form);
 
 
-        form.add(new TextField<String>("pattern", new PropertyModel<String>(filterModel, "pattern")));
+        form.add(new TextField<>("pattern", new PropertyModel<String>(filterModel, "pattern")));
 
 //        DATE RANGE FILTER
         DateRangePanel dateRangePanel = new DateRangePanel("date-range", filterModel.getDateRangeModel());
         form.add(dateRangePanel);
 
         // SEVERITY CHOICE FILTER
-        ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<LogLevel>(
+        ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<>(
                 "severity-choice"
                 , new PropertyModel<List<LogLevel>>(filterModel, "severities")
                 , LogLevel.getLogEnumList(), new ChoiceRenderer<>("levelDisplayName"));
@@ -92,7 +84,7 @@ public class LogMonitorPage extends BasePage {
 
         //FACILITY CHOICE FILTER
         //TODO needed refactoring this component
-        ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<LogFacility>(
+        ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<>(
                 "facility-choice"
                 , new PropertyModel<List<LogFacility>>(filterModel, "facilities")
                 , LogFacility.getLogEnumList(), new ChoiceRenderer<>("facilityDisplayName"));
@@ -100,20 +92,20 @@ public class LogMonitorPage extends BasePage {
 
         //HOST CHOICE FILTER
         List<HostData> hostData = logCollector.loadHosts();
-        ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<HostData>(
+        ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<>(
                 "hostData-choice"
                 , new PropertyModel<List<HostData>>(filterModel, "hosts")
                 , hostData, new ChoiceRenderer<>("hostname"));
         form.add(hostDataChoice);
 
         //LIST LOG DATA
-        PageableDataProvider<LogData> dataProvider = new PageableDataProvider<LogData>() {
+        PageableDataProvider<LogData> dataProvider = new PageableDataProvider<>() {
             @Override
             public Collection<LogData> load(int offset, int limit) {
                 try {
-                    if(form.hasError()){
+                    if (form.hasError()) {
                         return Collections.emptyList();
-                    }else {
+                    } else {
                         return logCollector.search(
                                 filterModel.getDateRangeModel().getDateRange().getFromDate()
                                 , filterModel.getDateRangeModel().getDateRange().getToDate()
@@ -131,7 +123,7 @@ public class LogMonitorPage extends BasePage {
             }
         };
 
-        final UncountablyPageableListView<LogData> listView = new UncountablyPageableListView<LogData>("list-log-data", dataProvider, filterModel.getItemPrePage()) {
+        final UncountablyPageableListView<LogData> listView = new UncountablyPageableListView<>("list-log-data", dataProvider, filterModel.getItemPrePage()) {
             @Override
             protected void populateItem(Item<LogData> item) {
                 LogData logData = item.getModelObject();
@@ -140,7 +132,7 @@ public class LogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
-                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
+                item.add(new Label("log-program", logData.getProgram() == null ? "-" : logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClassBySeverity(logLevel, item);
 
@@ -149,22 +141,21 @@ public class LogMonitorPage extends BasePage {
 
                     linkParameters.add("hash", logData.getHash());
 
-                    BookmarkablePageLink<SnortLogMonitorPage> link = new BookmarkablePageLink<SnortLogMonitorPage>(
-                        "log-snort-logs-link",
-                        SnortLogMonitorPage.class,
-                        linkParameters
+                    BookmarkablePageLink<SnortLogMonitorPage> link = new BookmarkablePageLink<>(
+                            "log-snort-logs-link",
+                            SnortLogMonitorPage.class,
+                            linkParameters
                     );
 
                     item.add(link);
-                }
-                else {
+                } else {
                     item.add(new Label("log-snort-logs-link", ""));
                 }
             }
         };
         form.add(listView);
 
-        final UncountablyPageableNavigator<LogData> pagingNavigator = new UncountablyPageableNavigator<LogData>("paging-navigator", listView);
+        final UncountablyPageableNavigator<LogData> pagingNavigator = new UncountablyPageableNavigator<>("paging-navigator", listView);
         form.add(pagingNavigator);
 
         form.add(new WebMarkupContainer("no-data"){
@@ -203,7 +194,7 @@ public class LogMonitorPage extends BasePage {
 
         if (!severityValue.isEmpty()) {
             LogLevel severity = LogLevel.valueOf(severityValue.toString());
-            filterModel.setSeverities(new ArrayList<LogLevel>(Arrays.asList(severity)));
+            filterModel.setSeverities(new ArrayList<>(Arrays.asList(severity)));
         }
 
         DateRangeModel dateRangeModel = filterModel.getDateRangeModel();
@@ -255,8 +246,8 @@ public class LogMonitorPage extends BasePage {
         private Integer itemPrePage;
 
         private FilterModel() {
-            this.severities = new ArrayList<LogLevel>();
-            this.facilities = new ArrayList<LogFacility>();
+            this.severities = new ArrayList<>();
+            this.facilities = new ArrayList<>();
             this.itemPrePage = 25;
             this.dateRangeModel = new DateRangePanel.DateRangeModel();
         }
@@ -311,7 +302,7 @@ public class LogMonitorPage extends BasePage {
         }
 
         private void setHostIds(List<HostData> hosts) {
-            List<Integer> ids = new ArrayList<Integer>();
+            List<Integer> ids = new ArrayList<>();
             for (HostData host : hosts) {
                 ids.add(host.getId().intValue());
             }
@@ -344,7 +335,7 @@ public class LogMonitorPage extends BasePage {
         }
 
         private List<Integer> getListIdsFromListEnum(List<? extends LogEnum> logEnums) {
-            List<Integer> ids = new ArrayList<Integer>(logEnums.size());
+            List<Integer> ids = new ArrayList<>(logEnums.size());
             for (LogEnum logEnum : logEnums) {
                 ids.add(logEnum.getValue());
             }

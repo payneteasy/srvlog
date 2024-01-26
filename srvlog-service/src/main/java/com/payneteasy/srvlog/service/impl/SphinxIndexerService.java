@@ -63,7 +63,7 @@ public class SphinxIndexerService implements IIndexerService{
         if (errorOccuredWhileQuerying(sphinxClient, result)) return Collections.emptyList();
         reportWarningsIfAny(sphinxClient);
 
-        List<Long> logIds = new LinkedList<Long>();
+        List<Long> logIds = new LinkedList<>();
         for (SphinxMatch sm: result.matches) {
             logIds.add(sm.docId);
         }
@@ -200,7 +200,7 @@ public class SphinxIndexerService implements IIndexerService{
 
         reportWarningsIfAny(sphinxClient);
 
-        Map<Date, Long> resultMap = new TreeMap<Date, Long>();
+        Map<Date, Long> resultMap = new TreeMap<>();
         DateFormat df = new SimpleDateFormat("yyyyMMdd");
         for(SphinxMatch sm: result.matches) {
             Date groupDate = null;
@@ -230,7 +230,7 @@ public class SphinxIndexerService implements IIndexerService{
     }
 
     private  Map<LogLevel, Long> initTreeMapNumberOfLogsBySeverity(){
-        Map<LogLevel, Long> resultMap = new TreeMap<LogLevel, Long>();
+        Map<LogLevel, Long> resultMap = new TreeMap<>();
         for (LogLevel logLevel : LogLevel.values()) {
             resultMap.put(logLevel, 0L);
         }

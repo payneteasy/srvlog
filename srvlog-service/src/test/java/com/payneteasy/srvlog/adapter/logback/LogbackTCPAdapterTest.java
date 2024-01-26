@@ -11,14 +11,11 @@ import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +26,7 @@ public class LogbackTCPAdapterTest {
 
 
     @Test
-    public void testSendLogbackLogDirectly() throws IOException {
+    public void testSendLogbackLogDirectly() {
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
         LogbackTCPAdapter logbackAdapter = new LogbackTCPAdapter(mockLogCollector, "paynet", 4000);
@@ -49,7 +46,7 @@ public class LogbackTCPAdapterTest {
     }
 
     @Test
-    public void testSendLogbakLogWithArgumentsDirectly() throws IOException {
+    public void testSendLogbakLogWithArgumentsDirectly() {
         ILogCollector mockLogCollector = EasyMock.createMock(ILogCollector.class);
 
         LogbackTCPAdapter logbackAdapter = new LogbackTCPAdapter(mockLogCollector, "paynet", 4000);
@@ -61,24 +58,16 @@ public class LogbackTCPAdapterTest {
         EasyMock.expectLastCall();
         EasyMock.replay(mockLogCollector);
 
-        /*ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
-                Level.WARN, "This is test logging", null, null);
-*/
-
-
         ILoggingEvent logEvent = new LoggingEvent(log.getClass().getName(), log,
                 Level.WARN, "clientOrderId={}", null, new Object[]{344567});
 
         logbackAdapter.processEvent(new ServerLogbackEvent(logEvent, InetAddress.getLoopbackAddress()));
 
         EasyMock.verify(mockLogCollector);
-
     }
 
-
-
     @Test
-    public void testSendLog4jLogUsingTCP() throws IOException, InterruptedException {
+    public void testSendLog4jLogUsingTCP() throws InterruptedException {
 
         final CountDownLatch savedLatch = new CountDownLatch(1);
 
@@ -90,12 +79,9 @@ public class LogbackTCPAdapterTest {
         LogData logData = buildReferenceLogData(c);
 
         mockLogCollector.saveLog(logData);
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                savedLatch.countDown();
-                return null;
-            }
+        EasyMock.expectLastCall().andAnswer(() -> {
+            savedLatch.countDown();
+            return null;
         });
         EasyMock.replay(mockLogCollector);
 
@@ -121,9 +107,8 @@ public class LogbackTCPAdapterTest {
         EasyMock.verify(mockLogCollector);
     }
 
-    private LogData buildReferenceLogData(Calendar c) throws UnknownHostException {
+    private LogData buildReferenceLogData(Calendar c) {
         LogData logData = new LogData();
-
 
         logData.setDate(c.getTime());
         logData.setFacility(LogFacility.user.getValue());
@@ -148,15 +133,15 @@ public class LogbackTCPAdapterTest {
 
         logData.setProgram("paynet");
         logData.setMessage("clientOrderId=344567");
+
         return logData;
-
     }
-
 
     private Calendar buildReferenceCalendar() {
         Calendar c = Calendar.getInstance();
         c.set(2013, 01, 17, 13, 50, 21);
         c.set(Calendar.MILLISECOND, 0);
+
         return c;
     }
 

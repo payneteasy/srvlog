@@ -1,6 +1,6 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.*;
+import com.payneteasy.srvlog.data.FirewallAlertData;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.util.DateRange;
@@ -10,7 +10,6 @@ import com.payneteasy.srvlog.wicket.page.detailed.OssecAlertDataPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -33,14 +32,14 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
     }
 
     @Test
-    public void testSideBarNavigation() throws Exception {
+    public void testSideBarNavigation() {
         WicketTester wicketTester = getWicketTester();
 
         EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
 
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Collections.<FirewallAlertData>emptyList());
-        EasyMock.expect(logCollector.getFirewallDropData(today.getFromDate())).andReturn(Collections.<FireWallDropData>emptyList());
+        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Collections.emptyList());
+        EasyMock.expect(logCollector.getFirewallDropData(today.getFromDate())).andReturn(Collections.emptyList());
 
         EasyMock.replay(logCollector);
 
@@ -63,9 +62,9 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Collections.<FirewallAlertData>emptyList());
+        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Collections.emptyList());
 
-        EasyMock.expect(logCollector.getFirewallAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<FirewallAlertData>emptyList());
+        EasyMock.expect(logCollector.getFirewallAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.emptyList());
 
         EasyMock.replay(logCollector);
 
@@ -80,13 +79,13 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
     }
 
     @Test
-    public void testNoDataPanel() throws Exception {
+    public void testNoDataPanel() {
         WicketTester wicketTester = getWicketTester();
 
         EasyMock.expect(logCollector.hasUnprocessedLogs()).andReturn(Boolean.TRUE).anyTimes();
 
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Arrays.asList(new FirewallAlertData[]{new FirewallAlertData()}));
+        EasyMock.expect(logCollector.getFirewallAlertData(today.getFromDate())).andReturn(Arrays.asList(new FirewallAlertData()));
 
         EasyMock.replay(logCollector);
 
@@ -112,9 +111,9 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.getFirewallDropData(today.getFromDate())).andReturn(Collections.<FireWallDropData>emptyList());
+        EasyMock.expect(logCollector.getFirewallDropData(today.getFromDate())).andReturn(Collections.emptyList());
 
-        EasyMock.expect(logCollector.getFirewallDropData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<FireWallDropData>emptyList());
+        EasyMock.expect(logCollector.getFirewallDropData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.emptyList());
 
         EasyMock.replay(logCollector);
 
@@ -138,9 +137,9 @@ public class DetailedLogsPageTest extends AbstractWicketTester {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.getOssecAlertData(today.getFromDate())).andReturn(Collections.<OssecAlertData>emptyList());
+        EasyMock.expect(logCollector.getOssecAlertData(today.getFromDate())).andReturn(Collections.emptyList());
 
-        EasyMock.expect(logCollector.getOssecAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.<OssecAlertData>emptyList());
+        EasyMock.expect(logCollector.getOssecAlertData(simpleDateFormat.parse(simpleDateFormat.format(now)))).andReturn(Collections.emptyList());
 
         EasyMock.replay(logCollector);
 

@@ -34,25 +34,21 @@ public class DetailedLogsTest extends CommonIntegrationTest {
     }
 
     @Test
-    public void testFirewallAlert() throws Exception {
+    public void testFirewallAlert() {
         List<FirewallAlertData> firewallAlertData = logDao.getFirewallAlertData(nowDate);
-
         Assert.assertEquals(firewallAlertData.size(), 1);
     }
 
     @Test
-    public void testFireWallDrop() throws Exception {
+    public void testFireWallDrop() {
         List<FireWallDropData> firewallDropDataList = logDao.getFirewallDropData(nowDate);
-
         Assert.assertEquals(firewallDropDataList.size(), 1);
     }
 
     @Test
-    public void testOssecAlert() throws Exception {
+    public void testOssecAlert() {
        List<OssecAlertData> ossecAlertData = logDao.getOssecAlertData(nowDate);
-
        Assert.assertEquals(ossecAlertData.size(), 1);
-
     }
 
     private void putFirewallAlertDropLog() {
@@ -65,7 +61,6 @@ public class DetailedLogsTest extends CommonIntegrationTest {
         logData.setProgram(null);
         logDao.saveLog(logData);
     }
-
 
     private void putFireWallAlertLog() {
         LogData logData = new LogData();
@@ -89,8 +84,6 @@ public class DetailedLogsTest extends CommonIntegrationTest {
         logDao.saveLog(logData);
     }
 
-
-
     private void initFireWallHost() {
         //init host with name is firewall
         HostData hostData = new HostData();
@@ -106,6 +99,4 @@ public class DetailedLogsTest extends CommonIntegrationTest {
         hostData.setIpAddress("127.0.0.1");
         logDao.saveHost(hostData);
     }
-
-
 }

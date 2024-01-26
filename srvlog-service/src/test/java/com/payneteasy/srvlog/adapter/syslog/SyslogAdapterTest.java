@@ -3,13 +3,10 @@ package com.payneteasy.srvlog.adapter.syslog;
 import com.nesscomputing.syslog4j.server.impl.event.SyslogServerEvent;
 import com.payneteasy.srvlog.adapter.syslog.surricata.SuricataMessageManager;
 import com.payneteasy.srvlog.adapter.utils.AdapterHelper;
-import com.payneteasy.srvlog.data.LogData;
-import com.payneteasy.srvlog.data.LogFacility;
-import com.payneteasy.srvlog.data.LogLevel;
-import com.payneteasy.srvlog.data.OssecLogData;
-import com.payneteasy.srvlog.data.SnortLogData;
+import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.easymock.EasyMock;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,10 +14,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Locale;
-import org.easymock.EasyMock;
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Date: 22.01.13 Time: 13:42

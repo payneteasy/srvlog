@@ -75,11 +75,5 @@ public class UncountablyPageableNavigator<T extends Serializable> extends Panel 
             }
         })
         );
-
-
-
-
     }
-
-
 }
