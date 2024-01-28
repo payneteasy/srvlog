@@ -49,8 +49,13 @@ public class StartSrvlogJettyServer {
 
             server.setHandler(webAppContext);
 
+            LOG.info("Starting jetty srvlog server on port {}, context path: {}",
+                    config.getJettyPort(), config.getJettyContext());
+
             server.start();
             server.setStopAtShutdown(true);
+
+            LOG.info("jetty srvlog server started");
 
         } catch (Exception e) {
             LOG.error("Cannot start server app", e);
