@@ -1,16 +1,25 @@
 package com.payneteasy.srvlog;
 
 import com.payneteasy.srvlog.config.IStartupConfig;
+import com.payneteasy.srvlog.websocket.jetty.LogEndpointCreator;
 import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.webapp.*;
+import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.FragmentConfiguration;
+import org.eclipse.jetty.webapp.JettyWebXmlConfiguration;
+import org.eclipse.jetty.webapp.MetaInfConfiguration;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
+import org.eclipse.jetty.webapp.WebXmlConfiguration;
+import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.time.Duration;
 
 public class StartSrvlogJettyServer {
 
@@ -48,6 +57,13 @@ public class StartSrvlogJettyServer {
             webAppContext.setServer(server);
 
             server.setHandler(webAppContext);
+
+            JettyWebSocketServletContainerInitializer.configure(webAppContext, (servletContext, wsContainer) ->
+            {
+                wsContainer.setMaxTextMessageSize(config.webSocketMaxMessageSize());
+                wsContainer.setIdleTimeout(Duration.ofSeconds(config.webSocketIdleTimeoutSeconds()));
+                wsContainer.addMapping(config.webSocketEndpointPath(), new LogEndpointCreator());
+            });
 
             LOG.info("Starting jetty srvlog server on port {}, context path: {}",
                     config.getJettyPort(), config.getJettyContext());

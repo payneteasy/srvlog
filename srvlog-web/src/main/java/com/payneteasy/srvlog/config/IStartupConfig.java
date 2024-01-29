@@ -15,4 +15,13 @@ public interface IStartupConfig {
 
     @AStartupParameter(name = "WEB_DESCRIPTOR_PATH", value = "")
     String webDescriptorPath();
+
+    @AStartupParameter(name = "WEB_SOCKET_ENDPOINT_PATH", value = "/ws-log")
+    String webSocketEndpointPath();
+
+    @AStartupParameter(name = "WEB_SOCKET_MAX_MESSAGE_SIZE", value = "65535")
+    long webSocketMaxMessageSize();
+
+    @AStartupParameter(name = "WEB_SOCKET_IDLE_TIMEOUT_SECONDS", value = "300")
+    int webSocketIdleTimeoutSeconds();
 }

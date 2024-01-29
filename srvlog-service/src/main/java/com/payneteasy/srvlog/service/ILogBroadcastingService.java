@@ -2,8 +2,7 @@ package com.payneteasy.srvlog.service;
 
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.impl.Subscription;
-
-import javax.websocket.Session;
+import org.eclipse.jetty.websocket.api.Session;
 import java.util.List;
 
 public interface ILogBroadcastingService {

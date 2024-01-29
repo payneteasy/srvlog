@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.Session;
+import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,7 +107,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                     );
                     String incorrectRequestParametersResponseJson = jsonMapper.writeValueAsString(incorrectRequestParametersResponse);
 
-                    session.getBasicRemote().sendText(incorrectRequestParametersResponseJson);
+                    session.getRemote().sendString(incorrectRequestParametersResponseJson);
 
                     return;
                 }
@@ -116,7 +116,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                 LogBroadcastingResponse logBroadcastingResponse = new LogBroadcastingResponse(true, logDataList, null);
                 String logBroadcastingResponseJson = jsonMapper.writeValueAsString(logBroadcastingResponse);
 
-                session.getBasicRemote().sendText(logBroadcastingResponseJson);
+                session.getRemote().sendString(logBroadcastingResponseJson);
 
                 subscriptionStorage.get(session).set(new Subscription(
                         host,
@@ -137,7 +137,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
             try {
                 String unsuccessfulResponseJson = jsonMapper.writeValueAsString(unsuccessfulResponse);
-                session.getBasicRemote().sendText(unsuccessfulResponseJson);
+                session.getRemote().sendString(unsuccessfulResponseJson);
             } catch (IOException e2) {
                 logger.error("Error while sending web socket unsuccessful log subscription response", e2);
             }
@@ -190,15 +190,11 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             if (subscriptionEntry.getValue().get().isBroadcastCandidateFor(host, program)) {
                 try {
                     synchronized (subscriptionEntry.getKey()) {
-                        subscriptionEntry.getKey().getBasicRemote().sendText(logDataText);
+                        subscriptionEntry.getKey().getRemote().sendString(logDataText);
                     }
                 } catch (IOException e) {
                     subscriptionIterator.remove();
-                    try {
-                        subscriptionEntry.getKey().close();
-                    } catch (IOException ce) {
-                        logger.warn("Error while closing web socket conversation due to IOException", ce);
-                    }
+                    subscriptionEntry.getKey().close();
                 }
             }
         }

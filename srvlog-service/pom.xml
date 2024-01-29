@@ -104,16 +104,16 @@
           <artifactId>netty-buffer</artifactId>
       </dependency>
       <dependency>
-          <groupId>javax.websocket</groupId>
-          <artifactId>javax.websocket-api</artifactId>
-      </dependency>
-      <dependency>
           <groupId>javax.annotation</groupId>
           <artifactId>javax.annotation-api</artifactId>
       </dependency>
       <dependency>
           <groupId>xerces</groupId>
           <artifactId>xercesImpl</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.eclipse.jetty.websocket</groupId>
+          <artifactId>websocket-jetty-api</artifactId>
       </dependency>
 
       <dependency>

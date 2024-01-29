@@ -7,7 +7,7 @@ import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.websocket.Session;
+import org.eclipse.jetty.websocket.api.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -123,7 +123,7 @@ public class LogBroadcastingServiceImplTest {
     @Test
     public void logBroadcastingTest() throws Exception {
 
-        MockWsSession wsSession1 = emulateWebSocketOpenConnectionRequest();
+        MockWebSocketSession wsSession1 = emulateWebSocketOpenConnectionRequest();
 
         String subscriptionHost1 = TEST_HOST_LIST.get(0);
         String subscriptionProgram1 = TEST_PROGRAM_LIST.get(0);
@@ -138,7 +138,7 @@ public class LogBroadcastingServiceImplTest {
 
         validateHostProgramLogDataList(subscriptionHost1, subscriptionProgram1, logDataList1);
 
-        MockWsSession wsSession2 = emulateWebSocketOpenConnectionRequest();
+        MockWebSocketSession wsSession2 = emulateWebSocketOpenConnectionRequest();
 
         String subscriptionHost2 = TEST_HOST_LIST.get(1);
         String subscriptionProgram2 = TEST_PROGRAM_LIST.get(1);
@@ -153,7 +153,7 @@ public class LogBroadcastingServiceImplTest {
 
         validateHostProgramLogDataList(subscriptionHost2, subscriptionProgram2, logDataList2);
 
-        MockWsSession wsSession3 = emulateWebSocketOpenConnectionRequest();
+        MockWebSocketSession wsSession3 = emulateWebSocketOpenConnectionRequest();
 
         LogBroadcastingResponse logBroadcastingResponse3 =
                 emulateWebSocketLogBroadcastingSubscriptionRequest(wsSession3, null, null);
@@ -188,9 +188,9 @@ public class LogBroadcastingServiceImplTest {
         assertEquals(newLogDataId, (long) logData.getId());
     }
 
-    private MockWsSession emulateWebSocketOpenConnectionRequest() {
+    private MockWebSocketSession emulateWebSocketOpenConnectionRequest() {
 
-        MockWsSession testWsSession = new MockWsSession();
+        MockWebSocketSession testWsSession = new MockWebSocketSession();
         logBroadcastingService.saveBroadcastingSession(testWsSession, Subscription.initialState());
 
         return testWsSession;
@@ -208,6 +208,6 @@ public class LogBroadcastingServiceImplTest {
 
         logBroadcastingService.handleLogBroadcastingRequest(session, requestText);
 
-        return ((MockWsSession) session).getLogBroadcastingResponse();
+        return ((MockWebSocketSession) session).getLogBroadcastingResponse();
     }
 }
