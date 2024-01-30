@@ -20,8 +20,7 @@ logging solution is required. As an example of such
 requirements is PCI DSS requirements 10.1-10.2 
 
 Software requirements:
-1) JDK 17.0.10;
-2) Java Application Container - Tomcat 7.x and higher, Jetty 8.1.x;
+`1) JDK 17.0.10 and higher;
 2) MariaDB 10.0.x and higher;
 3) sphinxsearch 3.6.1 and higher.
 
@@ -30,5 +29,24 @@ Minimum system requirements:
 2) 100GB Disk space (for up to 200 thousands logs per day )
 3) Intell i5, i7, Xeon processors.
 
+### Building and starting embedded srvlog jetty server
 
+Build uber-jar file:
 
+```shell
+mvn clean package
+```
+Set environment variables required for embedded server:
+```shell
+export JETTY_PORT=8080 # server port
+export JETTY_CONTEXT=/srvlog # web application context path
+export JETTY_ENV_CONFIG_PATH=/path/to/jetty-env-ui.xml # server env config xml
+export WEB_DESCRIPTOR_PATH=/path/to/web.xml # web application config xml
+export WEB_SOCKET_ENDPOINT_PATH=/ws-log # web socket endpoint context path
+export WEB_SOCKET_MAX_MESSAGE_SIZE=65535 # web socket max message size in bytes
+export WEB_SOCKET_IDLE_TIMEOUT_SECONDS=300 # web socket idle timeout in seconds
+```
+Start server uber-jar:
+```shell
+java -jar ./srvlog-web/target/srvlog-embed-server.jar
+```
