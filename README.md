@@ -45,6 +45,13 @@ export WEB_DESCRIPTOR_PATH=/path/to/web.xml # web application config xml
 export WEB_SOCKET_ENDPOINT_PATH=/ws-log # web socket endpoint context path
 export WEB_SOCKET_MAX_MESSAGE_SIZE=65535 # web socket max message size in bytes
 export WEB_SOCKET_IDLE_TIMEOUT_SECONDS=300 # web socket idle timeout in seconds
+export SYSLOG_PROTOCOL=tcp # syslog protocol
+export SYSLOG_HOST=localhost # syslog host
+export SYSLOG_PORT=2514 # syslog port
+export JSON_ADAPTER_BIND_ADDRESS=127.0.0.1 # json adapter bind address
+export JSON_ADAPTER_PORT=28080 # json adapter port
+export JSON_ADAPTER_PATH=/save-logs # json adapter path
+export JSON_ADAPTER_TOKEN=token # json adapter token
 ```
 Start server uber-jar:
 ```shell

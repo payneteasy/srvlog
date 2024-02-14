@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.syslog;
 
 import com.nesscomputing.syslog4j.Syslog;
+import com.nesscomputing.syslog4j.SyslogConstants;
 import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.CommonIntegrationTest;
@@ -87,6 +88,11 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
             @Override
             public String getSyslogProtocol() {
                 return "tcp";
+            }
+
+            @Override
+            public String getSyslogHost() {
+                return SyslogConstants.SYSLOG_HOST_DEFAULT;
             }
 
             @Override

@@ -19,6 +19,8 @@ public class ShowVersionServlet extends HttpServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowVersionServlet.class);
 
+    private static final String POM_PROPS_PATH = "/META-INF/maven/com.payneteasy.srvlog/srvlog-web/pom.properties";
+
     private volatile String version = "no init";
 
     @Override
@@ -30,8 +32,8 @@ public class ShowVersionServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         Properties properties = new Properties();
-        InputStream in = config.getServletContext().getResourceAsStream("/META-INF/maven/com.payneteasy.srvlog/srvlog-web/pom.properties");
-        if(in == null) {
+        InputStream in = getClass().getResourceAsStream(POM_PROPS_PATH);
+        if (in == null) {
             version = "no input stream";
             return;
         }

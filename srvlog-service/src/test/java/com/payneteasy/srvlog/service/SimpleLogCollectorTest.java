@@ -115,6 +115,11 @@ public class SimpleLogCollectorTest {
             }
 
             @Override
+            public String getSyslogHost() {
+                return SyslogConstants.SYSLOG_HOST_DEFAULT;
+            }
+
+            @Override
             public int getSyslogPort() {
                 return 1514;
             }
