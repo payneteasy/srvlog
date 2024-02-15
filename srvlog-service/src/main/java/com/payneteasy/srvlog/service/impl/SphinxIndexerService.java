@@ -3,6 +3,7 @@ package com.payneteasy.srvlog.service.impl;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.IndexerServiceException;
+import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import org.sphx.api.SphinxClient;
 import org.sphx.api.SphinxException;
 import org.sphx.api.SphinxMatch;
 import org.sphx.api.SphinxResult;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +28,8 @@ public class SphinxIndexerService implements IIndexerService{
 
     private static final Logger LOG = LoggerFactory.getLogger(SphinxIndexerService.class);
 
-    @Value( "${sphinxHost}" )
-    private String host;
-
-    @Value( "${sphinxPort}" )
-    private int port;
-
-    @Value( "${sphinxConnectTimeout}" )
-    private int connectTimeout;
-
-    @Value( "${sphinxQueryIndexes}" )
-    private String sphinxQueryIndexes;
+    private static final ISphinxConfig sphinxConfig = StartupParametersFactory
+            .getStartupParameters(ISphinxConfig.class);
 
     @Override
     public List<Long> search(Date from, Date to, List<Integer> facilities, List<Integer> severities, List<Integer> hosts, String pattern, Integer offset, Integer limit) throws IndexerServiceException {
@@ -83,8 +74,8 @@ public class SphinxIndexerService implements IIndexerService{
     }
 
     private SphinxClient createSphinxClient() {
-        SphinxClient sphinxClient = new SphinxClient(host, port);
-        sphinxClient.SetConnectTimeout(connectTimeout);
+        SphinxClient sphinxClient = new SphinxClient(sphinxConfig.getHost(), sphinxConfig.getPort());
+        sphinxClient.SetConnectTimeout(sphinxConfig.getConnectTimeout());
         return sphinxClient;
     }
 
@@ -108,7 +99,7 @@ public class SphinxIndexerService implements IIndexerService{
     private SphinxResult querySphinx(String pattern, SphinxClient sphinxClient) throws IndexerServiceException {
         SphinxResult result;
         try {
-            result = sphinxClient.Query(pattern, sphinxQueryIndexes);
+            result = sphinxClient.Query(pattern, sphinxConfig.getQueryIndexes());
         } catch (SphinxException e) {
             LOG.error("While sending query to Sphinx Daemon", e);
             throw new IndexerServiceException("While sending query to Sphinx Daemon", e);
@@ -263,19 +254,4 @@ public class SphinxIndexerService implements IIndexerService{
         return array;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setConnectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
-    }
 }

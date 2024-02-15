@@ -6,19 +6,24 @@ import com.payneteasy.srvlog.adapter.LoggerAcceptorNode;
 import com.payneteasy.srvlog.adapter.utils.IRunnableFactory;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.Socket;
 
 @Service
 public class LogbackTCPAdapter extends AbstractTCPLoggerAdapter {
+
+    private static final ILogbackAdapterConfig adapterConfig = StartupParametersFactory
+            .getStartupParameters(ILogbackAdapterConfig.class);
+
     @Autowired
-    public LogbackTCPAdapter(
-            ILogCollector logCollector,
-            @Value("${logbackProgram}") String program,
-            @Value("${logbackTCPPort}") int serverPort) {
+    public LogbackTCPAdapter(ILogCollector logCollector) {
+        super(logCollector, adapterConfig.getProgram(), adapterConfig.getTcpPort());
+    }
+
+    public LogbackTCPAdapter(ILogCollector logCollector, String program, int serverPort) {
         super(logCollector, program, serverPort);
     }
 

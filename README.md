@@ -52,6 +52,14 @@ export JSON_ADAPTER_BIND_ADDRESS=127.0.0.1 # json adapter bind address
 export JSON_ADAPTER_PORT=28080 # json adapter port
 export JSON_ADAPTER_PATH=/save-logs # json adapter path
 export JSON_ADAPTER_TOKEN=token # json adapter token
+export SPHINX_HOST=localhost # sphinx host
+export SPHINX_PORT=9312 # sphinx port
+export SPHINX_CONNECT_TIMEOUT=30000 # sphinx connect timeout
+export SPHINX_QUERY_INDEXES=index1,index2 # comma separated query indexes
+export LOG_STORAGE_CAPACITY=1000 # log broadcasting service storage capacity (web terminal page)
+export LOGBACK_PROGRAM=programName # logback program name
+export LOGBACK_TCP_PORT=4713 # port for logback tcp adapter
+export LOGBACK_UDP_PORT=4713 # port for logback udp adapter
 ```
 Start server uber-jar:
 ```shell
