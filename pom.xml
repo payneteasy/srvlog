@@ -60,7 +60,7 @@
         <maven.flyway.plugin.version>10.4.1</maven.flyway.plugin.version>
         <maven.surefire.plugin.version>3.2.3</maven.surefire.plugin.version>
 
-        <wicket.version>10.0.0-M2</wicket.version>
+        <wicket.version>10.1.0</wicket.version>
         <jetty.version>11.0.19</jetty.version>
         <slf4j.version>2.0.9</slf4j.version>
         <apache.log4j.version>2.22.0</apache.log4j.version>
