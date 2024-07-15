@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.payneteasy</groupId>
         <artifactId>srvlog</artifactId>
-        <version>srvlog-1.2-28</version>
+        <version>srvlog-1.2-29-SNAPSHOT</version>
     </parent>
 
     <groupId>com.payneteasy.srvlog</groupId>
