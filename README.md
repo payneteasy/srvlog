@@ -20,7 +20,7 @@ logging solution is required. As an example of such
 requirements is PCI DSS requirements 10.1-10.2 
 
 Software requirements:
-`1) JDK 17.0.10 and higher;
+1) JDK 17.0.10 and higher;
 2) MariaDB 10.0.x and higher;
 3) sphinxsearch 3.6.1 and higher.
 
