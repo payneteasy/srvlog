@@ -1,6 +1,7 @@
 package com.payneteasy.srvlog.syslog;
 
 import com.nesscomputing.syslog4j.Syslog;
+import com.nesscomputing.syslog4j.SyslogConstants;
 import com.nesscomputing.syslog4j.SyslogFacility;
 import com.nesscomputing.syslog4j.SyslogIF;
 import com.payneteasy.srvlog.CommonIntegrationTest;
@@ -11,7 +12,6 @@ import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
  * Date: 08.01.13
  * Time: 16:53
  */
-
 public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonIntegrationTest {
 
     private SyslogIF syslogClient;
@@ -75,7 +74,6 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         assertTrue("Logs should be created in defined time interval", logDataList.size() > 0);
     }
 
-
     public static SyslogIF createSyslog4jClient(ISyslogAdapterConfig syslogAdapterConfig) {
         SyslogIF udpSyslogClient = Syslog.getInstance(syslogAdapterConfig.getSyslogProtocol());
 
@@ -93,6 +91,11 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
             }
 
             @Override
+            public String getSyslogHost() {
+                return SyslogConstants.SYSLOG_HOST_DEFAULT;
+            }
+
+            @Override
             public int getSyslogPort() {
                 return 1514;
             }
@@ -103,15 +106,11 @@ public class Syslog4jAdaptorAndSimpleLogCollectorIntegrationTest extends CommonI
         try {
             DatabaseUtil.generateTestLogsThroughSyslogClient(syslog4jClient);
             syslog4jClient.flush();
-        }finally {
+        } finally {
             if (syslog4jClient !=null) {
 
                 syslog4jClient.shutdown();
             }
         }
-
     }
-
-
-
 }

@@ -110,6 +110,7 @@ public class SrvlogDbMigrator {
                 .baselineVersion(MigrationVersion.fromVersion(baselineVersion))
                 .baselineDescription(baselineDescription)
                 .schemas(schemas)
+                .cleanDisabled(false)
                 .sqlMigrationSuffixes(sqlMigrationSuffixes).load();
         return fw;
     }

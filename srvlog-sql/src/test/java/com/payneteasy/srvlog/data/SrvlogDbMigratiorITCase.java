@@ -46,9 +46,7 @@ public class SrvlogDbMigratiorITCase {
         srvlogDbMigrator.cleanDatabase();
 
         final LinkedList<String> tableList = new LinkedList<>();
-        query("show tables", resultSet -> {
-            tableList.add(resultSet.getString(1));
-        });
+        query("show tables", resultSet -> tableList.add(resultSet.getString(1)));
 
         assertEquals("After clean database should not contain any tables",0, tableList.size());
     }
@@ -62,9 +60,7 @@ public class SrvlogDbMigratiorITCase {
         srvlogDbMigrator.migrateDatabase();
 
         final LinkedList<String> tableList = new LinkedList<>();
-        query("show tables", resultSet -> {
-            tableList.add(resultSet.getString(1));
-        });
+        query("show tables", resultSet -> tableList.add(resultSet.getString(1)));
 
         assertEquals("9 tables should be returned.\n " +
                 "+---------------------------------+\n" +

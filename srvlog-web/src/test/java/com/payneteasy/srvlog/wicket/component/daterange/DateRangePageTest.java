@@ -42,7 +42,7 @@ public class DateRangePageTest {
     }
 
     @Test
-    public void testDateRange() throws Exception {
+    public void testDateRange() {
         tester.startPage(TestDateRangePage.class);
         tester.assertRenderedPage(TestDateRangePage.class);
 

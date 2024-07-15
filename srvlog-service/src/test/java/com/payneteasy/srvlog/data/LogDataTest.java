@@ -1,7 +1,6 @@
 package com.payneteasy.srvlog.data;
 
 import junit.framework.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Calendar;

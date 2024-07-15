@@ -20,8 +20,7 @@ logging solution is required. As an example of such
 requirements is PCI DSS requirements 10.1-10.2 
 
 Software requirements:
-1) JDK 1.8.x (1.9.x has not been tested yet);
-2) Java Application Container - Tomcat 7.x and higher, Jetty 8.1.x;
+`1) JDK 17.0.10 and higher;
 2) MariaDB 10.0.x and higher;
 3) sphinxsearch 3.6.1 and higher.
 
@@ -30,5 +29,39 @@ Minimum system requirements:
 2) 100GB Disk space (for up to 200 thousands logs per day )
 3) Intell i5, i7, Xeon processors.
 
+### Building and starting embedded srvlog jetty server
 
+Build uber-jar file:
 
+```shell
+mvn clean package
+```
+Set environment variables required for embedded server:
+```shell
+export JETTY_PORT=8080 # server port
+export JETTY_CONTEXT=/srvlog # web application context path
+export JETTY_ENV_CONFIG_PATH=/path/to/jetty-env-ui.xml # server env config xml
+export WEB_DESCRIPTOR_PATH=/path/to/web.xml # web application config xml
+export WEB_SOCKET_ENDPOINT_PATH=/ws-log # web socket endpoint context path
+export WEB_SOCKET_MAX_MESSAGE_SIZE=65535 # web socket max message size in bytes
+export WEB_SOCKET_IDLE_TIMEOUT_SECONDS=300 # web socket idle timeout in seconds
+export SYSLOG_PROTOCOL=tcp # syslog protocol
+export SYSLOG_HOST=localhost # syslog host
+export SYSLOG_PORT=2514 # syslog port
+export JSON_ADAPTER_BIND_ADDRESS=127.0.0.1 # json adapter bind address
+export JSON_ADAPTER_PORT=28080 # json adapter port
+export JSON_ADAPTER_PATH=/save-logs # json adapter path
+export JSON_ADAPTER_TOKEN=token # json adapter token
+export SPHINX_HOST=localhost # sphinx host
+export SPHINX_PORT=9312 # sphinx port
+export SPHINX_CONNECT_TIMEOUT=30000 # sphinx connect timeout
+export SPHINX_QUERY_INDEXES=index1,index2 # comma separated query indexes
+export LOG_STORAGE_CAPACITY=1000 # log broadcasting service storage capacity (web terminal page)
+export LOGBACK_PROGRAM=programName # logback program name
+export LOGBACK_TCP_PORT=4713 # port for logback tcp adapter
+export LOGBACK_UDP_PORT=4713 # port for logback udp adapter
+```
+Start server uber-jar:
+```shell
+java -jar ./srvlog-web/target/srvlog-embed-server.jar
+```

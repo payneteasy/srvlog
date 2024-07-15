@@ -1,6 +1,5 @@
 package com.payneteasy.srvlog.adapter.syslog;
 
-import com.google.common.base.Preconditions;
 import com.nesscomputing.syslog4j.server.SyslogServer;
 import com.nesscomputing.syslog4j.server.SyslogServerEventIF;
 import com.nesscomputing.syslog4j.server.SyslogServerIF;
@@ -11,6 +10,7 @@ import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
 import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +34,8 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     @Autowired
     private ILogCollector logCollector;
 
-    @Autowired
-    private ISyslogAdapterConfig logAdapterConfig;
+    private ISyslogAdapterConfig logAdapterConfig = StartupParametersFactory
+            .getStartupParameters(ISyslogAdapterConfig.class);
 
     private SnortMessageManager snortMessageManager;
 
@@ -47,6 +47,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
     public void init() {
         suricataMessageManager = new SuricataMessageManager(checkNotNull(logCollector, "No logCollector"));
 
+        String host = logAdapterConfig.getSyslogHost();
         int port = logAdapterConfig.getSyslogPort();
         String protocol = logAdapterConfig.getSyslogProtocol();
         LOG.info("  Starting syslog4j server on port = {} and on protocol = {} ...", port, protocol );
@@ -57,6 +58,7 @@ public class SyslogAdapter implements SyslogServerSessionlessEventHandlerIF {
         SyslogServer.initialize();
         // Now create a new instance of Syslog.
         syslog4jInstance = SyslogServer.getInstance(protocol);
+        syslog4jInstance.getConfig().setHost(host);
         syslog4jInstance.getConfig().setPort(port);
         syslog4jInstance.getConfig().addEventHandler(this);
         syslog4jInstance.getConfig().setUseStructuredData(true);

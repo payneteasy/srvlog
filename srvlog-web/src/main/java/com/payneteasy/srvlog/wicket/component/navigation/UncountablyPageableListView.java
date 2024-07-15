@@ -40,7 +40,7 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
         Collection<T> collection = pageableDataProvider.load(offset, itemsPerPage + 1);
         itemsFetched = collection.size();
         hasNextPage = (itemsFetched - itemsPerPage) > 0;
-        Iterator<IModel<T>> iterator = new ModelIterator<T>(collection, itemsPerPage);
+        Iterator<IModel<T>> iterator = new ModelIterator<>(collection, itemsPerPage);
         return iterator;
     }
 
@@ -110,7 +110,7 @@ public abstract class UncountablyPageableListView<T extends Serializable> extend
 
         public IModel<T> next() {
             index++;
-            return new Model<T>(items.next());
+            return new Model<>(items.next());
         }
     }
 

@@ -13,7 +13,6 @@ public class ProcessJsonException extends Exception {
 
     private static  final ObjectWriter WRITER = new ObjectMapper().setSerializationInclusion(NON_NULL).writerFor(SaveLogsResponse.class);
 
-
     private final int    statusCode;
     private final String requestId;
 

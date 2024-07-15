@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:17-jdk
       - image: circleci/mariadb:latest
 
     working_directory: ~/repo
@@ -56,7 +56,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
   sonar:
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: circleci/openjdk:17-jdk
     steps:
       - checkout
       # Download and cache dependencies

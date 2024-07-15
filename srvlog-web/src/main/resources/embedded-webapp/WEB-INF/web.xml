@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+  <display-name>Accounting servers UI</display-name>
+
+    <!-- SPRING -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/spring/spring-security.xml
+            /WEB-INF/spring/spring-ui-datasource.xml
+            classpath:spring/spring-dao.xml
+            classpath:spring/spring-service.xml
+            classpath:spring/spring-log-adapter.xml
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>skipSpringSecurity</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>save-logs-token</param-name>
+        <param-value>test-token-197dc68c-34e5-11eb-9fbd-7bb165d4566c</param-value>
+    </context-param>
+
+    <!-- Added more context listeners to PriorityServletContextListener -->
+    <listener>
+        <listener-class>com.payneteasy.srvlog.servlet.PriorityServletContextListener</listener-class>
+    </listener>
+
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>com.payneteasy.srvlog.servlet.CustomDelegationFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- WICKET FILTER -->
+    <filter>
+        <filter-name>wicket.srvlog</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>com.payneteasy.srvlog.wicket.SrvlogUIApplication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>configuration</param-name>
+            <param-value>DEPLOYMENT</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignorePaths</param-name>
+            <param-value>/management/version.txt</param-value>
+        </init-param>
+
+    </filter>
+
+    <filter-mapping>
+        <filter-name>wicket.srvlog</filter-name>
+        <url-pattern>/*</url-pattern>
+
+    </filter-mapping>
+
+
+    <!-- GET /management/version.txt -->
+    <servlet>
+        <servlet-name>showVersionNumber</servlet-name>
+        <servlet-class>com.payneteasy.srvlog.ShowVersionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>showVersionNumber</servlet-name>
+        <url-pattern>/management/version.txt</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <!-- Disables URL-based sessions (no more 'jsessionid' in the URL using Tomcat) -->
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+
+</web-app>

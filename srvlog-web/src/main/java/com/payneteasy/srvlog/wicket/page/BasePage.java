@@ -4,14 +4,18 @@ import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.wicket.page.detailed.FirewallAlertDataPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
 
@@ -45,7 +49,7 @@ public class BasePage extends WebPage {
         addBarLink("terminal", TerminalPage.class);
 
 
-        IModel<Boolean> model = new LoadableDetachableModel<Boolean>() {
+        IModel<Boolean> model = new LoadableDetachableModel<>() {
             @Override
             protected Boolean load() {
                 return logCollector.hasUnprocessedLogs();
@@ -53,7 +57,7 @@ public class BasePage extends WebPage {
         };
 
         //SHOW WARNINGS
-        Link<Boolean> warningsLink = new Link<Boolean>("warnings-link", model) {
+        Link<Boolean> warningsLink = new Link<>("warnings-link", model) {
             @Override
             public void onClick() {
                 logCollector.saveUnprocessedLogs();
@@ -67,7 +71,7 @@ public class BasePage extends WebPage {
         };
         add(warningsLink);
 
-        Link<Void> showUnprocessedHostsName = new Link<Void>("show-unprocessed-hosts-link") {
+        Link<Void> showUnprocessedHostsName = new Link<>("show-unprocessed-hosts-link") {
             @Override
             public void onClick() {
                 PageParameters newPageParameter = new PageParameters();
@@ -84,16 +88,17 @@ public class BasePage extends WebPage {
         super.onRender();
     }
 
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "css/main.css")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/bootstrap.min.js")));
+    }
+
     private void addBarLink(String linkId, Class<? extends Page> pageClass){
         WebMarkupContainer webMarkupContainer = new WebMarkupContainer(linkId+"-container");
-        BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<Page>(linkId, pageClass);
+        BookmarkablePageLink<Page> bookmarkablePageLink = new BookmarkablePageLink<>(linkId, pageClass);
         if(this.pageClass.equals(pageClass)){
-            webMarkupContainer.add(new AttributeModifier("class",  new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                   return "active";
-                }
-            }));
+            webMarkupContainer.add(new AttributeModifier("class", (IModel<Object>) () -> "active"));
         }
         webMarkupContainer.add(bookmarkablePageLink);
         add(webMarkupContainer);

@@ -1,23 +1,22 @@
 package com.payneteasy.srvlog.service;
 
 import com.payneteasy.srvlog.DatabaseUtil;
-import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.LogFacility;
 import com.payneteasy.srvlog.data.LogLevel;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sphx.api.SphinxException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static junit.framework.Assert.*;
-
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Date: 09.01.13
@@ -48,7 +47,7 @@ public class SphinxIndexerServiceIntegrationTest {
 
 
     @Test
-    public void testQueryByFacilities() throws SphinxException, IndexerServiceException {
+    public void testQueryByFacilities() throws IndexerServiceException {
         List<Long> idList = indexerService.search(null, null, Arrays.asList(LogFacility.kern.getValue()), null, null, null, 0, 30);
         assertEquals("20 logs should be found by the facility", 20, idList.size());
     }
@@ -161,7 +160,7 @@ public class SphinxIndexerServiceIntegrationTest {
         Map<LogLevel, Long> results = indexerService.numberOfLogsBySeverity(from, to);
         assertEquals("Should be 8 groups of severity buckets", 8, results.size());
 
-        List<Map.Entry<LogLevel, Long>> list = new ArrayList<Map.Entry<LogLevel, Long>>(results.entrySet());
+        List<Map.Entry<LogLevel, Long>> list = new ArrayList<>(results.entrySet());
         assertEquals("Should be 8 groups of severity buckets", 8, list.size());
     }
 
@@ -174,7 +173,4 @@ public class SphinxIndexerServiceIntegrationTest {
             sphinxDaemonProcess.destroy();
         }
     }
-
-
-
 }

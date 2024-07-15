@@ -5,8 +5,8 @@ import com.payneteasy.srvlog.adapter.udp.Datagram;
 import com.payneteasy.srvlog.adapter.udp.IDatagramProcessor;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
+import com.payneteasy.startup.parameters.StartupParametersFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -16,12 +16,16 @@ import java.io.ObjectInputStream;
 @Service
 public class LogbackUDPAdapter extends AbstractUDPLoggerAdapter {
 
-    @Autowired
-    public LogbackUDPAdapter(
-            ILogCollector logCollector,
-            @Value("${logbackProgram}") String program,
-            @Value("${logbackUDPPort}") int serverPort) {
+    private static final ILogbackAdapterConfig adapterConfig = StartupParametersFactory
+            .getStartupParameters(ILogbackAdapterConfig.class);
+
+    public LogbackUDPAdapter(ILogCollector logCollector, String program, int serverPort) {
         super(serverPort, program, logCollector);
+    }
+
+    @Autowired
+    public LogbackUDPAdapter(ILogCollector logCollector) {
+        super(adapterConfig.getUdpPort(), adapterConfig.getProgram(), logCollector);
     }
 
     @Override

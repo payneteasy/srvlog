@@ -20,6 +20,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.payneteasy.srvlog.adapter.syslog.IpHeader.isContainsIpHeader;
@@ -56,7 +57,7 @@ public class SnortLogMonitorPage extends BasePage {
     private void addLogs(String hash) {
         final List<LogData> logs = logCollector.getLogsByHash(hash);
 
-        add(new ListView<LogData>("logs", logs) {
+        add(new ListView<>("logs", logs) {
 
             @Override
             protected void populateItem(ListItem<LogData> li) {
@@ -67,7 +68,7 @@ public class SnortLogMonitorPage extends BasePage {
                 li.add(new Label("log-severity", logLevel));
                 li.add(new Label("log-facility", LogFacility.forValue(log.getFacility())));
                 li.add(new Label("log-host", log.getHost()));
-                li.add(new Label("log-program", log.getProgram()==null? "-":log.getProgram()));
+                li.add(new Label("log-program", log.getProgram() == null ? "-" : log.getProgram()));
                 li.add(new Label("log-message", log.getMessage()));
             }
         });
@@ -88,7 +89,7 @@ public class SnortLogMonitorPage extends BasePage {
             .flatMap(List::stream)
             .collect(toList());
 
-        snortLogs.sort((firstLog, secondLog) -> firstLog.getDate().compareTo(secondLog.getDate()));
+        snortLogs.sort(Comparator.comparing(SnortLogData::getDate));
 
         add(new ListView<SnortLogData>("snort-logs", snortLogs) {
 

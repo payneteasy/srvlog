@@ -26,14 +26,13 @@ public class StartUI {
     }
 
     private void startServerUI() throws MalformedURLException {
+
         LOG.info("Configuring jetty web server ...");
 
         final Server server = new Server();
 
         final File tempDir = new File("target/temp");
         tempDir.mkdirs();
-
-
 
         ServerConnector connector = new ServerConnector(server);
         // Set some timeout options to make debugging easier.
@@ -48,7 +47,7 @@ public class StartUI {
         srvlog.setServer(server);
         srvlog.setContextPath("/");
         srvlog.setWar("src/main/webapp");
-
+        srvlog.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
 
         srvlog.getSessionHandler().setHttpOnly(false);
         srvlog.getSessionHandler().setSecureRequestOnly(false);
@@ -66,7 +65,6 @@ public class StartUI {
                 new JettyWebXmlConfiguration()
         };
         srvlog.setConfigurations(configurations);
-
 
         ContextHandlerCollection webapps = new ContextHandlerCollection();
         webapps.setHandlers(new Handler[]{srvlog});

@@ -1,19 +1,20 @@
 package com.payneteasy.srvlog.syslog;
 
-import com.payneteasy.srvlog.adapter.syslog.SnortMessageManager;
 import com.payneteasy.srvlog.CommonIntegrationTest;
+import com.payneteasy.srvlog.adapter.syslog.SnortMessageManager;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import java.io.IOException;
-import java.util.Date;
-import static java.util.Locale.ENGLISH;
 import org.joda.time.DateTime;
-import static org.joda.time.DateTimeZone.UTC;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Date;
+
+import static java.util.Locale.ENGLISH;
+import static org.joda.time.DateTimeZone.UTC;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *

@@ -3,9 +3,6 @@ package com.payneteasy.srvlog.wicket.page;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import junit.framework.Assert;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.easymock.EasyMock;
@@ -43,7 +40,7 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
     }
 
     @Test
-    public void testChoiceHost() throws Exception {
+    public void testChoiceHost() {
         WicketTester wicketTester = getWicketTester();
 
         List<LogData> testLogData25 = getTestLogData(25);
@@ -59,7 +56,7 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
     }
 
     public static List<LogData> getTestLogData(Integer limit) {
-        ArrayList<LogData> listData = new ArrayList<LogData>();
+        ArrayList<LogData> listData = new ArrayList<>();
         for (int i = 1; i <=limit; i++) {
             LogData logData = new LogData();
             logData.setSeverity(1);
@@ -73,7 +70,7 @@ public class OnlineLogMonitorPageTest extends AbstractWicketTester{
     }
 
     public static List<HostData> getHosts(){
-        List<HostData> hosts = new ArrayList<HostData>();
+        List<HostData> hosts = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             HostData hostData = new HostData();
             hostData.setId(Long.valueOf(i));

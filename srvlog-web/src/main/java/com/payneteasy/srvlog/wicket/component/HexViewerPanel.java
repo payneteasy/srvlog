@@ -31,7 +31,7 @@ public class HexViewerPanel extends Panel {
     public HexViewerPanel(String id, String data) {
         super(id, new Model<>(data));
 
-        add(new ListView<HexViewerLine>("hex-viewer-lines", getLines(data)) {
+        add(new ListView<>("hex-viewer-lines", getLines(data)) {
 
             @Override
             protected void populateItem(ListItem<HexViewerLine> item) {

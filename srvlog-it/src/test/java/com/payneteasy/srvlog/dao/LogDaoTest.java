@@ -1,11 +1,11 @@
 package com.payneteasy.srvlog.dao;
 
 import com.payneteasy.srvlog.CommonIntegrationTest;
-import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
 import com.payneteasy.srvlog.data.HostData;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.data.SnortLogData;
 import com.payneteasy.srvlog.util.DateRange;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.joda.time.DateTime;
-import static org.joda.time.DateTimeZone.UTC;
 
+import static com.payneteasy.srvlog.adapter.syslog.SnortMessage.createSnortMessage;
+import static org.joda.time.DateTimeZone.UTC;
 import static org.junit.Assert.*;
 
 /**
@@ -118,7 +118,6 @@ public class LogDaoTest extends CommonIntegrationTest {
 
         List<LogData> logDataList = logDao.getLogsByIds("1,2,3,4,5");
         assertEquals("getLogsByIds should return 5 log entries.", 5, logDataList.size());
-
     }
 
     private LogData saveTestLog(int i, Date date) {
@@ -157,12 +156,9 @@ public class LogDaoTest extends CommonIntegrationTest {
 
         assertTrue("Should return zero unprocessed logs when saveUnprocessedLogs has been invoked", unprocessedLogs.size() == 0);
 
-
         List<LogData> processedLogs = logDao.loadLatest(1, null);
 
         assertTrue("Should returne one processed logs when saveUnprocessedLogs has been invoked", processedLogs.size() == 1);
-
-
     }
 
     @Test

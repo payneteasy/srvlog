@@ -5,7 +5,7 @@
   <artifactId>srvlog-service</artifactId>
   <packaging>jar</packaging>
 
-  <name>srvlog-service    ${version}</name>
+  <name>srvlog-service    ${project.version}</name>
 
   <parent>
     <groupId>com.payneteasy</groupId>
@@ -13,61 +13,62 @@
     <artifactId>srvlog</artifactId>
   </parent>
 
-
-
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>-->
-    </properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <dependencies>
 
-
       <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <scope>test</scope>
-     </dependency>
+          <groupId>com.payneteasy</groupId>
+          <artifactId>startup-parameters</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.payneteasy.http-server</groupId>
+          <artifactId>http-server-impl</artifactId>
+      </dependency>
 
-      <!-- SLF4J -->
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
       </dependency>
-
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>jul-to-slf4j</artifactId>
       </dependency>
-
-      <!--
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-            </dependency>
-      -->
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>jcl-over-slf4j</artifactId>
       </dependency>
-
       <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
       </dependency>
+      <dependency>
+          <groupId>com.nesscomputing</groupId>
+          <artifactId>ness-syslog4j</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-1.2-api</artifactId>
+      </dependency>
 
-      <!-- SPRING -->
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-core</artifactId>
       </dependency>
-
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
       </dependency>
-
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-jdbc</artifactId>
+      </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-test</artifactId>
@@ -75,60 +76,21 @@
       </dependency>
 
       <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-jdbc</artifactId>
-      </dependency>
-
-      <!--syslog4j from ness computing-->
-      <dependency>
-          <groupId>com.nesscomputing</groupId>
-          <artifactId>ness-syslog4j</artifactId>
-      </dependency>
-
-      <dependency>
           <artifactId>jdbc-proc-daofactory</artifactId>
           <groupId>com.googlecode.jdbc-proc.jdbc-proc</groupId>
       </dependency>
-
-      <dependency>
-          <groupId>org.easymock</groupId>
-          <artifactId>easymock</artifactId>
-          <scope>test</scope>
-      </dependency>
-
       <dependency>
           <groupId>org.sphx.api</groupId>
           <artifactId>sphinx-api</artifactId>
-          <version>3.6.1</version>
       </dependency>
-
       <dependency>
           <groupId>commons-io</groupId>
           <artifactId>commons-io</artifactId>
       </dependency>
-
-       <dependency>
-           <groupId>com.payneteasy.logging-extensions</groupId>
-           <artifactId>logging-extensions</artifactId>
-           <scope>test</scope>
-       </dependency>
-
       <dependency>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-core</artifactId>
+          <groupId>net.sourceforge.jregex</groupId>
+          <artifactId>jregex</artifactId>
       </dependency>
-
-      <dependency>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-1.2-api</artifactId>
-      </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.jregex</groupId>
-            <artifactId>jregex</artifactId>
-            <version>1.2_01</version>
-        </dependency>
-
       <dependency>
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-core</artifactId>
@@ -137,32 +99,38 @@
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-databind</artifactId>
       </dependency>
-
       <dependency>
           <groupId>io.netty</groupId>
           <artifactId>netty-buffer</artifactId>
       </dependency>
-
-      <dependency>
-          <groupId>com.payneteasy.http-server</groupId>
-          <artifactId>http-server-impl</artifactId>
-      </dependency>
-
-      <dependency>
-          <groupId>com.payneteasy</groupId>
-          <artifactId>startup-parameters</artifactId>
-      </dependency>
-
-      <dependency>
-          <groupId>javax.websocket</groupId>
-          <artifactId>javax.websocket-api</artifactId>
-      </dependency>
-
       <dependency>
           <groupId>javax.annotation</groupId>
           <artifactId>javax.annotation-api</artifactId>
       </dependency>
+      <dependency>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.eclipse.jetty.websocket</groupId>
+          <artifactId>websocket-jetty-api</artifactId>
+      </dependency>
 
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.payneteasy.logging-extensions</groupId>
+          <artifactId>logging-extensions</artifactId>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.easymock</groupId>
+          <artifactId>easymock</artifactId>
+          <scope>test</scope>
+      </dependency>
 
   </dependencies>
 
@@ -187,16 +155,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${project.jdk.version}</source>
+                    <target>${project.jdk.version}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>${maven.jar.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>

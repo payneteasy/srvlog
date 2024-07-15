@@ -11,20 +11,22 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.Serializable;
@@ -66,9 +68,9 @@ public class OnlineLogMonitorPage extends BasePage {
         };
         add(timeDurationGroupButtonPanel);
 
-        Form<FilterModel> hostChoiceForm = new Form<FilterModel>("hostChoice-form");
+        Form<FilterModel> hostChoiceForm = new Form<>("hostChoice-form");
         add(hostChoiceForm);
-        DropDownChoice<HostData> hostChoices = new DropDownChoice<HostData>("choices-host",new PropertyModel<HostData>(filterModel, "hostData"), new LoadableDetachableModel<List<HostData>>() {
+        DropDownChoice<HostData> hostChoices = new DropDownChoice<>("choices-host", new PropertyModel<>(filterModel, "hostData"), new LoadableDetachableModel<List<HostData>>() {
             @Override
             protected List<HostData> load() {
                 return logCollector.loadHosts();
@@ -84,7 +86,7 @@ public class OnlineLogMonitorPage extends BasePage {
         hostChoices.setNullValid(true);
         hostChoiceForm.add(hostChoices);
 
-        IModel<List<LogData>> logDataModel = new LoadableDetachableModel<List<LogData>>() {
+        IModel<List<LogData>> logDataModel = new LoadableDetachableModel<>() {
             @Override
             protected List<LogData> load() {
                 return logCollector.loadLatest(filterModel.getLatestLogs(), checkForNullHost(filterModel.getHostData()));
@@ -94,7 +96,7 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.setOutputMarkupId(true);
         add(holderListView);
 
-        ListView<LogData> listView = new ListView<LogData>("search-log-data", logDataModel) {
+        ListView<LogData> listView = new ListView<>("search-log-data", logDataModel) {
             @Override
             protected void populateItem(ListItem<LogData> item) {
                 LogData logData = item.getModelObject();
@@ -103,7 +105,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 item.add(new Label("log-severity", logLevel));
                 item.add(new Label("log-facility", LogFacility.forValue(logData.getFacility())));
                 item.add(new Label("log-host", logData.getHost()));
-                item.add(new Label("log-program", logData.getProgram()==null? "-":logData.getProgram()));
+                item.add(new Label("log-program", logData.getProgram() == null ? "-" : logData.getProgram()));
                 item.add(new Label("log-message", logData.getMessage()));
                 setHighlightCssClassBySeverity(logLevel, item);
             }
@@ -112,12 +114,18 @@ public class OnlineLogMonitorPage extends BasePage {
         holderListView.add(listView);
 
 //        //update panel
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
                 animateLastTableRow(target);
             }
         });
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/jquery-ui-1.10.0.custom.min.js")));
     }
 
     private void updateComponentBehavior(AjaxRequestTarget target, final FilterModel filterModel) {
@@ -126,7 +134,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 ((AjaxSelfUpdatingTimerBehavior) behavior).stop(target);
             }
         }
-        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(filterModel.getTimeDurationInSeconds())){
+        holderListView.add(new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(filterModel.getTimeDurationInSeconds())){
             @Override
             protected void onPostProcessTarget(AjaxRequestTarget target) {
                 animateLastTableRow(target);

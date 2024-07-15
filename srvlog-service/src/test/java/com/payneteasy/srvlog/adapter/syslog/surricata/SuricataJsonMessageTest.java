@@ -8,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SuricataJsonMessageTest {
 
@@ -34,7 +32,7 @@ public class SuricataJsonMessageTest {
         assertEquals ( "10.0.2.8"                        , snort.getDestinationIp    () );
         assertEquals ( 48008                             , snort.getSourcePort       () );
         assertEquals ( 36391                             , snort.getDestinationPort  () );
-        assertEquals ( null                              , snort.getHost             () );
+        assertNull(snort.getHost());
 
         assertTrue(snort.getPayload().contains("00000000| 00 b5 6d 04 7a 30 6c 3b 6b c2 8e 38 08 00 45 00 |..m.z0l;k..8..E."));
     }
@@ -64,7 +62,6 @@ public class SuricataJsonMessageTest {
         assertTrue(snort.getPayload().contains("<TITLE>302 Moved</TITLE></HEAD><BODY>"));
         assertTrue(snort.getPayload().contains("User-Agent: BlackSun"));
         assertTrue(snort.getPayload().contains("00000000| d4 ca 6d 04 87 61 00 b5 6d 04 7a 30 08 00 45 00 |..m..a..m.z0..E.|"));
-
     }
 
     private String read(String aFilename) throws IOException {

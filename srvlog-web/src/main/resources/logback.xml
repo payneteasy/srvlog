@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration>
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <pattern>ui %d{HH:mm:ss} %-15t %-5p %-26.26c{1} - %m%n</pattern>
+    </encoder>
+  </appender>
+<!--
+  <appender name="file" class="ch.qos.logback.core.FileAppender">
+    <file>target/output.log</file>
+    <encoder>
+      <pattern>ui %d{HH:mm:ss} %-15t %-5p %-26.26c{1} - %m%n</pattern>
+    </encoder>
+  </appender>
+-->
+  <logger name="com.payneteasy" level="DEBUG"/>
+  <logger name="org.apache.wicket" level="INFO"/>
+  <root level="INFO">
+    <appender-ref ref="console"/>
+    <!--<appender-ref ref="file"/>-->
+  </root>
+</configuration>

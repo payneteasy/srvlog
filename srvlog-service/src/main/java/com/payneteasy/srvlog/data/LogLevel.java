@@ -11,12 +11,18 @@ import java.util.Map;
  */
 public enum LogLevel implements LogEnum{
 
-    EMERGENCY(0), ALERT(1), CRITICAL(2), ERROR(3), WARN(4),
-    NOTICE(5), INFO(6), DEBUG(7);
+    EMERGENCY(0, "EMERGENCY"),
+    ALERT(1, "ALERT"),
+    CRITICAL(2, "CRITICAL"),
+    ERROR(3, "ERROR"),
+    WARN(4, "WARN"),
+    NOTICE(5, "NOTICE"),
+    INFO(6, "INFO"),
+    DEBUG(7, "DEBUG");
 
-    private static Map<Integer, String> valueToName = new HashMap<Integer, String>();
-    private static List<LogLevel> logLevelList = new ArrayList<LogLevel>();
-    private static Map<Integer, LogLevel> valueToLevel = new HashMap<Integer, LogLevel>();
+    private static Map<Integer, String> valueToName = new HashMap<>();
+    private static List<LogLevel> logLevelList = new ArrayList<>();
+    private static Map<Integer, LogLevel> valueToLevel = new HashMap<>();
 
     static {
         for (LogLevel ll: LogLevel.values()) {
@@ -27,14 +33,24 @@ public enum LogLevel implements LogEnum{
     }
 
     private final Integer value;
+    private String levelDisplayName;
 
-    private LogLevel(final Integer value)
+    LogLevel(final Integer value, String levelDisplayName)
     {
         this.value = value;
+        this.levelDisplayName = levelDisplayName;
     }
 
     public Integer getValue() {
         return this.value;
+    }
+
+    public String getLevelDisplayName() {
+        return levelDisplayName;
+    }
+
+    public void setLevelDisplayName(String levelDisplayName) {
+        this.levelDisplayName = levelDisplayName;
     }
 
     public static List<LogLevel> getLogEnumList() {

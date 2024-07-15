@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 
 public class SrvlogDbMigratorTest {
 
-
     @Test
     public void testReadPropertiesConfiguration() throws IOException {
         Properties props = new Properties();

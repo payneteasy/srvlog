@@ -65,8 +65,6 @@ public class SimpleLogCollectorTest {
             syslogAdapter.destroy();
         }
         assertTrue(MessageFormat.format("Message has not been retrieved: {0}", verificationError != null ? verificationError.getMessage() : null), messageRetrieved);
-
-
     }
 
     @Test(expected = RuntimeException.class)
@@ -117,6 +115,11 @@ public class SimpleLogCollectorTest {
             }
 
             @Override
+            public String getSyslogHost() {
+                return SyslogConstants.SYSLOG_HOST_DEFAULT;
+            }
+
+            @Override
             public int getSyslogPort() {
                 return 1514;
             }
@@ -136,7 +139,6 @@ public class SimpleLogCollectorTest {
         List<Integer> facilities = Arrays.asList(1, 2, 3, 4);
         List<Integer> severities = Arrays.asList(1, 2, 3, 4);
         List<Integer> host = Arrays.asList(1, 2, 3, 4);
-        ;
         String pattern = "";
         int offset = 0;
         int limit = 25;
@@ -220,7 +222,7 @@ public class SimpleLogCollectorTest {
         ILogDao logDao = createMock(ILogDao.class);
         logCollector.setLogDao(logDao);
 
-        EasyMock.expect(logDao.getUnprocessedHostsName()).andReturn(new ArrayList<String>());
+        EasyMock.expect(logDao.getUnprocessedHostsName()).andReturn(new ArrayList<>());
 
         EasyMock.replay(logDao);
 
@@ -230,14 +232,14 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testFirewallAlertData() throws Exception {
+    public void testFirewallAlertData() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
         logCollector.setLogDao(logDao);
 
         Date now = new Date();
-        EasyMock.expect(logDao.getFirewallAlertData(now)).andReturn(Collections.<FirewallAlertData>emptyList());
+        EasyMock.expect(logDao.getFirewallAlertData(now)).andReturn(Collections.emptyList());
 
         EasyMock.replay(logDao);
 
@@ -247,14 +249,14 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testFirewallDropData() throws Exception {
+    public void testFirewallDropData() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
         logCollector.setLogDao(logDao);
 
         Date now = new Date();
-        EasyMock.expect(logDao.getFirewallDropData(now)).andReturn(Collections.<FireWallDropData>emptyList());
+        EasyMock.expect(logDao.getFirewallDropData(now)).andReturn(Collections.emptyList());
 
         EasyMock.replay(logDao);
 
@@ -264,14 +266,14 @@ public class SimpleLogCollectorTest {
     }
 
     @Test
-    public void testOssecAlertData() throws Exception {
+    public void testOssecAlertData() {
         SimpleLogCollector logCollector = new SimpleLogCollector();
 
         ILogDao logDao = createMock(ILogDao.class);
         logCollector.setLogDao(logDao);
 
         Date now = new Date();
-        EasyMock.expect(logDao.getOssecAlertData(now)).andReturn(Collections.<OssecAlertData>emptyList());
+        EasyMock.expect(logDao.getOssecAlertData(now)).andReturn(Collections.emptyList());
 
         EasyMock.replay(logDao);
 
@@ -286,13 +288,13 @@ public class SimpleLogCollectorTest {
 
 
     public List<LogData> getLogs() {
-        return new ArrayList<LogData>();
+        return new ArrayList<>();
     }
 
     private static List<HostData> getHostDataList() {
         String hosts = "host1,12.12.12.13;host2,12.12.12.13";
         String[] arrayHosts = hosts.split(";");
-        List<HostData> hostDataList = new ArrayList<HostData>(arrayHosts.length - 1);
+        List<HostData> hostDataList = new ArrayList<>(arrayHosts.length - 1);
         for (String arrayHost : arrayHosts) {
             String[] currentHost = arrayHost.split(",");
             HostData hostData = new HostData();

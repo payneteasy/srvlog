@@ -2,26 +2,15 @@ package com.payneteasy.srvlog.wicket.page.detailed;
 
 import com.payneteasy.srvlog.data.FirewallAlertData;
 import com.payneteasy.srvlog.service.ILogCollector;
-import com.payneteasy.srvlog.wicket.component.daterange.DateRangePanel;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,17 +23,17 @@ public class FirewallAlertDataPage extends DetailedFormPage{
     public FirewallAlertDataPage(PageParameters pageParameters) {
         super(pageParameters, FirewallAlertDataPage.class);
 
-        LoadableDetachableModel<List<FirewallAlertData>> listDataModel = new LoadableDetachableModel<List<FirewallAlertData>>() {
+        LoadableDetachableModel<List<FirewallAlertData>> listDataModel = new LoadableDetachableModel<>() {
             @Override
             protected List<FirewallAlertData> load() {
-                if(getForm().hasError()){
+                if (getForm().hasError()) {
                     return Collections.emptyList();
                 }
                 return logCollector.getFirewallAlertData(getFilterDetailedModel().getDate());
             }
         };
 
-        final ListView<FirewallAlertData> listView = new ListView<FirewallAlertData>("list-view", listDataModel) {
+        final ListView<FirewallAlertData> listView = new ListView<>("list-view", listDataModel) {
             @Override
             protected void populateItem(ListItem<FirewallAlertData> item) {
                 FirewallAlertData firewallAlertData = item.getModelObject();

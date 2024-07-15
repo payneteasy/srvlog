@@ -1,7 +1,5 @@
 package com.payneteasy.srvlog.wicket.page;
 
-import com.payneteasy.srvlog.data.HostData;
-import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
@@ -34,9 +32,9 @@ public class BasePageTest extends AbstractWicketTester{
         wicketTester.startPage(BasePage.class);
         wicketTester.assertRenderedPage(BasePage.class);
 
-        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<HostData>());
+        EasyMock.expect(logCollector.loadHosts()).andReturn(new ArrayList<>());
         DateRange today = DateRange.today();
-        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0,26)).andReturn(new ArrayList<LogData>());
+        EasyMock.expect(logCollector.search(today.getFromDate(), today.getToDate(), null, null, null, null, 0,26)).andReturn(new ArrayList<>());
         EasyMock.replay(logCollector);
 
         wicketTester.clickLink("logs-container:logs");
@@ -49,7 +47,7 @@ public class BasePageTest extends AbstractWicketTester{
     }
 
     @Test
-    public void testForWarnings() throws IndexerServiceException {
+    public void testForWarnings() {
 
         WicketTester wicketTester = getWicketTester();
 
