@@ -76,7 +76,7 @@ public class OnlineLogMonitorPage extends BasePage {
                 return logCollector.loadHosts();
             }
         }, new ChoiceRenderer<>("hostname"));
-        hostChoices.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        hostChoices.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 updateComponentBehavior(target, filterModel);

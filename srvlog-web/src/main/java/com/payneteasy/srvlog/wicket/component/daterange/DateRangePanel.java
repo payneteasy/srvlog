@@ -41,7 +41,7 @@ public class DateRangePanel extends Panel{
                 , new ChoiceRenderer<>("typeDisplayName")
         );
         add(dateRangeType);
-        dateRangeType.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        dateRangeType.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(holderDateRangeContainer);
