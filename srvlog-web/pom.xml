@@ -16,28 +16,23 @@
     <dependencies>
 
         <dependency>
-            <!--Justification: Application configuration via environment variables-->
             <groupId>com.payneteasy</groupId>
             <artifactId>startup-parameters</artifactId>
         </dependency>
         <dependency>
-            <!--Justification: Java module containing srvlog middle-layer classes-->
             <groupId>com.payneteasy.srvlog</groupId>
             <artifactId>srvlog-service</artifactId>
         </dependency>
 
         <dependency>
-            <!--Justification: Render html UI-->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
         </dependency>
         <dependency>
-            <!--Justification: Integration between wicket and spring IOC-->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
         </dependency>
         <dependency>
-            <!--Justification: Additional UI components for wicket framework-->
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
         </dependency>
