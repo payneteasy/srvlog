@@ -53,7 +53,10 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
     @Override
     public List<String> getHostNameList() {
-        return new ArrayList<>(logStorage.keySet());
+        List<String> result = new ArrayList<>(logStorage.keySet());
+        Collections.sort(result);
+
+        return result;
     }
 
     @Override
@@ -65,7 +68,10 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             programNamesSet.addAll(hostLogStorage.keySet());
         }
 
-        return new ArrayList<>(programNamesSet);
+        List<String> result = new ArrayList<>(programNamesSet);
+        Collections.sort(result);
+
+        return result;
     }
 
     @Override
