@@ -1,16 +1,17 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
+import com.payneteasy.srvlog.wicket.component.MultiSelectDropdown;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
@@ -35,19 +36,12 @@ public class TerminalPage extends BasePage {
 
         List<String> hosts = logBroadcastingService.getHostNameList();
 
-        DropDownChoice<String> hostChoices = new DropDownChoice<>(
+        MultiSelectDropdown<String> hostChoices = new MultiSelectDropdown<>(
                 "choices-host",
-                new PropertyModel<>(filterModel, "hostName"),
-                new LoadableDetachableModel<List<String>>() {
-                    @Override
-                    protected List<String> load() {
-                        return hosts;
-                    }
-                },
+                hosts,
                 new ChoiceRenderer<>()
         );
 
-        hostChoices.setNullValid(true);
         hostChoiceForm.add(hostChoices);
 
         Form<TerminalFilterModel> programChoiceForm = new Form<>("programChoice-form");
@@ -55,29 +49,25 @@ public class TerminalPage extends BasePage {
 
         List<String> programs = logBroadcastingService.getProgramNameList();
 
-        DropDownChoice<String> programChoices = new DropDownChoice<>(
+        MultiSelectDropdown<String> programChoices = new MultiSelectDropdown<>(
                 "choices-program",
-                new PropertyModel<>(filterModel, "programName"),
-                new LoadableDetachableModel<List<String>>() {
-                    @Override
-                    protected List<String> load() {
-                        return programs;
-                    }
-                },
+                programs,
                 new ChoiceRenderer<>()
         );
 
-        programChoices.setNullValid(true);
         programChoiceForm.add(programChoices);
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
+        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "css/multi-select-dropdown.css")));
         response.render(new JavaScriptContentHeaderItem("let applicationContextPath = '"
                 + WebApplication.get().getServletContext().getContextPath() +  "';", null));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/hterm_all-1.91.js")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/terminal-1.0.0.js")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/multi-select-dropdown.js")));
+        response.render(OnLoadHeaderItem.forScript("document.querySelectorAll('[data-multi-select]').forEach(select => new MultiSelect(select));"));
     }
 
     public static class TerminalFilterModel implements Serializable {

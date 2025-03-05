@@ -1,14 +1,17 @@
 package com.payneteasy.srvlog.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Subscription {
 
-    private final String subscriptionHost;
-    private final String subscriptionProgram;
+    private final List<String> subscriptionHosts;
+    private final List<String> subscriptionPrograms;
     private final State subscriptionState;
 
-    public Subscription(String subscriptionHost, String subscriptionProgram, State subscriptionState) {
-        this.subscriptionHost = subscriptionHost;
-        this.subscriptionProgram = subscriptionProgram;
+    public Subscription(List<String> subscriptionHosts, List<String> subscriptionPrograms, State subscriptionState) {
+        this.subscriptionHosts = subscriptionHosts;
+        this.subscriptionPrograms = subscriptionPrograms;
         this.subscriptionState = subscriptionState;
     }
 
@@ -17,15 +20,15 @@ public class Subscription {
     }
 
     public static Subscription initialState() {
-        return new Subscription(null, null, State.INITIAL);
+        return new Subscription(Collections.emptyList(), Collections.emptyList(), State.INITIAL);
     }
 
-    public String getSubscriptionHost() {
-        return subscriptionHost;
+    public List<String> getSubscriptionHost() {
+        return subscriptionHosts;
     }
 
-    public String getSubscriptionProgram() {
-        return subscriptionProgram;
+    public List<String> getSubscriptionProgram() {
+        return subscriptionPrograms;
     }
 
     public State getSubscriptionState() {
@@ -34,7 +37,7 @@ public class Subscription {
 
     public synchronized boolean isBroadcastCandidateFor(String host, String program) {
         return Subscription.State.ONLINE_BROADCASTING.equals(this.getSubscriptionState())
-                && host.equalsIgnoreCase(this.getSubscriptionHost())
-                && program.equalsIgnoreCase(this.getSubscriptionProgram());
+                && subscriptionHosts.contains(host)
+                && subscriptionPrograms.contains(program);
     }
 }

@@ -1,5 +1,6 @@
 package com.payneteasy;
 
+import com.payneteasy.srvlog.websocket.jetty.LogEndpointCreator;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
@@ -8,11 +9,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.webapp.*;
+import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.time.Duration;
 
 
 /**
@@ -22,7 +25,7 @@ public class StartUI {
     private  static final Logger LOG = LoggerFactory.getLogger(StartUI.class);
 
     public static void main(String[] args) throws MalformedURLException {
-       new StartUI().startServerUI();
+        new StartUI().startServerUI();
     }
 
     private void startServerUI() throws MalformedURLException {
@@ -45,7 +48,7 @@ public class StartUI {
         WebAppContext srvlog = new WebAppContext();
         srvlog.setTempDirectory(tempDir);
         srvlog.setServer(server);
-        srvlog.setContextPath("/");
+        srvlog.setContextPath("/srvlog");
         srvlog.setWar("src/main/webapp");
         srvlog.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
 
@@ -65,6 +68,13 @@ public class StartUI {
                 new JettyWebXmlConfiguration()
         };
         srvlog.setConfigurations(configurations);
+
+        JettyWebSocketServletContainerInitializer.configure(srvlog, (servletContext, wsContainer) ->
+        {
+            wsContainer.setMaxTextMessageSize(65535);
+            wsContainer.setIdleTimeout(Duration.ofSeconds(300));
+            wsContainer.addMapping("/ws-log", new LogEndpointCreator());
+        });
 
         ContextHandlerCollection webapps = new ContextHandlerCollection();
         webapps.setHandlers(new Handler[]{srvlog});

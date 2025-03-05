@@ -5,12 +5,25 @@ let terminalIO;
 
 let socket;
 
+
+function getSelectedValues(selectId) {
+
+    let selectedElements = $(selectId).find('.multi-select-selected').find(".multi-select-option-text");
+    let result = [];
+
+    for (let element of selectedElements) {
+      result.push(element.innerText);
+    }
+
+    return result;
+}
+
 function getLatestLogs () {
 
-    let selectedHostValue = $("#selected-host option:selected").text();
-    let selectedProgramValue = $("#selected-program option:selected").text();
+    let selectedHosts = getSelectedValues('#selected-hosts');
+    let selectedPrograms = getSelectedValues('#selected-programs');
 
-    if (selectedHostValue !== 'None' && selectedProgramValue !== 'None') {
+    if (selectedHosts.length > 0 && selectedPrograms.length > 0) {
 
         let webSocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         let webSocketLogUrl = webSocketProtocol + '//' + window.location.host + applicationContextPath + '/ws-log';
@@ -20,8 +33,8 @@ function getLatestLogs () {
         socket.onopen = function () {
 
             let logSubscriptionRequest = {
-                host: selectedHostValue,
-                program: selectedProgramValue,
+                hosts: selectedHosts,
+                programs: selectedPrograms,
                 subscriptionState: 'INITIAL'
             };
 
@@ -86,7 +99,7 @@ function printMultilineMessage(logDate, item, terminalIO) {
     });
 }
 
-function logParameterChanged() {
+function handleMultiSelectAction() {
     if (socket !== undefined) {
         socket.close();
     }

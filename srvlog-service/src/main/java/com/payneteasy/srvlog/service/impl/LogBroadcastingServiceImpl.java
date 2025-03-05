@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.startup.parameters.StartupParametersFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -88,6 +88,33 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
     }
 
     @Override
+    public List<LogData> getLogDataListByHostsAndPrograms(List<String> hosts, List<String> programs) {
+
+        List<List<LogData>> result = new ArrayList<>();
+
+        logStorage.entrySet().stream()
+                .filter(entry -> hosts.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .map(ConcurrentMap::entrySet)
+                .parallel()
+                .forEach(entrySet -> {
+                    result.addAll(
+                            entrySet.stream()
+                                    .filter(entry -> programs.contains(entry.getKey()))
+                                    .map(Map.Entry::getValue)
+                                    .map(InMemoryLogStorage::asLogList)
+                                    .toList()
+                    );
+                });
+
+        return result.stream()
+                .flatMap(List::stream)
+                .sorted(Comparator.comparing(LogData::getDate))
+                .parallel()
+                .toList();
+    }
+
+    @Override
     public void saveBroadcastingSession(Session session, Subscription subscription) {
         subscriptionStorage.put(session, new AtomicReference<>(subscription));
     }
@@ -107,10 +134,10 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             if (Subscription.State.INITIAL.equals(subscriptionState) || Subscription.State.INITIAL
                     .equals(subscriptionStorage.get(session).get().getSubscriptionState())) {
 
-                String host = logBroadcastingRequest.getHost();
-                String program = logBroadcastingRequest.getProgram();
+                List<String> hosts = logBroadcastingRequest.getHosts();
+                List<String> programs = logBroadcastingRequest.getPrograms();
 
-                if (StringUtils.isEmpty(host) || StringUtils.isEmpty(program)) {
+                if (hosts.isEmpty() || programs.isEmpty()) {
 
                     LogBroadcastingResponse incorrectRequestParametersResponse = new LogBroadcastingResponse(
                             false, Collections.emptyList(), "Incorrect request parameters"
@@ -122,15 +149,15 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                     return;
                 }
 
-                List<LogData> logDataList = getLogDataListByHostAndProgram(host, program);
+                List<LogData> logDataList = getLogDataListByHostsAndPrograms(hosts, programs);
                 LogBroadcastingResponse logBroadcastingResponse = new LogBroadcastingResponse(true, logDataList, null);
                 String logBroadcastingResponseJson = jsonMapper.writeValueAsString(logBroadcastingResponse);
 
                 session.getRemote().sendString(logBroadcastingResponseJson);
 
                 subscriptionStorage.get(session).set(new Subscription(
-                        host,
-                        program,
+                        hosts,
+                        programs,
                         Subscription.State.ONLINE_BROADCASTING
                     )
                 );

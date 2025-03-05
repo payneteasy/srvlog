@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -128,8 +129,9 @@ public class LogBroadcastingServiceImplTest {
         String subscriptionHost1 = TEST_HOST_LIST.get(0);
         String subscriptionProgram1 = TEST_PROGRAM_LIST.get(0);
 
-        LogBroadcastingResponse logBroadcastingResponse1 =
-                emulateWebSocketLogBroadcastingSubscriptionRequest(wsSession1, subscriptionHost1, subscriptionProgram1);
+        LogBroadcastingResponse logBroadcastingResponse1 = emulateWebSocketLogBroadcastingSubscriptionRequest(
+                wsSession1, Collections.singletonList(subscriptionHost1), Collections.singletonList(subscriptionProgram1)
+        );
 
         assertTrue(logBroadcastingResponse1.isSuccess());
         assertNull(logBroadcastingResponse1.getErrorMessage());
@@ -143,8 +145,9 @@ public class LogBroadcastingServiceImplTest {
         String subscriptionHost2 = TEST_HOST_LIST.get(1);
         String subscriptionProgram2 = TEST_PROGRAM_LIST.get(1);
 
-        LogBroadcastingResponse logBroadcastingResponse2 =
-                emulateWebSocketLogBroadcastingSubscriptionRequest(wsSession2, subscriptionHost2, subscriptionProgram2);
+        LogBroadcastingResponse logBroadcastingResponse2 = emulateWebSocketLogBroadcastingSubscriptionRequest(
+                wsSession2, Collections.singletonList(subscriptionHost2), Collections.singletonList(subscriptionProgram2)
+        );
 
         assertTrue(logBroadcastingResponse2.isSuccess());
         assertNull(logBroadcastingResponse2.getErrorMessage());
@@ -197,7 +200,7 @@ public class LogBroadcastingServiceImplTest {
     }
 
     private LogBroadcastingResponse emulateWebSocketLogBroadcastingSubscriptionRequest(
-            Session session, String subscriptionHost, String subscriptionProgram) throws JsonProcessingException {
+            Session session, List<String> subscriptionHost, List<String> subscriptionProgram) throws JsonProcessingException {
 
         LogBroadcastingRequest logBroadcastingRequest =
                 new LogBroadcastingRequest(
