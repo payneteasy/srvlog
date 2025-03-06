@@ -5,19 +5,6 @@ let terminalIO;
 
 let socket;
 
-
-function getSelectedValues(selectId) {
-
-    let selectedElements = $(selectId).find('.multi-select-selected').find(".multi-select-option-text");
-    let result = [];
-
-    for (let element of selectedElements) {
-      result.push(element.innerText);
-    }
-
-    return result;
-}
-
 function getLatestLogs () {
 
     let selectedHosts = getSelectedValues('#selected-hosts');
@@ -79,6 +66,18 @@ function getLatestLogs () {
             terminalIO.println('WEBSOCKET: Error has occurred')
         }
     }
+}
+
+function getSelectedValues(selectId) {
+
+    let selectedElements = $(selectId).find('.multi-select-selected').find(".multi-select-option-text");
+    let result = [];
+
+    for (let element of selectedElements) {
+      result.push(element.innerText);
+    }
+
+    return result;
 }
 
 function isMultilineMessage(text) {

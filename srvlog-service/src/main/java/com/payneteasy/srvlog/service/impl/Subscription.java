@@ -23,11 +23,11 @@ public class Subscription {
         return new Subscription(Collections.emptyList(), Collections.emptyList(), State.INITIAL);
     }
 
-    public List<String> getSubscriptionHost() {
+    public List<String> getSubscriptionHosts() {
         return subscriptionHosts;
     }
 
-    public List<String> getSubscriptionProgram() {
+    public List<String> getSubscriptionPrograms() {
         return subscriptionPrograms;
     }
 

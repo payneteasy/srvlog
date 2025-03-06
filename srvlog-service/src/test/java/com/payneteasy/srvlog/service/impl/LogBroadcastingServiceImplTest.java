@@ -24,8 +24,8 @@ public class LogBroadcastingServiceImplTest {
 
     private static final int TEST_PROGRAM_LOG_STORAGE_CAPACITY = 10;
 
-    private static final List<String> TEST_HOST_LIST = Arrays.asList("host-1", "host-2");
-    private static final List<String> TEST_PROGRAM_LIST = Arrays.asList("program-1", "program-2");
+    private static final List<String> TEST_HOST_LIST = Arrays.asList("host-1", "host-2", "host-3");
+    private static final List<String> TEST_PROGRAM_LIST = Arrays.asList("program-1", "program-2", "program-3");
 
     private static final int TEST_LOG_NUMBER_PER_PROGRAM = 14;
 
@@ -97,6 +97,12 @@ public class LogBroadcastingServiceImplTest {
                 validateHostProgramLogDataList(hostName, programName, logDataList);
             }
         }
+
+        List<String> hosts = Arrays.asList(TEST_HOST_LIST.get(0), TEST_HOST_LIST.get(TEST_HOST_LIST.size() - 1));
+        List<String> programs = Arrays.asList(TEST_PROGRAM_LIST.get(0), TEST_PROGRAM_LIST.get(TEST_PROGRAM_LIST.size() - 1));
+
+        List<LogData> logDataList = logBroadcastingService.getLogDataListByHostsAndPrograms(hosts, programs);
+        validateHostsProgramsLogDataList(hosts, programs, logDataList);
     }
 
     private void validateHostProgramLogDataList(String hostName, String programName, List<LogData> logDataList) {
@@ -119,6 +125,23 @@ public class LogBroadcastingServiceImplTest {
             assertEquals(hostName, logData.getHost());
             assertEquals(programName, logData.getProgram());
         }
+    }
+
+    private void validateHostsProgramsLogDataList(List<String> hosts, List<String> programs, List<LogData> logDataList) {
+
+        assertTrue(
+                logDataList.stream()
+                        .allMatch(
+                                logData -> hosts.contains(logData.getHost()) && programs.contains(logData.getProgram())
+                        )
+        );
+
+        assertFalse(
+                logDataList.stream()
+                        .anyMatch(
+                                logData -> !hosts.contains(logData.getHost()) || !programs.contains(logData.getProgram())
+                        )
+        );
     }
 
     @Test
@@ -159,7 +182,7 @@ public class LogBroadcastingServiceImplTest {
         MockWebSocketSession wsSession3 = emulateWebSocketOpenConnectionRequest();
 
         LogBroadcastingResponse logBroadcastingResponse3 =
-                emulateWebSocketLogBroadcastingSubscriptionRequest(wsSession3, null, null);
+                emulateWebSocketLogBroadcastingSubscriptionRequest(wsSession3, Collections.emptyList(), Collections.emptyList());
 
         assertFalse(logBroadcastingResponse3.isSuccess());
         assertEquals("Incorrect request parameters", logBroadcastingResponse3.getErrorMessage());

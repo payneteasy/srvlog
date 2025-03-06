@@ -90,24 +90,22 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
     @Override
     public List<LogData> getLogDataListByHostsAndPrograms(List<String> hosts, List<String> programs) {
 
-        List<List<LogData>> result = new ArrayList<>();
+        List<List<LogData>> programsLogLists = new ArrayList<>();
 
         logStorage.entrySet().stream()
                 .filter(entry -> hosts.contains(entry.getKey()))
                 .map(Map.Entry::getValue)
                 .map(ConcurrentMap::entrySet)
                 .parallel()
-                .forEach(entrySet -> {
-                    result.addAll(
-                            entrySet.stream()
-                                    .filter(entry -> programs.contains(entry.getKey()))
-                                    .map(Map.Entry::getValue)
-                                    .map(InMemoryLogStorage::asLogList)
-                                    .toList()
-                    );
-                });
+                .forEach(entrySet -> programsLogLists.addAll(
+                        entrySet.stream()
+                                .filter(entry -> programs.contains(entry.getKey()))
+                                .map(Map.Entry::getValue)
+                                .map(InMemoryLogStorage::asLogList)
+                                .toList()
+                ));
 
-        return result.stream()
+        return programsLogLists.stream()
                 .flatMap(List::stream)
                 .sorted(Comparator.comparing(LogData::getDate))
                 .parallel()

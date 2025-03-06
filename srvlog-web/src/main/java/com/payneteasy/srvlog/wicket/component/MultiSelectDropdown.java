@@ -8,6 +8,9 @@ import org.apache.wicket.util.value.IValueMap;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Component for integration with multi-select-dropdown.js functionality
+ */
 public class MultiSelectDropdown<T> extends AbstractChoice<Collection<T>, T> {
 
     public MultiSelectDropdown(final String id,

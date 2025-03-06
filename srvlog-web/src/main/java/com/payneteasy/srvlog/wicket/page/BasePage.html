@@ -56,7 +56,11 @@
 </div>
 
 <script type="text/javascript">
-    $(".alert").alert();
+    try {
+      $(".alert").alert();
+    } catch (e) {
+      console.log("Unable to execute alert function");
+    }
 </script>
 
 <wicket:child/>
