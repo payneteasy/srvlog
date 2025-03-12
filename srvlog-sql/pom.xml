@@ -16,6 +16,8 @@
     <name>srvlog-sql ${project.version}</name>
     <packaging>jar</packaging>
 
+    <description>Database schemes amd mi for logs collector system</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

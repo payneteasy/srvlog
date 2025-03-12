@@ -8,6 +8,8 @@
     <packaging>pom</packaging>
     <name>srvlog ${project.version}</name>
 
+    <description>Lightweight logs collector system</description>
+
     <modules>
         <module>srvlog-service</module>
         <module>srvlog-web</module>
@@ -397,9 +399,9 @@
 
             <dependency>
                 <!--Justification: connector for mysql database-->
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.33</version>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>8.2.0</version>
             </dependency>
             <dependency>
                 <!--Justification: java client for database-->

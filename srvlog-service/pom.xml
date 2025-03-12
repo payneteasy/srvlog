@@ -7,6 +7,8 @@
 
   <name>srvlog-service    ${project.version}</name>
 
+  <description>Core services implementation for logs collector system</description>
+
   <parent>
     <groupId>com.payneteasy</groupId>
     <version>srvlog-1.2-30-SNAPSHOT</version>

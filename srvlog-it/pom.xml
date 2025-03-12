@@ -13,6 +13,8 @@
     <artifactId>srvlog-it</artifactId>
     <name>srvlog-it ${project.version}</name>
 
+    <description>Integration tests for srvlog project</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
@@ -112,8 +114,8 @@
             <artifactId>commons-dbcp</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Fon running on mac m1 -->

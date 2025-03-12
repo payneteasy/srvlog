@@ -7,6 +7,8 @@
 
     <name>srvlog-web    ${project.version}</name>
 
+    <description>Web services for logs collector system</description>
+
     <parent>
         <groupId>com.payneteasy</groupId>
         <version>srvlog-1.2-30-SNAPSHOT</version>
@@ -135,8 +137,8 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
         <dependency>
