@@ -36,12 +36,12 @@ public class SaveLogsServiceImpl implements ISaveLogsService {
             try {
                 logCollector.saveLog(logData);
             } catch (Exception e) {
-                throw new IllegalStateException("Cannot save log", e);
+                LOG.error("Cannot save json: {}", logData, e);
             }
         }
 
         LOG.debug("Saved {} with {} messages from {}", aLogs.getRequestId(), aLogs.getMessages().size(), aRemoveIpAddress);
-        
+
         return SaveLogsResponse.success(aLogs.getRequestId());
     }
 
