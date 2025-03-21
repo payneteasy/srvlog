@@ -57,8 +57,10 @@ public class SaveLogsHttpRequestHandler implements IHttpRequestHandler {
                     , new HttpResponseMessageBody(outputBytes)
             );
         } catch (ProcessJsonException e) {
+            String errorId = UUID.randomUUID().toString();
+            LOG.error("Cannot parse json request. ErrorID = {}", errorId, e);
             return new HttpResponse(
-                    new HttpResponseStatusLine(e.getStatusCode(), "Error")
+                    new HttpResponseStatusLine(e.getStatusCode(), "Json Error " + errorId + " -" + e.getMessage())
                     , EMPTY_HEADERS
                     , new HttpResponseMessageBody(e.createJson())
             );
