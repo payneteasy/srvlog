@@ -37,6 +37,7 @@ public class SaveLogsServiceImpl implements ISaveLogsService {
                 logCollector.saveLog(logData);
             } catch (Exception e) {
                 LOG.error("Cannot save json: {}", logData, e);
+                throw new IllegalStateException("Cannot save log message", e);
             }
         }
 
