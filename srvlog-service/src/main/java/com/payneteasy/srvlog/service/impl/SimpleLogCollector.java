@@ -2,7 +2,6 @@ package com.payneteasy.srvlog.service.impl;
 
 import com.payneteasy.srvlog.adapter.syslog.OssecSnortMessage;
 import com.payneteasy.srvlog.adapter.syslog.SnortSignature;
-import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 import com.payneteasy.srvlog.dao.ILogDao;
 import com.payneteasy.srvlog.data.*;
 import com.payneteasy.srvlog.service.IIndexerService;
@@ -20,6 +19,8 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSignature;
 
 /**
  * Date: 05.01.13
@@ -49,7 +50,7 @@ public class SimpleLogCollector implements ILogCollector {
         }
         //#9 Do cut off the message to store into the database
         if (logData.getMessage()!=null && logData.getMessage().length() > 65535)
-            logData.setMessage(logData.getMessage().substring(0, 65_635));
+            logData.setMessage(logData.getMessage().substring(0, 65_535));
 
         try {
             logBroadcastingService.handleReceivedLogData(logData);
