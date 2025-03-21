@@ -49,7 +49,7 @@ public class SimpleLogCollector implements ILogCollector {
         }
         //#9 Do cut off the message to store into the database
         if (logData.getMessage()!=null && logData.getMessage().length() > 65535)
-            logData.setMessage(logData.getMessage().substring(1, 65536));
+            logData.setMessage(logData.getMessage().substring(0, 65_635));
 
         try {
             logBroadcastingService.handleReceivedLogData(logData);
