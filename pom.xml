@@ -4,7 +4,7 @@
 
     <groupId>com.payneteasy</groupId>
     <artifactId>srvlog</artifactId>
-    <version>srvlog-1.2-34-SNAPSHOT</version>
+    <version>srvlog-1.2-34</version>
     <packaging>pom</packaging>
     <name>srvlog ${project.version}</name>
 
@@ -39,7 +39,7 @@
         <connection>scm:git:https://github.com/payneteasy/srvlog.git</connection>
         <developerConnection>scm:git:git@github.com:payneteasy/srvlog.git</developerConnection>
         <url>https://github.com/payneteasy/srvlog</url>
-        <tag>srvlog-1.2-28</tag>
+        <tag>srvlog-1.2-34</tag>
     </scm>
 
     <distributionManagement>
