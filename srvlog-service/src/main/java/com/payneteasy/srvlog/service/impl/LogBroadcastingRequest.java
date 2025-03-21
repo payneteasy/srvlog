@@ -1,34 +1,36 @@
 package com.payneteasy.srvlog.service.impl;
 
+import java.util.List;
+
 public class LogBroadcastingRequest {
 
-    private String host;
-    private String program;
+    private List<String> hosts;
+    private List<String> programs;
     private String subscriptionState;
 
     public LogBroadcastingRequest() {
     }
 
-    public LogBroadcastingRequest(String host, String program, String subscriptionState) {
-        this.host = host;
-        this.program = program;
+    public LogBroadcastingRequest(List<String> hosts, List<String> programs, String subscriptionState) {
+        this.hosts = hosts;
+        this.programs = programs;
         this.subscriptionState = subscriptionState;
     }
 
-    public String getHost() {
-        return host;
+    public List<String> getHosts() {
+        return hosts;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setHosts(List<String> hosts) {
+        this.hosts = hosts;
     }
 
-    public String getProgram() {
-        return program;
+    public List<String> getPrograms() {
+        return programs;
     }
 
-    public void setProgram(String program) {
-        this.program = program;
+    public void setPrograms(List<String> programs) {
+        this.programs = programs;
     }
 
     public String getSubscriptionState() {

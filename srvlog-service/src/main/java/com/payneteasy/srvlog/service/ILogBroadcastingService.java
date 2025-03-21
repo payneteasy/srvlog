@@ -13,6 +13,8 @@ public interface ILogBroadcastingService {
 
     List<LogData> getLogDataListByHostAndProgram(String host, String program);
 
+    List<LogData> getLogDataListByHostsAndPrograms(List<String> hosts, List<String> programs);
+
     void saveBroadcastingSession(Session session, Subscription subscription);
 
     void removeBroadcastingSession(Session session);
