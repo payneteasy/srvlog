@@ -8,6 +8,7 @@ import com.payneteasy.srvlog.service.IIndexerService;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.srvlog.service.ILogCollector;
 import com.payneteasy.srvlog.service.IndexerServiceException;
+import com.payneteasy.srvlog.util.TruncationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +33,9 @@ import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSig
 public class SimpleLogCollector implements ILogCollector {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleLogCollector.class);
+
+    private static final int MESSAGE_MAX_BYTES = 65535;
+    private static final Charset MESSAGE_CHARSET = StandardCharsets.UTF_8;
 
     @Autowired
     private ILogDao logDao;
@@ -48,9 +54,8 @@ public class SimpleLogCollector implements ILogCollector {
         if (logData.getHost() == null){
             throw new RuntimeException(MessageFormat.format("Cannot save logData without host: {0}", logData));
         }
-        //#9 Do cut off the message to store into the database
-        if (logData.getMessage()!=null && logData.getMessage().length() > 65535)
-            logData.setMessage(logData.getMessage().substring(0, 65_535));
+
+        logData.setMessage(TruncationUtil.truncateString(MESSAGE_CHARSET, MESSAGE_MAX_BYTES, logData.getMessage()));
 
         try {
             logBroadcastingService.handleReceivedLogData(logData);
