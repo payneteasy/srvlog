@@ -25,7 +25,6 @@
     <bean id="abstractDaoMethodInfoFactory" abstract="true" class="com.googlecode.jdbcproc.daofactory.DaoMethodInfoFactory">
         <property name="callableStatementGetStrategyFactory" value="#{ new com.googlecode.jdbcproc.daofactory.impl.dbstrategy.impl.CallableStatementGetStrategyFactoryIndexImpl() }" />
         <property name="callableStatementSetStrategyFactory" value="#{ new com.googlecode.jdbcproc.daofactory.impl.dbstrategy.impl.CallableStatementSetStrategyFactoryIndexImpl() }" />
-        <property name="parameterConverterService" value="#{ new com.googlecode.jdbcproc.daofactory.impl.parameterconverter.ParameterConverterServiceImpl(true) }" />
     </bean>
 
     <bean id="daoMethodInfoFactory" parent="abstractDaoMethodInfoFactory">
