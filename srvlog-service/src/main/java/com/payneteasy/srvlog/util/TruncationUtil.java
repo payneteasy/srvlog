@@ -5,16 +5,24 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 
 public class TruncationUtil {
 
-    public static String truncateString(Charset charset, int maxBytes, String input) {
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final int MAX_BYTES_PER_SYMBOL = 4;
 
-        if (input == null) {
+    public static String truncateString(int maxBytes, String input) {
+
+        if (input == null || input.isEmpty()) {
             return null;
         }
 
-        byte[] bytes = input.getBytes(charset);
+        if (input.length() <= maxBytes / MAX_BYTES_PER_SYMBOL) {
+            return input;
+        }
+
+        byte[] bytes = input.getBytes(CHARSET);
         if (bytes.length <= maxBytes) {
             return input;
         }
@@ -22,7 +30,7 @@ public class TruncationUtil {
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytes, 0, maxBytes);
         CharBuffer charBuffer = CharBuffer.allocate(maxBytes);
 
-        CharsetDecoder decoder = charset.newDecoder()
+        CharsetDecoder decoder = CHARSET.newDecoder()
                 .onMalformedInput(CodingErrorAction.IGNORE)
                 .onUnmappableCharacter(CodingErrorAction.IGNORE);
 

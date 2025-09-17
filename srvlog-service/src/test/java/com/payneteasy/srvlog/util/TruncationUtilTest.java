@@ -3,111 +3,77 @@ package com.payneteasy.srvlog.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 public class TruncationUtilTest {
 
     @Test
-    public void testNullInputReturnsNull() {
-        Assert.assertNull(TruncationUtil.truncateString(StandardCharsets.UTF_8, 10, null));
+    public void testNullInput() {
+        Assert.assertNull(TruncationUtil.truncateString(10, null));
     }
 
     @Test
-    public void testAsciiBelowLimitReturnsSame() {
-        String input = "hello";
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 10, input);
-        Assert.assertEquals(input, out);
+    public void testAsciiWithinLimit() {
+        String s = "hello"; // 5 bytes
+        Assert.assertEquals("hello", TruncationUtil.truncateString(10, s));
+        Assert.assertEquals("hello", TruncationUtil.truncateString(5, s));
     }
 
     @Test
-    public void testAsciiExactlyAtLimitReturnsSame() {
-        String input = "1234567890"; // 10 bytes in UTF-8
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 10, input);
-        Assert.assertEquals(input, out);
+    public void testAsciiExceedingLimit() {
+        String s = "abcdefghij"; // 10 bytes
+        Assert.assertEquals("abcd", TruncationUtil.truncateString(4, s));
+        Assert.assertEquals("abcdef", TruncationUtil.truncateString(6, s));
     }
 
     @Test
-    public void testAsciiAboveLimitTruncatesByBytes() {
-        String input = "abcdefghijK"; // 11 bytes
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 10, input);
-        Assert.assertEquals("abcdefghij", out);
+    public void testTwoByteUtf8Characters() {
+        String s = "Привет"; // Cyrillic, each char 2 bytes in UTF-8, total 12 bytes
+        // 11 bytes limit cannot include 6th char completely -> 5 chars = 10 bytes
+        Assert.assertEquals(s.substring(0,5), TruncationUtil.truncateString(11, s));
+        // Exact boundary 12 bytes -> full string
+        Assert.assertEquals(s, TruncationUtil.truncateString(12, s));
+        // 1 byte -> cannot fit even first char -> empty string
+        Assert.assertEquals("", TruncationUtil.truncateString(1, s));
     }
 
     @Test
-    public void testUtf8DoesNotBreakMultibyteChar() {
-        // "Привет" in Russian; each Cyrillic char is 2 bytes in UTF-8
-        String input = "Привет"; // 6 chars, 12 bytes in UTF-8
-        // Choose maxBytes that cuts inside the 2nd char: first char 'П' is 2 bytes
-        int maxBytes = 3; // 3 bytes will include full first char (2 bytes) and 1 byte of next char -> next char should be dropped
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, maxBytes, input);
-        Assert.assertEquals("П", out);
-
-        // Another check: 5 bytes -> should decode first two full chars (4 bytes), drop incomplete third
-        out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 5, input);
-        Assert.assertEquals("Пр", out);
+    public void testThreeByteUtf8Characters() {
+        String s = "你好世界"; // Chinese, each 3 bytes, total 12
+        Assert.assertEquals("你", TruncationUtil.truncateString(3, s));
+        Assert.assertEquals("你好", TruncationUtil.truncateString(6, s));
+        Assert.assertEquals("你好世", TruncationUtil.truncateString(9, s));
+        Assert.assertEquals("你好世界", TruncationUtil.truncateString(12, s));
+        // 2 bytes limit -> cannot include any
+        Assert.assertEquals("", TruncationUtil.truncateString(2, s));
     }
 
     @Test
-    public void testEmojiSurrogatePairUtf8() {
-        String emoji = "😀"; // U+1F600, 4 bytes in UTF-8
-        String input = emoji + "X"; // 4 + 1 bytes
-
-        // Cut inside emoji -> should return empty string because first code point incomplete
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 1, input);
-        Assert.assertEquals("", out);
-
-        out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 3, input);
-        Assert.assertEquals("", out);
-
-        // Exactly full emoji
-        out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 4, input);
-        Assert.assertEquals(emoji, out);
-
-        // Emoji plus 'X' truncated to 5 returns emoji + X
-        out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 5, input);
-        Assert.assertEquals(emoji + "X", out);
+    public void testFourByteEmoji() {
+        String s = "A😀B"; // 'A'(1), '😀'(4), 'B'(1) => 6 bytes
+        Assert.assertEquals("A😀B", TruncationUtil.truncateString(6, s));
+        Assert.assertEquals("A😀", TruncationUtil.truncateString(5, s));
+        Assert.assertEquals("A", TruncationUtil.truncateString(2, s));
+        Assert.assertEquals("A", TruncationUtil.truncateString(3, s));
+        // 1 byte -> only 'A'
+        Assert.assertEquals("A", TruncationUtil.truncateString(1, s));
     }
 
     @Test
-    public void testMaxBytesZero() {
-        String out = TruncationUtil.truncateString(StandardCharsets.UTF_8, 0, "anything");
-        Assert.assertEquals("", out);
+    public void testCombiningSequence() {
+        String base = "e";
+        String combining = "\u0301"; // combining acute accent
+        String s = base + combining; // visually 'é' but 2 code points; bytes: 1 + 2 = 3
+        Assert.assertEquals(s, TruncationUtil.truncateString(3, s));
+        // If truncated at 2 bytes, only 'e' (1 byte) should remain; combining mark alone would be dropped by decoder
+        Assert.assertEquals("e", TruncationUtil.truncateString(2, s));
     }
 
     @Test
-    public void testIso88591SingleByteEncoding() {
-        Charset iso = StandardCharsets.ISO_8859_1;
-        String input = "Ångström"; // In ISO-8859-1, each char is single byte (Å is 0xC5)
-        byte[] bytes = input.getBytes(iso);
-        Assert.assertTrue(bytes.length > 4);
-        String out = TruncationUtil.truncateString(iso, 4, input);
-        // Should be first 4 bytes/characters
-        Assert.assertEquals(new String(bytes, 0, 4, iso), out);
-    }
-
-    @Test
-    public void testUtf16TruncationOnCodeUnitBoundaries() {
-        // Note: UTF-16 uses 2 bytes per code unit; using BMP char 'Ж' (U+0416) and emoji
-        String bmp = "Ж"; // 2 bytes in UTF-16BE/LE per code unit, but Java default Charset UTF_16 includes BOM; use specific
-        Charset utf16be = StandardCharsets.UTF_16BE;
-        String input = bmp + bmp + "A"; // 2+2+1 chars
-        // bytes: bmp(2), bmp(2), 'A'(2) => total 6 bytes in UTF-16BE
-        // Truncate to 3 bytes -> first code unit complete (2 bytes) + 1 byte of next => decoder should keep only first char
-        String out = TruncationUtil.truncateString(utf16be, 3, input);
-        Assert.assertEquals(bmp, out);
-
-        // Truncate to 4 bytes -> two BMP chars
-        out = TruncationUtil.truncateString(utf16be, 4, input);
-        Assert.assertEquals(bmp + bmp, out);
-
-        // Emoji surrogate pair in UTF-16BE is 4 bytes; cut inside surrogate pair should drop it
-        String emoji = "😀"; // surrogate pair -> 4 bytes in UTF-16BE
-        out = TruncationUtil.truncateString(utf16be, 1, emoji);
-        Assert.assertEquals("", out);
-        out = TruncationUtil.truncateString(utf16be, 3, emoji);
-        Assert.assertEquals("", out);
-        out = TruncationUtil.truncateString(utf16be, 4, emoji);
-        Assert.assertEquals(emoji, out);
+    public void testLengthHeuristicEarlyReturn() {
+        // The method returns early if input.length() <= maxBytes/4
+        String s = "1234567890"; // length 10
+        Assert.assertEquals(s, TruncationUtil.truncateString(40, s)); // 40/4 = 10 -> <= true
+        // But also ensure that when heuristic fails yet bytes <= maxBytes it still returns input
+        String ascii = "abcdef"; // 6 bytes
+        Assert.assertEquals(ascii, TruncationUtil.truncateString(6, ascii));
     }
 }

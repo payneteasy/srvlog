@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -35,7 +33,6 @@ public class SimpleLogCollector implements ILogCollector {
     private static final Logger logger = LoggerFactory.getLogger(SimpleLogCollector.class);
 
     private static final int MESSAGE_MAX_BYTES = 65535;
-    private static final Charset MESSAGE_CHARSET = StandardCharsets.UTF_8;
 
     @Autowired
     private ILogDao logDao;
@@ -55,7 +52,7 @@ public class SimpleLogCollector implements ILogCollector {
             throw new RuntimeException(MessageFormat.format("Cannot save logData without host: {0}", logData));
         }
 
-        logData.setMessage(TruncationUtil.truncateString(MESSAGE_CHARSET, MESSAGE_MAX_BYTES, logData.getMessage()));
+        logData.setMessage(TruncationUtil.truncateString(MESSAGE_MAX_BYTES, logData.getMessage()));
 
         try {
             logBroadcastingService.handleReceivedLogData(logData);
