@@ -1,76 +1,81 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-    <wicket:extend>
-        <div class="container-fluid" id="page">
-
-            <h2>Ossec message</h2>
-
-            <table class="table table-bordered table-striped table-hover main-table">
-                <colgroup>
-                    <col width="120px"/>
-                    <col width="100px"/>
-                    <col width="100px"/>
-                </colgroup>
-                <thead>
+<head>
+    <title>Srvlog - Snort logs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<wicket:extend>
+    <div id="page" class="space-y-8">
+        <section>
+            <h2 class="text-lg font-semibold text-slate-800 mb-3">Ossec message</h2>
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+                <table class="main-table w-full text-sm">
+                    <colgroup>
+                        <col width="120px"/>
+                        <col width="100px"/>
+                        <col width="100px"/>
+                    </colgroup>
+                    <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Facility</th>
-                        <th>Severity</th>
-                        <th>Host</th>
-                        <th>Program</th>
-                        <th>Message</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Date</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Facility</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Severity</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Host</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Program</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Message</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="logs">
-                        <td wicket:id="log-date" id="log-date" class="log-date">Date</td>
-                        <td wicket:id="log-facility">Facility</td>
-                        <td wicket:id="log-severity">Severity</td>
-                        <td wicket:id="log-host">Host</td>
-                        <td wicket:id="log-program">Program</td>
-                        <td><span wicket:id="log-message" class="log-message"></span></td>
+                    </thead>
+                    <tbody>
+                    <tr wicket:id="logs" class="border-t border-slate-200 hover:bg-slate-50 transition-colors">
+                        <td wicket:id="log-date" id="log-date" class="log-date px-4 py-2">Date</td>
+                        <td wicket:id="log-facility" class="px-4 py-2">Facility</td>
+                        <td wicket:id="log-severity" class="px-4 py-2">Severity</td>
+                        <td wicket:id="log-host" class="px-4 py-2">Host</td>
+                        <td wicket:id="log-program" class="px-4 py-2">Program</td>
+                        <td class="px-4 py-2"><span wicket:id="log-message" class="log-message"></span></td>
                     </tr>
-                    <tr wicket:id="no-logs"><td colspan="6">No data found</td></tr>
-                </tbody>
-            </table>
+                    <tr wicket:id="no-logs" class="border-t border-slate-200"><td colspan="6" class="px-4 py-8 text-center text-slate-500">No data found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-            <h2>Snort packets</h2>
-
-            <table class="table table-bordered table-striped table-hover main-table">
-                <thead>
+        <section>
+            <h2 class="text-lg font-semibold text-slate-800 mb-3">Snort packets</h2>
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+                <table class="main-table w-full text-sm">
+                    <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Priority</th>
-                        <th>Classification</th>
-                        <th>Alert cause</th>
-                        <th>Header</th>
-                        <th class="payload">Payload</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Date</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Priority</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Classification</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Alert cause</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700">Header</th>
+                        <th class="px-4 py-3 text-left font-semibold text-slate-700 payload">Payload</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr wicket:id="snort-logs">
-                        <td wicket:id="date"></td>
-                        <td wicket:id="priority"></td>
-                        <td><a wicket:id="classification-url"></a></td>
-                        <td wicket:id="alert-cause"></td>
-                        <td>
+                    </thead>
+                    <tbody>
+                    <tr wicket:id="snort-logs" class="border-t border-slate-200 hover:bg-slate-50 transition-colors">
+                        <td wicket:id="date" class="px-4 py-2"></td>
+                        <td wicket:id="priority" class="px-4 py-2"></td>
+                        <td class="px-4 py-2"><a wicket:id="classification-url" class="text-blue-600 hover:underline"></a></td>
+                        <td wicket:id="alert-cause" class="px-4 py-2"></td>
+                        <td class="px-4 py-2">
                             <div wicket:id="ip-header"></div>
                             <div wicket:id="host"></div>
                             <div wicket:id="x-forwarded-for"></div>
                             <div wicket:id="x-real-ip"></div>
                         </td>
-                        <td wicket:id="payload"></td>
+                        <td wicket:id="payload" class="px-4 py-2"></td>
                     </tr>
-                    <tr wicket:id="no-snort-logs"><td colspan="6">No data found</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </wicket:extend>
-    </body>
+                    <tr wicket:id="no-snort-logs" class="border-t border-slate-200"><td colspan="6" class="px-4 py-8 text-center text-slate-500">No data found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</wicket:extend>
+</body>
 </html>

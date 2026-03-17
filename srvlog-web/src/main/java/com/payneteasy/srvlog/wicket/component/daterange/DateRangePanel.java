@@ -2,12 +2,11 @@ package com.payneteasy.srvlog.wicket.component.daterange;
 
 import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
+import com.payneteasy.srvlog.wicket.component.FlatpickrBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -23,8 +22,14 @@ import java.util.Date;
  */
 public class DateRangePanel extends Panel{
     private static final String DATE_PATTERN = "dd.MM.yyyy";
+    private static final String DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
+    
+    // Flatpickr format patterns (different from Java patterns)
+    private static final String FLATPICKR_DATE_FORMAT = "d.m.Y";
+    private static final String FLATPICKR_DATETIME_FORMAT = "d.m.Y H:i";
     private WebMarkupContainer holderDateRangeContainer;
     private DateRangeModel dateRangeModel;
+    private DropDownChoice<DateRangeType> dateRangeTypeChoice;
 
     public DateRangePanel(String id) {
         this(id, new DateRangeModel());
@@ -34,14 +39,15 @@ public class DateRangePanel extends Panel{
         super(id);
         this.dateRangeModel = dateRangeModel;
 
-        final DropDownChoice<DateRangeType> dateRangeType = new DropDownChoice<>(
+        dateRangeTypeChoice = new DropDownChoice<>(
                 "date-range-type"
                 , new PropertyModel<>(dateRangeModel, "dateRangeType")
                 , Arrays.asList(DateRangeType.values())
                 , new ChoiceRenderer<>("typeDisplayName")
         );
-        add(dateRangeType);
-        dateRangeType.add(new AjaxFormComponentUpdatingBehavior("change") {
+        dateRangeTypeChoice.setOutputMarkupId(true); // Enable Ajax updates for the dropdown
+        add(dateRangeTypeChoice);
+        dateRangeTypeChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(holderDateRangeContainer);
@@ -62,9 +68,9 @@ public class DateRangePanel extends Panel{
         DateTextField dateToTextField = getExactlyDateTextField("dateTo-field", dateRangeModel, "exactlyDateTo");
         holderDateRangeContainer.add(dateToTextField);
 
-        DateTimeField dateFromTimeField = getExactlyDateTimeField("timeFrom-field",  dateRangeModel, "exactlyDateFrom");
+        DateTextField dateFromTimeField = getExactlyDateTimeField("timeFrom-field", dateRangeModel, "exactlyDateFrom");
         holderDateRangeContainer.add(dateFromTimeField);
-        DateTimeField dateToTimeField = getExactlyDateTimeField("timeTo-field", dateRangeModel, "exactlyDateTo");
+        DateTextField dateToTimeField = getExactlyDateTimeField("timeTo-field", dateRangeModel, "exactlyDateTo");
         holderDateRangeContainer.add(dateToTimeField);
     }
 
@@ -82,39 +88,21 @@ public class DateRangePanel extends Panel{
                 return DateRangeType.EXACTLY_DATE == dateRangeModel.getDateRangeType();
             }
         };
-        dateTextField.add(new DatePicker());
+        // Use Flatpickr instead of YUI DatePicker
+        dateTextField.add(new FlatpickrBehavior(FLATPICKR_DATE_FORMAT));
         dateTextField.setRequired(true);
         return dateTextField;
     }
 
-    private DateTimeField getExactlyDateTimeField(String id, final DateRangeModel dateRangeModel, String expression) {
-        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<>(dateRangeModel, expression)) {
-            @Override
-            protected boolean use12HourFormat() {
-                return false;
-            }
-
+    private DateTextField getExactlyDateTimeField(String id, final DateRangeModel dateRangeModel, String expression) {
+        DateTextField dateTimeField = new DateTextField(id, new PropertyModel<>(dateRangeModel, expression), new PatternDateConverter(DATE_TIME_PATTERN, false)) {
             @Override
             public boolean isVisible() {
                 return DateRangeType.EXACTLY_TIME == dateRangeModel.getDateRangeType();
             }
-
-            @Override
-            protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel) {
-                return DateTextField.forDatePattern(id, dateFieldModel, DATE_PATTERN);
-            }
-
-            @Override
-            protected DatePicker newDatePicker() {
-                return new DatePicker() {
-                    @Override
-                    protected String getDatePattern() {
-                        return DATE_PATTERN;
-                    }
-
-                };
-            }
         };
+        // Use Flatpickr with time enabled
+        dateTimeField.add(new FlatpickrBehavior(FLATPICKR_DATETIME_FORMAT, true, true));
         dateTimeField.setRequired(true);
         return dateTimeField;
     }
@@ -123,6 +111,13 @@ public class DateRangePanel extends Panel{
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Get the date range type dropdown for external Ajax updates
+     */
+    public DropDownChoice<DateRangeType> getDateRangeTypeChoice() {
+        return dateRangeTypeChoice;
     }
 
     public static class DateRangeModel implements Serializable{

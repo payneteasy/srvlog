@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="StartUI" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+<!--      <env name="MOCK_DATA" value="1" />-->
+<!--      <env name="MARIADB_ROOT_PWD" value="1234" />-->
+<!--      <env name="MARIADB_PORT" value="3322" />-->
+      <env name="SRVLOG_WEB_DIR" value="$PROJECT_DIR$/srvlog-web" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.payneteasy.StartUI" />
+    <module name="srvlog-web" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/srvlog-web" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.payneteasy.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

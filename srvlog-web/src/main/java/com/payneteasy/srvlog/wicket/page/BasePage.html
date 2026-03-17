@@ -1,68 +1,55 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
-    <wicket:head>
-        <title>Srvlog log collector</title>
-    </wicket:head>
-<body>
-<div class="container-fluid">
-    <div class="navbar navbar-inverse">
-        <div class="navbar-inner">
-
-            <a class="brand" href="#">SRVLOG</a>
-
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li wicket:id="dashboard-container">
-                        <a href="#" wicket:id="dashboard">Dashboard</a>
-                    </li>
-                    <li wicket:id="logs-container">
-                        <a href="#" wicket:id="logs">Logs</a>
-                    </li>
-                    <li wicket:id="online-logs-container">
-                        <a href="#" wicket:id="online-logs">Online Logs</a>
-                    </li>
-
-                    <li wicket:id="terminal-container">
-                        <a href="#" wicket:id="terminal">Terminal</a>
-                    </li>
-
-                    <li wicket:id="detailed-logs-container">
-                        <a href="#" wicket:id="detailed-logs">Detailed logs</a>
-                    </li>
-
-                    <li wicket:id="add-hosts-container">
-                        <a href="#" wicket:id="add-hosts">Add hosts</a>
-                    </li>
-
-                </ul>
-
-                <div class="navbar-form pull-right">
-                    <a class="btn" href="j_spring_security_logout">Logout</a>
+<wicket:head>
+    <title>Srvlog log collector</title>
+</wicket:head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<div class="min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-slate-800 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <a href="#" class="text-xl font-semibold tracking-tight text-white hover:text-slate-200 transition-colors">SRVLOG</a>
+                <div class="flex items-center gap-1 flex-wrap">
+                    <div wicket:id="dashboard-container">
+                        <a href="#" wicket:id="dashboard" class="nav-link">Dashboard</a>
+                    </div>
+                    <div wicket:id="logs-container">
+                        <a href="#" wicket:id="logs" class="nav-link">Logs</a>
+                    </div>
+                    <div wicket:id="online-logs-container">
+                        <a href="#" wicket:id="online-logs" class="nav-link">Online Logs</a>
+                    </div>
+                    <div wicket:id="terminal-container">
+                        <a href="#" wicket:id="terminal" class="nav-link">Terminal</a>
+                    </div>
+                    <div wicket:id="detailed-logs-container">
+                        <a href="#" wicket:id="detailed-logs" class="nav-link">Detailed logs</a>
+                    </div>
+                    <div wicket:id="add-hosts-container">
+                        <a href="#" wicket:id="add-hosts" class="nav-link">Add hosts</a>
+                    </div>
+                    <a href="j_spring_security_logout" class="ml-4 px-4 py-2 rounded-md bg-slate-600 hover:bg-slate-500 text-white text-sm font-medium transition-colors">Logout</a>
                 </div>
-
             </div>
         </div>
-    </div>
+    </nav>
 
     <wicket:enclosure child="warnings-link">
-        <div class="alert alert-block fade in">
-            <button type="button" class="close" data-dismiss="alert">Close</button>
-            <h4>Warnings!</h4>
-            <p>There are logs with unresolved hosts. Please add required hosts and press "Process unresolved logs"?</p>
-            <a href="#"  wicket:id="warnings-link" class="btn btn-primary">Process unresolved logs</a>
-            <a href="" wicket:id="show-unprocessed-hosts-link" class="btn btn-primary">Show unprocessed hosts</a>
+        <div class="mx-4 mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex flex-wrap items-start gap-3">
+            <div class="flex-1 min-w-0">
+                <h4 class="font-semibold text-amber-800">Warnings!</h4>
+                <p class="text-amber-700 text-sm mt-1">There are logs with unresolved hosts. Please add required hosts and press "Process unresolved logs"?</p>
+            </div>
+            <div class="flex gap-2 flex-shrink-0">
+                <a href="#" wicket:id="warnings-link" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium transition-colors">Process unresolved logs</a>
+                <a href="" wicket:id="show-unprocessed-hosts-link" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium transition-colors">Show unprocessed hosts</a>
+            </div>
         </div>
     </wicket:enclosure>
 
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <wicket:child/>
+    </main>
 </div>
-
-<script type="text/javascript">
-    try {
-      $(".alert").alert();
-    } catch (e) {
-      console.log("Unable to execute alert function");
-    }
-</script>
-
-<wicket:child/>
 </body>
 </html>

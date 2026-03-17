@@ -2,33 +2,20 @@
 <body>
 <wicket:extend>
 
-    <div class="container-fluid" id="page">
+    <div id="page" class="space-y-4">
+        <div class="flex flex-wrap items-center gap-4">
+            <h4 class="text-sm font-medium text-slate-500">Hosts:</h4>
+            <form wicket:id="hostChoice-form">
+                <select wicket:id="choices-host" class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+            </form>
+            <h4 class="text-sm font-medium text-slate-500">Latest logs:</h4>
+            <wicket:container wicket:id="latestLog-groupButton-panel"></wicket:container>
+            <h4 class="text-sm font-medium text-slate-500">Time duration update:</h4>
+            <wicket:container wicket:id="timeDuration-groupButton-panel"></wicket:container>
+        </div>
 
-        <ul class="inline">
-            <li>
-                <h4 class="muted">Hosts:</h4>
-            </li>
-            <li>
-                <form wicket:id="hostChoice-form">
-                    <select wicket:id="choices-host"></select>
-                </form>
-            </li>
-            <li>
-                <h4 class="muted">Latest logs:</h4>
-            </li>
-            <li>
-                <wicket:container wicket:id="latestLog-groupButton-panel"></wicket:container>
-            </li>
-            <li>
-                <h4 class="muted">Time duration update:</h4>
-            </li>
-            <li>
-                <wicket:container wicket:id="timeDuration-groupButton-panel"></wicket:container>
-            </li>
-        </ul>
-
-        <div wicket:id="holder-search-log-data">
-            <table class="table table-bordered table-striped table-hover main-table">
+        <div wicket:id="holder-search-log-data" class="overflow-x-auto rounded-lg border border-slate-200">
+            <table class="main-table w-full text-sm">
                 <colgroup>
                     <col width="120px"/>
                     <col width="100px"/>
@@ -36,22 +23,22 @@
                 </colgroup>
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Facility</th>
-                    <th>Severity</th>
-                    <th>Host</th>
-                    <th>Program</th>
-                    <th>Message</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Date</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Facility</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Severity</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Host</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Program</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-700">Message</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr wicket:id="search-log-data">
-                    <td wicket:id="log-date" id="log-date" class="log-date">Date</td>
-                    <td wicket:id="log-facility">Facility</td>
-                    <td wicket:id="log-severity">Severity</td>
-                    <td wicket:id="log-host">Host</td>
-                    <td wicket:id="log-program">Program</td>
-                    <td><span wicket:id="log-message" class="log-message"></span></td>
+                <tr wicket:id="search-log-data" class="border-t border-slate-200 hover:bg-slate-50 transition-colors">
+                    <td wicket:id="log-date" id="log-date" class="log-date px-4 py-2">Date</td>
+                    <td wicket:id="log-facility" class="px-4 py-2">Facility</td>
+                    <td wicket:id="log-severity" class="px-4 py-2">Severity</td>
+                    <td wicket:id="log-host" class="px-4 py-2">Host</td>
+                    <td wicket:id="log-program" class="px-4 py-2">Program</td>
+                    <td class="px-4 py-2"><span wicket:id="log-message" class="log-message"></span></td>
                 </tr>
                 </tbody>
             </table>
@@ -59,34 +46,26 @@
     </div>
 
     <script type="text/javascript">
-        var lastDateText = $("tr #log-date:first").text(), hasMore = false;
+        var lastDateText = $("tbody tr .log-date").first().text(), hasMore = false;
 
         function animateLastTableRow() {
-            $("tbody tr").each(function (index) {
-                var dateText = $(this).find("#log-date").text();
-                if(new Date(lastDateText) < new Date(dateText)){
+            $("tbody tr").each(function () {
+                var dateText = $(this).find(".log-date").text();
+                if (new Date(lastDateText) < new Date(dateText)) {
                     hasMore = true;
-                    var originColor = $(this).children("td:first").css("background-color");
-                    $(this).children("td").animate({ backgroundColor: rgb2hex(originColor, 1)}, 1000,"linear", function () {
-                        $(this).css("background-color", originColor);
-                    });
+                    var $row = $(this);
+                    $row.addClass("log-row-highlight");
+                    setTimeout(function () {
+                        $row.removeClass("log-row-highlight");
+                    }, 1000);
                 }
             });
 
-            if(hasMore){
-                lastDateText = $("tr #log-date:first").text();
+            if (hasMore) {
+                lastDateText = $("tbody tr .log-date").first().text();
                 hasMore = false;
             }
-
-            function rgb2hex(rgb, offset){
-                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-                return "#" +
-                        ("0" + parseInt(rgb[1],10-offset).toString(16)).slice(-2)+
-                        ("0" + parseInt(rgb[2],10-offset).toString(16)).slice(-2)+
-                        ("0" + parseInt(rgb[3],10-offset).toString(16)).slice(-2);
-            }
         }
-
     </script>
 
 </wicket:extend>

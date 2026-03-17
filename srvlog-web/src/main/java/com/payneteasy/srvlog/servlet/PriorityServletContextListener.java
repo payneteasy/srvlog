@@ -1,10 +1,8 @@
 package com.payneteasy.srvlog.servlet;
 
-import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoaderListener;
 
 import jakarta.servlet.ServletContextEvent;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class PriorityServletContextListener implements ServletContextListener {
     public PriorityServletContextListener() {
         this.listeners = new ArrayList<>();
         //TODO configure logback for loggin during context init listeners.add(new LogbackConfigListener());
-        listeners.add(new ContextLoaderListener());
+        listeners.add(new MockProfileContextLoader());
     }
 
     @Override

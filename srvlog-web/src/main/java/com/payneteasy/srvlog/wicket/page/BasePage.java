@@ -6,7 +6,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -15,7 +14,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
+
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.access.annotation.Secured;
 
@@ -24,6 +23,9 @@ import org.springframework.security.access.annotation.Secured;
  */
 @Secured("ROLE_ADMIN")
 public class BasePage extends WebPage {
+
+    public static final CssResourceReference TAILWIND_CSS = new CssResourceReference(BasePage.class, "css/tailwind.css");
+    public static final CssResourceReference MAIN_CSS = new CssResourceReference(BasePage.class, "css/main.css");
 
     private Class<? extends Page> pageClass;
     public final static String HAS_UNPROCESSED_HOSTS_PARAMETER = "has-unpr-host";
@@ -90,8 +92,8 @@ public class BasePage extends WebPage {
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "css/main.css")));
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/bootstrap.min.js")));
+        response.render(CssHeaderItem.forReference(TAILWIND_CSS));
+        response.render(CssHeaderItem.forReference(MAIN_CSS));
     }
 
     private void addBarLink(String linkId, Class<? extends Page> pageClass){

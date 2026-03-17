@@ -1,6 +1,8 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -17,6 +19,11 @@ import jakarta.servlet.http.HttpSession;
  * Date: 22.12.12 Time: 13:43
  */
 public class LoginPage extends WebPage {
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(CssHeaderItem.forReference(BasePage.TAILWIND_CSS));
+    }
 
     public LoginPage() {
         final String relativeUrl = getRequest().getContextPath();

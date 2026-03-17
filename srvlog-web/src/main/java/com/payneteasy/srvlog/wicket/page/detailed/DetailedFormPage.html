@@ -3,16 +3,19 @@
 <wicket:extend>
     <div wicket:id="feedBack-panel"></div>
 
-    <form wicket:id="form">
-        <ul class="inline">
-            <li><h4 class="muted">Date:</h4></li>
-            <li>
-                <input wicket:id="date-field" class="input-small" autocomplete="off"/>
-            </li>
-            <li>
-                <button wicket:id="button" class="btn btn-info">Apply</button>
-            </li>
-        </ul>
+    <form wicket:id="form" class="mb-6">
+        <div class="flex flex-wrap items-center gap-4">
+            <h4 class="text-sm font-medium text-slate-500">Date:</h4>
+            <div class="relative">
+                <input wicket:id="date-field" autocomplete="off" class="pl-3 pr-10 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-40"/>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                    </svg>
+                </div>
+            </div>
+            <button wicket:id="button" type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors">Apply</button>
+        </div>
     </form>
 
     <wicket:child/>

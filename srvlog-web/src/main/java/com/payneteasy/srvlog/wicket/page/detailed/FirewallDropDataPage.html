@@ -1,29 +1,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <table class="table table-bordered table-striped table-hover main-table">
-        <thead>
-        <tr>
-            <th>Source ip</th>
-            <th>Source port</th>
-            <th>Destination ip</th>
-            <th>Destination port</th>
-            <th>Protocol</th>
-            <th>Drop count</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr wicket:id="list-view">
-            <td wicket:id="source-ip"></td>
-            <td wicket:id="source-port"></td>
-            <td wicket:id="dist-ip"></td>
-            <td wicket:id="dist-port"></td>
-            <td wicket:id="protocol">Alert</td>
-            <td wicket:id="drop-count">10</td>
-        </tr>
-        <tr wicket:id="no-data"><td colspan="6">No data found</td></tr>
-        </tbody>
-    </table>
+    <div class="overflow-x-auto rounded-lg border border-slate-200">
+        <table class="main-table w-full text-sm">
+            <thead>
+            <tr>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Source ip</th>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Source port</th>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Destination ip</th>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Destination port</th>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Protocol</th>
+                <th class="px-4 py-3 text-left font-semibold text-slate-700">Drop count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr wicket:id="list-view" class="border-t border-slate-200 hover:bg-slate-50 transition-colors">
+                <td wicket:id="source-ip" class="px-4 py-2"></td>
+                <td wicket:id="source-port" class="px-4 py-2"></td>
+                <td wicket:id="dist-ip" class="px-4 py-2"></td>
+                <td wicket:id="dist-port" class="px-4 py-2"></td>
+                <td wicket:id="protocol" class="px-4 py-2">Alert</td>
+                <td wicket:id="drop-count" class="px-4 py-2">10</td>
+            </tr>
+            <tr wicket:id="no-data" class="border-t border-slate-200"><td colspan="6" class="px-4 py-8 text-center text-slate-500">No data found</td></tr>
+            </tbody>
+        </table>
+    </div>
 </wicket:extend>
 </body>
 </html>

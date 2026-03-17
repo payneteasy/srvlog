@@ -11,12 +11,14 @@ import com.payneteasy.srvlog.wicket.component.navigation.PageableDataProvider;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableListView;
 import com.payneteasy.srvlog.wicket.component.navigation.UncountablyPageableNavigator;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -52,6 +54,11 @@ public class LogMonitorPage extends BasePage {
      * Parser for date and time.
      */
     private final SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm", ENGLISH);
+    
+    /**
+     * Date range panel component for Ajax updates
+     */
+    private DateRangePanel dateRangePanel;
 
     public LogMonitorPage(PageParameters pageParameters) {
         super(pageParameters, LogMonitorPage.class);
@@ -65,37 +72,44 @@ public class LogMonitorPage extends BasePage {
             fillFilterModel(filterModel, pageParameters);
         }
 
-        final Form<FilterModel> form = new Form<>("form", Model.of(filterModel));
+        // Use CompoundPropertyModel for better Ajax support
+        final CompoundPropertyModel<FilterModel> filterModelWrapper = new CompoundPropertyModel<>(filterModel);
+        final Form<FilterModel> form = new Form<>("form", filterModelWrapper);
+        form.setOutputMarkupId(true); // Enable Ajax updates
         add(form);
 
 
         form.add(new TextField<>("pattern", new PropertyModel<String>(filterModel, "pattern")));
 
 //        DATE RANGE FILTER
-        DateRangePanel dateRangePanel = new DateRangePanel("date-range", filterModel.getDateRangeModel());
+        dateRangePanel = new DateRangePanel("date-range", filterModel.getDateRangeModel());
+        dateRangePanel.setOutputMarkupId(true); // Enable Ajax updates
         form.add(dateRangePanel);
 
-        // SEVERITY CHOICE FILTER
+        // SEVERITY CHOICE FILTER - показываем все опции
         ListMultipleChoice<LogLevel> severityChoice = new ListMultipleChoice<>(
                 "severity-choice"
                 , new PropertyModel<List<LogLevel>>(filterModel, "severities")
                 , LogLevel.getLogEnumList(), new ChoiceRenderer<>("levelDisplayName"));
+        severityChoice.setMaxRows(8); // Показываем все severity levels (EMERGENCY, ALERT, CRITICAL, ERROR, WARN, NOTICE, INFO, DEBUG)
         form.add(severityChoice);
 
-        //FACILITY CHOICE FILTER
+        //FACILITY CHOICE FILTER - показываем все опции
         //TODO needed refactoring this component
         ListMultipleChoice<LogFacility> facilityChoice = new ListMultipleChoice<>(
                 "facility-choice"
                 , new PropertyModel<List<LogFacility>>(filterModel, "facilities")
                 , LogFacility.getLogEnumList(), new ChoiceRenderer<>("facilityDisplayName"));
+        facilityChoice.setMaxRows(24); // Показываем все facility types (kern, user, mail, daemon, auth, syslog, lpr, news, uucp, cron, authpriv, ftp, ntp, audit, alert, clock, local0-7)
         form.add(facilityChoice);
 
-        //HOST CHOICE FILTER
+        //HOST CHOICE FILTER - показываем все опции
         List<HostData> hostData = logCollector.loadHosts();
         ListMultipleChoice<HostData> hostDataChoice = new ListMultipleChoice<>(
                 "hostData-choice"
                 , new PropertyModel<List<HostData>>(filterModel, "hosts")
                 , hostData, new ChoiceRenderer<>("hostname"));
+        hostDataChoice.setMaxRows(Math.max(5, hostData.size())); // Показываем все хосты (минимум 5 строк)
         form.add(hostDataChoice);
 
         //LIST LOG DATA
@@ -248,6 +262,7 @@ public class LogMonitorPage extends BasePage {
         private FilterModel() {
             this.severities = new ArrayList<>();
             this.facilities = new ArrayList<>();
+            this.hosts = new ArrayList<>();
             this.itemPrePage = 25;
             this.dateRangeModel = new DateRangePanel.DateRangeModel();
         }

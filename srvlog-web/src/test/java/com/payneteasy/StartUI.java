@@ -32,9 +32,17 @@ public class StartUI {
 
         LOG.info("Configuring jetty web server ...");
 
+        String baseDir = System.getProperty("srvlog.web.dir", System.getenv("SRVLOG_WEB_DIR"));
+        if (baseDir == null || baseDir.isEmpty()) {
+            // Derive from class location: .../srvlog-web/target/test-classes/com/payneteasy/StartUI.class
+            String classPath = StartUI.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            File testClassesDir = new File(classPath.replace("%20", " "));
+            baseDir = testClassesDir.getParentFile().getParentFile().getParentFile().getAbsolutePath();
+        }
+
         final Server server = new Server();
 
-        final File tempDir = new File("target/temp");
+        final File tempDir = new File(baseDir, "target/temp");
         tempDir.mkdirs();
 
         ServerConnector connector = new ServerConnector(server);
@@ -49,15 +57,19 @@ public class StartUI {
         srvlog.setTempDirectory(tempDir);
         srvlog.setServer(server);
         srvlog.setContextPath("/srvlog");
-        srvlog.setWar("src/main/webapp");
-        srvlog.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
+        srvlog.setWar(new File(baseDir, "src/main/webapp").getAbsolutePath());
+        srvlog.setDefaultsDescriptor(new File(baseDir, "src/main/webapp/WEB-INF/web.xml").getAbsolutePath());
 
         srvlog.getSessionHandler().setHttpOnly(false);
         srvlog.getSessionHandler().setSecureRequestOnly(false);
         srvlog.getSessionHandler().setUsingCookies(true);
 
         EnvConfiguration envConfiguration = new EnvConfiguration();
-        envConfiguration.setJettyEnvXml(new File("src/test/resources/jetty/jetty-env-ui.xml").toURI().toURL());
+        String envXmlPath = System.getenv("JETTY_ENV_XML");
+        File envFile = envXmlPath != null && !envXmlPath.isEmpty()
+                ? new File(envXmlPath)
+                : new File(baseDir, "src/test/resources/jetty/jetty-env-ui.xml");
+        envConfiguration.setJettyEnvXml(envFile.toURI().toURL());
         Configuration[] configurations = new Configuration[]{
                 new WebInfConfiguration(),
                 new WebXmlConfiguration(),

@@ -2,5 +2,6 @@
 .project
 .classpath
 .idea
+.task
 *.iml
 target

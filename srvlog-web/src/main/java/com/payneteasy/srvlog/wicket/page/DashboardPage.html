@@ -1,71 +1,59 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <div class="container-fluid">
-        <div wicket:id="feedbackPanel"></div>
+    <div wicket:id="feedbackPanel"></div>
 
-        <div class="main-dashboard">
-            <div class="main-dashboard-header">
-                <ul class="inline">
-                    <li class="main-li-icon"><i class="icon-folder-close"></i></li>
-                    <li class="main-li-title">Logs statistics</li>
-                    <li class="main-li-btn-group">
-                        <div wicket:id="button-group-holder" class="btn-group">
-                            <a wicket:id="THIS_WEEK" class="btn btn-small">this week</a>
-                            <a wicket:id="LAST_WEEK" class="btn btn-small">last week</a>
-                            <a wicket:id="THIS_MONTH" class="btn btn-small">this month</a>
-                            <a wicket:id="LAST_MONTH" class="btn btn-small">last month</a>
-                        </div>
-                    </li>
-                </ul>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                <span class="font-semibold text-slate-700">Logs statistics</span>
             </div>
-            <div class="main-dashboard-content">
-                <ul class="inline">
-                    <li class="main-list-severities">
-                        <div class="main-dashboard-header  main-dashboard-header-small">
-                            <ul class="inline">
-                                <li class="main-li-icon"><i class="icon-list"></i></li>
-                                <li class="main-li-title">Number of logs by severity</li>
-                            </ul>
-                        </div>
-                        <div wicket:id="list-severity-holder" class="main-dashboard-box">
-                            <div wicket:id="list-severity" class="main-dashboard-list">
-                                <a href="" wicket:id="link">
-                                    <span wicket:id="name"></span>
-                                    <span wicket:id="count" class="pull-right label"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="main-chart-holder">
-                        <div class="main-dashboard-header  main-dashboard-header-small">
-                            <ul class="inline">
-                                <li class="main-li-icon"><i class="icon-signal"></i></li>
-                                <li class="main-li-title">Number of logs by date</li>
-                            </ul>
-                        </div>
-                        <!--CHART-->
-                        <div class="main-chart-box">
-                            <div id="container" style="width: 98%; height: 400px;"></div>
-                            <div id="noDataContainer" class="alert alert-block " style="display: none;">No data for this period</div>
-                        </div>
-                    </li>
-                </ul>
-
+            <div wicket:id="button-group-holder" class="flex gap-1 flex-wrap">
+                <a wicket:id="THIS_WEEK" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">this week</a>
+                <a wicket:id="LAST_WEEK" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">last week</a>
+                <a wicket:id="THIS_MONTH" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">this month</a>
+                <a wicket:id="LAST_MONTH" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">last month</a>
             </div>
-
         </div>
-
+        <div class="p-4">
+            <div class="flex flex-col lg:flex-row gap-6">
+                <div class="lg:w-1/3">
+                    <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center gap-2 mb-2">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                        <span class="font-medium text-slate-700 text-sm">Number of logs by severity</span>
+                    </div>
+                    <div wicket:id="list-severity-holder" class="border border-slate-200 rounded-lg overflow-hidden">
+                        <div wicket:id="list-severity" class="border-b border-slate-200 last:border-b-0">
+                            <a href="" wicket:id="link" class="block px-4 py-3 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                                <span wicket:id="name"></span>
+                                <span wicket:id="count" class="px-2 py-0.5 rounded text-sm font-semibold bg-slate-200 text-slate-800"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:flex-1">
+                    <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center gap-2 mb-2">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        <span class="font-medium text-slate-700 text-sm">Number of logs by date</span>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg overflow-hidden relative">
+                        <div id="container" class="w-full" style="height: 400px;"></div>
+                        <div id="noDataContainer" class="hidden absolute inset-0 flex items-center justify-center bg-slate-50/90 text-slate-500 font-medium">No data for this period</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
         function drawChart(map){
             var jsonObj = JSON && JSON.parse(map) || $.parseJSON(map);
             if($.isEmptyObject(jsonObj)){
-               $("#noDataContainer").show();
+               $("#noDataContainer").removeClass("hidden");
                $("#container").children().remove();
             }else{
-                $("#noDataContainer").hide();
+                $("#noDataContainer").addClass("hidden");
                 doChart();
             }
 
@@ -138,7 +126,7 @@
                         {
                             name: "count",
                             data: jsonObj,
-                            color: "#faa732",
+                            color: "#f59e0b",
                             type: "line"
                         }
                     ]

@@ -8,8 +8,7 @@ import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.resource.UrlResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -42,7 +41,7 @@ public class SrvlogUIApplication extends WebApplication{
             getResourceSettings().setResourceFinders(resourceFinders);
         }
 
-        getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js")));
+        getJavaScriptLibrarySettings().setJQueryReference(new JavaScriptResourceReference(SrvlogUIApplication.class, "jquery.min.js"));
 
         String skipSpringSecurity = getServletContext().getInitParameter("skipSpringSecurity");
         if(skipSpringSecurity!=null && !isTrue(skipSpringSecurity)){

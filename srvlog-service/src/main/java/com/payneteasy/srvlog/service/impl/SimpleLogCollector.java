@@ -12,6 +12,8 @@ import com.payneteasy.srvlog.util.TruncationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.payneteasy.srvlog.service.condition.NotMockModeCondition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -28,6 +30,7 @@ import static com.payneteasy.srvlog.adapter.syslog.SnortSignature.createSnortSig
  */
 @Transactional
 @Service
+@Conditional(NotMockModeCondition.class)
 public class SimpleLogCollector implements ILogCollector {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleLogCollector.class);

@@ -1,15 +1,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 
 <wicket:head>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" type="text/javascript"></script>
     <style>
         #terminal {
             display: block;
             position: relative;
             height: 80%;
             width: 98%;
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
             margin-left: 20px;
         }
     </style>
@@ -17,21 +16,13 @@
 
 <wicket:extend>
     <body>
-        <div class="container-fluid" id="page">
-            <ul class="inline">
-                <li>
-                    <h4 class="muted">Hosts:</h4>
-                </li>
-                <li>
-                    <select wicket:id="choices-host" id="selected-hosts"></select>
-                </li>
-                <li>
-                    <h4 class="muted">Programs:</h4>
-                </li>
-                <li>
-                    <select wicket:id="choices-program" id="selected-programs"></select>
-                </li>
-            </ul>
+        <div id="page" class="mb-4">
+            <div class="flex flex-wrap items-center gap-4">
+                <h4 class="text-sm font-medium text-slate-500">Hosts:</h4>
+                <select wicket:id="choices-host" id="selected-hosts" class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+                <h4 class="text-sm font-medium text-slate-500">Programs:</h4>
+                <select wicket:id="choices-program" id="selected-programs" class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+            </div>
         </div>
 
         <div id='terminal'></div>

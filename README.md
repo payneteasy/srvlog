@@ -29,9 +29,35 @@ Minimum system requirements:
 2) 100GB Disk space (for up to 200 thousands logs per day )
 3) Intell i5, i7, Xeon processors.
 
+### Локальный запуск UI (для разработки)
+
+Скрипт выполняет `install/install.sh`, инициализирует БД, миграции и запускает UI:
+
+```shell
+# MariaDB на localhost:3306, root без пароля
+./scripts/run-local-with-docker-mariadb.sh
+
+# С паролем root и другим портом
+MARIADB_ROOT_PWD=secret MARIADB_PORT=3322 ./scripts/run-local-with-docker-mariadb.sh
+
+# Пропустить install (если уже выполнено)
+SKIP_INSTALL=1 ./scripts/run-local-with-docker-mariadb.sh
+
+# Только UI (БД и миграции уже выполнены)
+RUN_ONLY_UI=1 MARIADB_PORT=3322 ./scripts/run-local-with-docker-mariadb.sh
+```
+
+Требования: MariaDB на хосте, `mysql` в PATH. UI: http://localhost:8080/srvlog/main
+
 ### Building and starting embedded srvlog jetty server
 
-Build uber-jar file:
+Установите зависимости (один раз):
+
+```shell
+./install/install.sh
+```
+
+Соберите uber-jar:
 
 ```shell
 mvn clean package
