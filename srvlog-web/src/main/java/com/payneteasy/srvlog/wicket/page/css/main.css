@@ -157,24 +157,37 @@ aside .active .sidebar-link { background-color: rgb(59 130 246); color: white; }
 }
 
 /* ============================================
+   Log table scrollable container
+   ============================================ */
+
+/* max-height is set dynamically via JS; overflow enables sticky thead */
+.table-scroll-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 176px); /* fallback; JS overrides this */
+}
+
+/* ============================================
    Filter Components (LogMonitorPage)
    ============================================ */
 
-/* Filter section wrapper */
 .filter-section {
-    @apply lg:w-96 flex-shrink-0;
-}
-
-.filter-section-sticky {
-    @apply sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto;
+    @apply lg:w-80 flex-shrink-0;
 }
 
 .filter-panel {
     @apply bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden;
+    /* max-height so filter panel itself scrolls if viewport is small */
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
 }
 
 .filter-header {
     @apply px-4 py-3 bg-slate-50 border-b border-slate-200;
+    /* Stick the header at top of filter panel when it scrolls */
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .filter-title {
@@ -196,11 +209,11 @@ aside .active .sidebar-link { background-color: rgb(59 130 246); color: white; }
 
 /* Multi-select container with scroll */
 .filter-select-container {
-    @apply max-h-48 overflow-y-auto border border-slate-300 rounded-lg bg-white;
+    @apply max-h-36 overflow-y-auto border border-slate-300 rounded-lg bg-white;
 }
 
 .filter-select-container.large {
-    @apply max-h-64;
+    @apply max-h-48;
 }
 
 /* Multi-select element */
@@ -211,4 +224,18 @@ aside .active .sidebar-link { background-color: rgb(59 130 246); color: white; }
 
 .filter-select:focus {
     @apply ring-0;
+}
+
+/* Apply filter button — slide-down reveal */
+.apply-filter-wrapper {
+    padding-top: 0.75rem;
+}
+
+.apply-filter-visible {
+    animation: filter-apply-reveal 0.2s ease-out both;
+}
+
+@keyframes filter-apply-reveal {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }

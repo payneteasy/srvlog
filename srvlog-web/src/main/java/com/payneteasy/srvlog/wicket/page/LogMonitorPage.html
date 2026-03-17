@@ -7,21 +7,29 @@
 
     <div wicket:id="feedback-panel"></div>
     <form wicket:id="form">
-        <div class="mb-4">
-            <div class="flex max-w-2xl">
-                <input id="appendedInputButton" wicket:id="pattern" type="text" class="flex-1 h-12 px-4 text-lg border border-slate-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
-                <button type="submit" wicket:id="search-button" class="px-6 h-12 rounded-r-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors">Search</button>
-            </div>
-        </div>
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
 
-        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- LEFT: sticky toolbar + scrollable table -->
             <div class="lg:flex-[3] min-w-0">
-                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-                    <div wicket:id="item-perPage" class="pager"></div>
-                    <div wicket:id="paging-navigator" class="main-pager-holder"></div>
+
+                <!-- STICKY TOOLBAR: search + pager -->
+                <div id="sticky-toolbar" class="sticky z-20 bg-white border-b border-slate-200 py-3 mb-3 -mx-4 sm:-mx-6 lg:-mx-8 px-3">
+                    <div class="flex mb-4">
+                        <input id="appendedInputButton" wicket:id="pattern" type="text"
+                               class="flex-1 h-12 px-4 text-base border border-slate-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
+                        <button type="submit" wicket:id="search-button"
+                                class="px-6 h-12 rounded-r-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors whitespace-nowrap">
+                            Search
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div wicket:id="item-perPage" class="pager"></div>
+                        <div wicket:id="paging-navigator" class="main-pager-holder"></div>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                <!-- TABLE in scrollable container — thead sticky works inside scroll box -->
+                <div id="table-container" class="table-scroll-container rounded-lg border border-slate-200">
                     <table class="main-table w-full text-sm">
                         <colgroup>
                             <col width="120px" />
@@ -56,12 +64,17 @@
                 </div>
             </div>
 
-            <div class="filter-section">
-                <div class="filter-section-sticky">
+            <!-- RIGHT: filter panel — starts at same level as search input -->
+            <div id="filter-section" class="filter-section">
+                <div id="filter-sticky" class="sticky">
                     <div class="filter-panel">
                         <!-- Header -->
-                        <div class="filter-header">
+                        <div class="filter-header flex items-center justify-between">
                             <h3 class="filter-title">Filters</h3>
+                            <span id="filter-dirty-dot" class="hidden items-center gap-1 text-xs font-medium text-amber-600">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
+                                pending
+                            </span>
                         </div>
 
                         <!-- Filter content -->
@@ -70,7 +83,7 @@
                             <div>
                                 <label class="filter-label">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
                                     Date Range
@@ -82,7 +95,7 @@
                             <div>
                                 <label class="filter-label">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                     </svg>
                                     Severity
@@ -96,7 +109,7 @@
                             <div>
                                 <label class="filter-label">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                                     </svg>
                                     Facility
@@ -110,7 +123,7 @@
                             <div>
                                 <label class="filter-label">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
                                     </svg>
                                     Host
@@ -118,6 +131,14 @@
                                 <div class="filter-select-container">
                                     <select wicket:id="hostData-choice" class="filter-select" multiple></select>
                                 </div>
+                            </div>
+
+                            <!-- Apply filter button — hidden until filters change -->
+                            <div id="apply-filter-wrapper" class="apply-filter-wrapper hidden">
+                                <button type="submit" id="apply-filter-btn"
+                                        class="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors">
+                                    Apply Filters
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -127,7 +148,63 @@
     </form>
 
     <script type="text/javascript">
-        $("#appendedInputButton").focus();
+        (function () {
+            // ── 1. Dynamic sticky offsets ────────────────────────────────────────
+            function updateOffsets() {
+                var navbar   = document.querySelector('nav');
+                var toolbar  = document.getElementById('sticky-toolbar');
+                var tableBox = document.getElementById('table-container');
+                var filterEl = document.getElementById('filter-sticky');
+
+                var navH = navbar  ? navbar.getBoundingClientRect().height : 56;
+                var barH = toolbar ? toolbar.getBoundingClientRect().height : 96;
+
+                if (toolbar)  toolbar.style.top  = navH + 'px';
+                if (filterEl) filterEl.style.top  = (navH + 16) + 'px';
+
+                // Table container height = viewport - navbar - toolbar - outer padding (py-6 = 24px top + 24px bot)
+                if (tableBox) {
+                    tableBox.style.maxHeight = 'calc(100vh - ' + (navH + barH + 48) + 'px)';
+                }
+            }
+
+            updateOffsets();
+            window.addEventListener('resize', updateOffsets);
+            // Recalculate after full render (toolbar height may vary)
+            window.addEventListener('load', updateOffsets);
+
+            // ── 2. Filter dirty tracking → show "Apply Filters" button ───────────
+            var filtersDirty = false;
+
+            function markDirty() {
+                if (filtersDirty) return;
+                filtersDirty = true;
+
+                var wrapper = document.getElementById('apply-filter-wrapper');
+                var dot     = document.getElementById('filter-dirty-dot');
+
+                if (wrapper) {
+                    wrapper.classList.remove('hidden');
+                    wrapper.classList.add('apply-filter-visible');
+                }
+                if (dot) {
+                    dot.classList.remove('hidden');
+                    dot.classList.add('flex');
+                }
+            }
+
+            // Watch all selects and inputs inside filter panel
+            var filterPanel = document.getElementById('filter-section');
+            if (filterPanel) {
+                filterPanel.querySelectorAll('select, input').forEach(function (el) {
+                    el.addEventListener('change', markDirty);
+                });
+            }
+
+            // ── 3. Focus search input ─────────────────────────────────────────────
+            var searchInput = document.getElementById('appendedInputButton');
+            if (searchInput) searchInput.focus();
+        })();
     </script>
 </wicket:extend>
 </body>
