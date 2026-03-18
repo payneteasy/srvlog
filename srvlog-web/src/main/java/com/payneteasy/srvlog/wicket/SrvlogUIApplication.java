@@ -9,6 +9,8 @@ import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -49,6 +51,15 @@ public class SrvlogUIApplication extends WebApplication{
         }
 
         addSpringComponentInjector();
+
+        // Caching strategy: content hash in filename (enables long-term browser caching)
+        getResourceSettings().setCachingStrategy(
+            new FilenameWithVersionResourceCachingStrategy(new MessageDigestResourceVersion())
+        );
+
+        // Mount resources at short paths (bypasses the long package-based Wicket URL)
+        mountResource("/css/tailwind.css", BasePage.TAILWIND_CSS);
+        mountResource("/css/main.css", BasePage.MAIN_CSS);
 
         //PAGES
         mountPage("main", DashboardPage.class);

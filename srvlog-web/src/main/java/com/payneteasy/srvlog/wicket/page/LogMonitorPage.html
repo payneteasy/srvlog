@@ -5,24 +5,44 @@
 <body>
 <wicket:extend>
 
+    <!-- Drawer backdrop (mobile only) -->
+    <div id="filter-backdrop"
+         class="fixed inset-0 bg-black/40 z-40 hidden"
+         onclick="closeFilterDrawer()"></div>
+
     <div wicket:id="feedback-panel"></div>
     <form wicket:id="form">
-        <div class="flex flex-col lg:flex-row gap-6 items-start">
+        <div id="page-layout">
 
-            <!-- LEFT: sticky toolbar + scrollable table -->
-            <div class="lg:flex-[3] min-w-0">
+            <!-- Main content -->
+            <div class="min-w-0 min-w-0 flex-1">
 
                 <!-- STICKY TOOLBAR: search + pager -->
-                <div id="sticky-toolbar" class="sticky z-20 bg-white border-b border-slate-200 py-3 mb-3 -mx-4 sm:-mx-6 lg:-mx-8 px-3">
-                    <div class="flex mb-4">
-                        <input id="appendedInputButton" wicket:id="pattern" type="text"
-                               class="flex-1 h-12 px-4 text-base border border-slate-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"/>
-                        <button type="submit" wicket:id="search-button"
-                                class="px-6 h-12 rounded-r-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors whitespace-nowrap">
-                            Search
+                <div id="sticky-toolbar" class="py-3 px-3">
+                    <div class="search-row">
+                        <!-- Search input with icon button inside -->
+                        <div class="search-input-wrapper">
+                            <input id="appendedInputButton" wicket:id="pattern" type="text"
+                                   class="search-input" placeholder="Search logs…"/>
+                            <button type="submit" wicket:id="search-button" class="search-icon-btn" title="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Filter toggle button -->
+                        <button type="button" id="filter-toggle-btn" class="filter-toggle-btn"
+                                onclick="toggleFilterDrawer()" title="Filters">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 17H5"/><path d="M19 7h-9"/>
+                                <circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>
+                            </svg>
                         </button>
                     </div>
-                    <div class="flex items-center justify-between">
+                    <div class="pager-row">
                         <div wicket:id="item-perPage" class="pager"></div>
                         <div wicket:id="paging-navigator" class="main-pager-holder"></div>
                     </div>
@@ -64,17 +84,35 @@
                 </div>
             </div>
 
-            <!-- RIGHT: filter panel — starts at same level as search input -->
+            <!-- Filter panel — always a fixed drawer (all screen sizes) -->
             <div id="filter-section" class="filter-section">
                 <div id="filter-sticky" class="sticky">
                     <div class="filter-panel">
+
                         <!-- Header -->
                         <div class="filter-header flex items-center justify-between">
-                            <h3 class="filter-title">Filters</h3>
-                            <span id="filter-dirty-dot" class="hidden items-center gap-1 text-xs font-medium text-amber-600">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
-                                pending
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <h3 class="filter-title">Filters</h3>
+                                <span id="filter-dirty-dot" class="hidden items-center gap-1 text-xs font-medium text-amber-600">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
+                                    pending
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" id="clear-all-btn"
+                                        class="text-xs text-slate-500 hover:text-red-600 transition-colors hidden"
+                                        onclick="clearAllFilters()">
+                                    Clear all
+                                </button>
+                                <!-- Close button (mobile drawer only) -->
+                                <button type="button" id="filter-close-btn" class="p-1 rounded hover:bg-slate-100 text-slate-500"
+                                        onclick="closeFilterDrawer()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 6 6 18M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Filter content -->
@@ -150,60 +188,64 @@
     <script type="text/javascript">
         (function () {
             // ── 1. Dynamic sticky offsets ────────────────────────────────────────
+            // Navbar is not fixed — it scrolls away. Toolbar sticks at top:0.
+            // th cells stick below toolbar. Filter sidebar sticks at top:0.
             function updateOffsets() {
-                var navbar   = document.querySelector('nav');
                 var toolbar  = document.getElementById('sticky-toolbar');
-                var tableBox = document.getElementById('table-container');
+                var thCells  = document.querySelectorAll('#table-container thead th');
                 var filterEl = document.getElementById('filter-sticky');
-
-                var navH = navbar  ? navbar.getBoundingClientRect().height : 56;
-                var barH = toolbar ? toolbar.getBoundingClientRect().height : 96;
-
-                if (toolbar)  toolbar.style.top  = navH + 'px';
-                if (filterEl) filterEl.style.top  = (navH + 16) + 'px';
-
-                // Table container height = viewport - navbar - toolbar - outer padding (py-6 = 24px top + 24px bot)
-                if (tableBox) {
-                    tableBox.style.maxHeight = 'calc(100vh - ' + (navH + barH + 48) + 'px)';
-                }
+                var barH = toolbar ? toolbar.getBoundingClientRect().height : 100;
+                thCells.forEach(function(th) { th.style.top = barH + 'px'; });
+                if (filterEl) filterEl.style.top = '0px';
             }
-
             updateOffsets();
             window.addEventListener('resize', updateOffsets);
-            // Recalculate after full render (toolbar height may vary)
-            window.addEventListener('load', updateOffsets);
+            window.addEventListener('load',   updateOffsets);
 
-            // ── 2. Filter dirty tracking → show "Apply Filters" button ───────────
-            var filtersDirty = false;
+            // ── 2. Filter toggle — one class, CSS handles everything ─────────────
+            window.toggleFilterDrawer = function () {
+                document.getElementById('page-layout').classList.toggle('filter-open');
+                updateOffsets();
+            };
+            window.closeFilterDrawer = function () {
+                document.getElementById('page-layout').classList.remove('filter-open');
+                updateOffsets();
+            };
 
+            // ── 3. Filter dirty tracking ─────────────────────────────────────────
             function markDirty() {
-                if (filtersDirty) return;
-                filtersDirty = true;
-
-                var wrapper = document.getElementById('apply-filter-wrapper');
-                var dot     = document.getElementById('filter-dirty-dot');
-
-                if (wrapper) {
+                var wrapper  = document.getElementById('apply-filter-wrapper');
+                var dot      = document.getElementById('filter-dirty-dot');
+                var clearBtn = document.getElementById('clear-all-btn');
+                if (wrapper && wrapper.classList.contains('hidden')) {
                     wrapper.classList.remove('hidden');
                     wrapper.classList.add('apply-filter-visible');
                 }
-                if (dot) {
-                    dot.classList.remove('hidden');
-                    dot.classList.add('flex');
-                }
+                if (dot)      { dot.classList.remove('hidden'); dot.classList.add('flex'); }
+                if (clearBtn) clearBtn.classList.remove('hidden');
             }
+            var fp = document.getElementById('filter-section');
+            if (fp) fp.querySelectorAll('select, input').forEach(function (el) {
+                el.addEventListener('change', markDirty);
+            });
 
-            // Watch all selects and inputs inside filter panel
-            var filterPanel = document.getElementById('filter-section');
-            if (filterPanel) {
-                filterPanel.querySelectorAll('select, input').forEach(function (el) {
-                    el.addEventListener('change', markDirty);
+            // ── 4. Clear all filters ─────────────────────────────────────────────
+            window.clearAllFilters = function () {
+                var fp = document.getElementById('filter-section');
+                if (!fp) return;
+                fp.querySelectorAll('select[multiple]').forEach(function (sel) {
+                    for (var i = 0; i < sel.options.length; i++) sel.options[i].selected = false;
                 });
-            }
+                fp.querySelectorAll('input[type=text]').forEach(function (inp) {
+                    inp.value = '';
+                    if (inp._flatpickr) inp._flatpickr.clear();
+                });
+                markDirty();
+            };
 
-            // ── 3. Focus search input ─────────────────────────────────────────────
-            var searchInput = document.getElementById('appendedInputButton');
-            if (searchInput) searchInput.focus();
+            // ── 5. Focus search ──────────────────────────────────────────────────
+            var s = document.getElementById('appendedInputButton');
+            if (s) s.focus();
         })();
     </script>
 </wicket:extend>
