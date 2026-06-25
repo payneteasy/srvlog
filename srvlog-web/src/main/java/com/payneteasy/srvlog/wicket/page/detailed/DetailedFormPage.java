@@ -2,9 +2,7 @@ package com.payneteasy.srvlog.wicket.page.detailed;
 
 import com.payneteasy.srvlog.util.DateRange;
 import org.apache.wicket.Page;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -32,8 +30,7 @@ public class DetailedFormPage extends DetailedLogsPage{
         form = new Form<Void>("form");
         add(form);
 
-        DateTextField dateTextField = new DateTextField("date-field", new PropertyModel<>(filterDetailedModel, "date"), new PatternDateConverter(DATE_PATTERN, false));
-        dateTextField.add(new DatePicker());
+        DateTextField dateTextField = new DateTextField("date-field", new PropertyModel<>(filterDetailedModel, "date"), DATE_PATTERN);
         dateTextField.setRequired(true);
         form.add(dateTextField);
 

@@ -4,17 +4,21 @@ import com.payneteasy.srvlog.util.DateRange;
 import com.payneteasy.srvlog.util.DateRangeType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeField;
+import org.apache.wicket.extensions.markup.html.form.datetime.TimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -62,62 +66,63 @@ public class DateRangePanel extends Panel{
         DateTextField dateToTextField = getExactlyDateTextField("dateTo-field", dateRangeModel, "exactlyDateTo");
         holderDateRangeContainer.add(dateToTextField);
 
-        DateTimeField dateFromTimeField = getExactlyDateTimeField("timeFrom-field",  dateRangeModel, "exactlyDateFrom");
+        LocalDateTimeField dateFromTimeField = getExactlyDateTimeField("timeFrom-field", dateRangeModel, "exactlyDateFrom");
         holderDateRangeContainer.add(dateFromTimeField);
-        DateTimeField dateToTimeField = getExactlyDateTimeField("timeTo-field", dateRangeModel, "exactlyDateTo");
+        LocalDateTimeField dateToTimeField = getExactlyDateTimeField("timeTo-field", dateRangeModel, "exactlyDateTo");
         holderDateRangeContainer.add(dateToTimeField);
     }
 
-    private Date getFromDate(){
-        return dateRangeModel.getDateRange().getFromDate();
-    }
-    private Date getToDate(){
-        return dateRangeModel.getDateRange().getToDate();
-    }
-
     private DateTextField getExactlyDateTextField(String id, final DateRangeModel dateRangeModel, String expression) {
-        DateTextField dateTextField = new DateTextField(id, new PropertyModel<>(dateRangeModel, expression), new PatternDateConverter(DATE_PATTERN, false)) {
+        DateTextField dateTextField = new DateTextField(id, new PropertyModel<>(dateRangeModel, expression), DATE_PATTERN) {
             @Override
             public boolean isVisible() {
                 return DateRangeType.EXACTLY_DATE == dateRangeModel.getDateRangeType();
             }
         };
-        dateTextField.add(new DatePicker());
         dateTextField.setRequired(true);
         return dateTextField;
     }
 
-    private DateTimeField getExactlyDateTimeField(String id, final DateRangeModel dateRangeModel, String expression) {
-        DateTimeField dateTimeField = new DateTimeField(id, new PropertyModel<>(dateRangeModel, expression)) {
+    private LocalDateTimeField getExactlyDateTimeField(String id, final DateRangeModel dateRangeModel, String expression) {
+        String title = "exactlyDateFrom".equals(expression)
+                ? "Date and time from (DD.MM.YYYY HH:mm)"
+                : "Date and time to (DD.MM.YYYY HH:mm)";
+        IModel<LocalDateTime> ldtModel = new IModel<LocalDateTime>() {
             @Override
-            protected boolean use12HourFormat() {
-                return false;
+            public LocalDateTime getObject() {
+                Date d = new PropertyModel<Date>(dateRangeModel, expression).getObject();
+                return d == null ? null : d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             }
-
+            @Override
+            public void setObject(LocalDateTime ldt) {
+                new PropertyModel<Date>(dateRangeModel, expression)
+                    .setObject(ldt == null ? null : Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant()));
+            }
+        };
+        LocalDateTimeField dateTimeField = new LocalDateTimeField(id, ldtModel) {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                get("date").add(AttributeModifier.replace("title", title));
+            }
+            @Override
+            protected TimeField newTimeField(String timeId, IModel<LocalTime> timeModel) {
+                return new TimeField(timeId, timeModel) {
+                    @Override
+                    protected boolean use12HourFormat() {
+                        return false;
+                    }
+                };
+            }
             @Override
             public boolean isVisible() {
                 return DateRangeType.EXACTLY_TIME == dateRangeModel.getDateRangeType();
-            }
-
-            @Override
-            protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel) {
-                return DateTextField.forDatePattern(id, dateFieldModel, DATE_PATTERN);
-            }
-
-            @Override
-            protected DatePicker newDatePicker() {
-                return new DatePicker() {
-                    @Override
-                    protected String getDatePattern() {
-                        return DATE_PATTERN;
-                    }
-
-                };
             }
         };
         dateTimeField.setRequired(true);
         return dateTimeField;
     }
+
     private static boolean isVisibleDateField(DateRangeType type) {
         if (DateRangeType.EXACTLY_DATE == type || DateRangeType.EXACTLY_TIME == type) {
             return true;
