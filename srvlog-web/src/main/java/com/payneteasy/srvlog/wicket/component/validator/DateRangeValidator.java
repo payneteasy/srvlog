@@ -1,7 +1,7 @@
 package com.payneteasy.srvlog.wicket.component.validator;
 
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
@@ -12,7 +12,7 @@ import org.apache.wicket.model.ResourceModel;
  */
 public class DateRangeValidator extends AbstractFormValidator {
 
-    public DateRangeValidator(DateTimeField dateTimeField, String keyPrefix) {
+    public DateRangeValidator(LocalDateTimeField dateTimeField, String keyPrefix) {
         this.dateTimeField = dateTimeField;
         this.keyPrefix = keyPrefix;
         formComponent = new FormComponent[] {this.dateTimeField};
@@ -26,39 +26,30 @@ public class DateRangeValidator extends AbstractFormValidator {
 
     @Override
     public FormComponent<?>[] getDependentFormComponents() {
-        return new FormComponent<?>[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new FormComponent<?>[0];
     }
 
     @Override
     public void validate(Form<?> form) {
-        //check date time field
         if (dateTimeField != null && dateTimeField.isVisible()) {
-            if(dateTimeField.getDate() == null){
+            if (dateTimeField.getConvertedInput() == null) {
                 error(keyPrefix, "DateRequired");
-            }
-            if (dateTimeField.getHours() == null) {
-                error(keyPrefix, "HoursRequire");
-            }
-
-            if(dateTimeField.getMinutes() == null){
-                error(keyPrefix, "MinutesRequired");
             }
         }
 
-        //check date text field
-        if(dateTextField != null && dateTextField.isVisible()){
-            if(dateTextField.getConvertedInput() == null){
+        if (dateTextField != null && dateTextField.isVisible()) {
+            if (dateTextField.getConvertedInput() == null) {
                 error(keyPrefix, "DateRequired");
             }
         }
     }
 
-    private void error(String keyPrefix , String errorKey) {
-        formComponent[0].error(new ResourceModel(new StringBuilder().append(keyPrefix).append(".").append(errorKey).toString()).getObject());
+    private void error(String keyPrefix, String errorKey) {
+        formComponent[0].error(new ResourceModel(keyPrefix + "." + errorKey).getObject());
     }
 
     private String keyPrefix;
-    private DateTimeField dateTimeField;
+    private LocalDateTimeField dateTimeField;
     private DateTextField dateTextField;
     private FormComponent<?>[] formComponent;
 }
