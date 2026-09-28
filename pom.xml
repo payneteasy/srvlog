@@ -153,12 +153,6 @@
                 <version>${wicket.version}</version>
             </dependency>
             <dependency>
-                <!--Justification: Wicket utils for date and time-->
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-datetime</artifactId>
-                <version>8.0.0-M7</version>
-            </dependency>
-            <dependency>
                 <!--Justification: For UI components unit tests-->
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-tester</artifactId>
