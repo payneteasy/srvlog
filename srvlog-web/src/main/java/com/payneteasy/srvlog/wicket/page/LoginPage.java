@@ -1,6 +1,8 @@
 package com.payneteasy.srvlog.wicket.page;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -9,6 +11,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +41,13 @@ public class LoginPage extends WebPage {
 
         addMessage(loginForm);
 
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        // bootstrap css lives in the page package since task #78, not under the webapp root
+        response.render(CssHeaderItem.forReference(new CssResourceReference(BasePage.class, "css/bootstrap.min.css")));
     }
 
     public static String buildCheckUrl(String relativePath) {

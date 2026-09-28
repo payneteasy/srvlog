@@ -1,42 +1,71 @@
 package com.payneteasy.srvlog.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.jetty.websocket.api.BatchMode;
-import org.eclipse.jetty.websocket.api.CloseStatus;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
+import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.SuspendToken;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.api.WebSocketBehavior;
-import org.eclipse.jetty.websocket.api.WriteCallback;
+import org.eclipse.jetty.websocket.api.exceptions.WebSocketTimeoutException;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.function.Predicate;
 
 public class MockWebSocketSession implements Session {
 
-    private final MockWsRemoteEndpoint remoteEndpoint = new MockWsRemoteEndpoint();
+    private static final ObjectMapper jsonMapper = new ObjectMapper();
+
+    private LogBroadcastingResponse logBroadcastingResponse;
 
     LogBroadcastingResponse getLogBroadcastingResponse() {
-        return remoteEndpoint.getLogBroadcastingResponse();
+        return logBroadcastingResponse;
     }
 
     @Override
-    public void close() {
+    public void sendText(String text, Callback callback) {
+        try {
+            logBroadcastingResponse = jsonMapper.readValue(text, LogBroadcastingResponse.class);
+            callback.succeed();
+        } catch (IOException e) {
+            callback.fail(e);
+        }
+    }
+
+    @Override
+    public void demand() {
 
     }
 
     @Override
-    public void close(CloseStatus closeStatus) {
-
+    public void sendBinary(ByteBuffer byteBuffer, Callback callback) {
+        callback.succeed();
     }
 
     @Override
-    public void close(int i, String s) {
+    public void sendPartialBinary(ByteBuffer byteBuffer, boolean last, Callback callback) {
+        callback.succeed();
+    }
 
+    @Override
+    public void sendPartialText(String text, boolean last, Callback callback) {
+        callback.succeed();
+    }
+
+    @Override
+    public void sendPing(ByteBuffer byteBuffer, Callback callback) {
+        callback.succeed();
+    }
+
+    @Override
+    public void sendPong(ByteBuffer byteBuffer, Callback callback) {
+        callback.succeed();
+    }
+
+    @Override
+    public void close(int statusCode, String reason, Callback callback) {
+        callback.succeed();
     }
 
     @Override
@@ -45,22 +74,17 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
-    public SocketAddress getLocalAddress() {
+    public SocketAddress getLocalSocketAddress() {
+        return null;
+    }
+
+    @Override
+    public SocketAddress getRemoteSocketAddress() {
         return null;
     }
 
     @Override
     public String getProtocolVersion() {
-        return null;
-    }
-
-    @Override
-    public RemoteEndpoint getRemote() {
-        return remoteEndpoint;
-    }
-
-    @Override
-    public SocketAddress getRemoteAddress() {
         return null;
     }
 
@@ -76,7 +100,7 @@ public class MockWebSocketSession implements Session {
 
     @Override
     public boolean isOpen() {
-        return false;
+        return true;
     }
 
     @Override
@@ -85,13 +109,8 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
-    public SuspendToken suspend() {
-        return null;
-    }
+    public void addIdleTimeoutListener(Predicate<WebSocketTimeoutException> listener) {
 
-    @Override
-    public WebSocketBehavior getBehavior() {
-        return null;
     }
 
     @Override
@@ -100,8 +119,18 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
+    public void setIdleTimeout(Duration duration) {
+
+    }
+
+    @Override
     public int getInputBufferSize() {
         return 0;
+    }
+
+    @Override
+    public void setInputBufferSize(int size) {
+
     }
 
     @Override
@@ -110,8 +139,18 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
+    public void setOutputBufferSize(int size) {
+
+    }
+
+    @Override
     public long getMaxBinaryMessageSize() {
         return 0;
+    }
+
+    @Override
+    public void setMaxBinaryMessageSize(long size) {
+
     }
 
     @Override
@@ -120,8 +159,18 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
+    public void setMaxTextMessageSize(long size) {
+
+    }
+
+    @Override
     public long getMaxFrameSize() {
         return 0;
+    }
+
+    @Override
+    public void setMaxFrameSize(long size) {
+
     }
 
     @Override
@@ -130,141 +179,17 @@ public class MockWebSocketSession implements Session {
     }
 
     @Override
-    public void setIdleTimeout(Duration duration) {
+    public void setAutoFragment(boolean autoFragment) {
 
     }
 
     @Override
-    public void setInputBufferSize(int i) {
-
+    public int getMaxOutgoingFrames() {
+        return 0;
     }
 
     @Override
-    public void setOutputBufferSize(int i) {
+    public void setMaxOutgoingFrames(int maxOutgoingFrames) {
 
-    }
-
-    @Override
-    public void setMaxBinaryMessageSize(long l) {
-
-    }
-
-    @Override
-    public void setMaxTextMessageSize(long l) {
-
-    }
-
-    @Override
-    public void setMaxFrameSize(long l) {
-
-    }
-
-    @Override
-    public void setAutoFragment(boolean b) {
-
-    }
-
-    public static class MockWsRemoteEndpoint implements RemoteEndpoint {
-
-        private static final ObjectMapper jsonMapper = new ObjectMapper();
-
-        private LogBroadcastingResponse logBroadcastingResponse;
-
-        @Override
-        public void sendBytes(ByteBuffer byteBuffer) {
-
-        }
-
-        @Override
-        public void sendBytes(ByteBuffer byteBuffer, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public void sendPartialBytes(ByteBuffer byteBuffer, boolean b) {
-
-        }
-
-        @Override
-        public void sendPartialBytes(ByteBuffer byteBuffer, boolean b, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public void sendString(String text) throws IOException {
-            logBroadcastingResponse = jsonMapper.readValue(
-                    text,
-                    LogBroadcastingResponse.class
-            );
-        }
-
-        @Override
-        public void sendString(String s, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public void sendPartialString(String s, boolean b) {
-
-        }
-
-        @Override
-        public void sendPartialString(String s, boolean b, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public void sendPing(ByteBuffer byteBuffer) {
-
-        }
-
-        @Override
-        public void sendPing(ByteBuffer byteBuffer, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public void sendPong(ByteBuffer byteBuffer) {
-
-        }
-
-        @Override
-        public void sendPong(ByteBuffer byteBuffer, WriteCallback writeCallback) {
-
-        }
-
-        @Override
-        public BatchMode getBatchMode() {
-            return null;
-        }
-
-        @Override
-        public void setBatchMode(BatchMode batchMode) {
-
-        }
-
-        @Override
-        public int getMaxOutgoingFrames() {
-            return 0;
-        }
-
-        @Override
-        public void setMaxOutgoingFrames(int i) {
-
-        }
-
-        @Override
-        public SocketAddress getRemoteAddress() {
-            return null;
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        public LogBroadcastingResponse getLogBroadcastingResponse() {
-            return logBroadcastingResponse;
-        }
     }
 }

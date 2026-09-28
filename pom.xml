@@ -19,11 +19,6 @@
 
     <repositories>
         <repository>
-            <id>spring.test-mvc</id>
-            <url>http://repo.springsource.org/libs-milestone</url>
-        </repository>
-
-        <repository>
             <id>mpos-pne</id>
             <url>https://mpos.pne.io/maven2</url>
         </repository>
@@ -62,20 +57,20 @@
         <maven.flyway.plugin.version>10.4.1</maven.flyway.plugin.version>
         <maven.surefire.plugin.version>3.2.3</maven.surefire.plugin.version>
 
-        <wicket.version>10.9.1</wicket.version>
-        <jetty.version>11.0.26</jetty.version>
+        <wicket.version>10.11.0</wicket.version>
+        <jetty.version>12.1.13</jetty.version>
         <slf4j.version>2.0.9</slf4j.version>
-        <apache.log4j.version>2.26.0</apache.log4j.version>
-        <spring.security.version>7.1.0</spring.security.version>
-        <org.springframework.version>7.0.8</org.springframework.version>
+        <apache.log4j.version>2.26.1</apache.log4j.version>
+        <spring.security.version>7.1.1</spring.security.version>
+        <org.springframework.version>7.0.9</org.springframework.version>
         <sphinx.api.version>3.6.1</sphinx.api.version>
         <jdbc-proc.version>1.1-35</jdbc-proc.version>
-        <mariadb.client.version>3.3.2</mariadb.client.version>
+        <mariadb.client.version>3.5.10</mariadb.client.version>
         <org.flywaydb.version>10.4.1</org.flywaydb.version>
         <tomcat.version>11.0.0-M15</tomcat.version>
         <jacoco.basedir>${project.basedir}/../target/coverage</jacoco.basedir>
-        <jackson.version>2.16.1</jackson.version>
-        <jackson-core.version>2.16.1</jackson-core.version>
+        <jackson.version>2.22.3</jackson.version>
+        <jackson-core.version>2.22.3</jackson-core.version>
         <guava.version>33.0.0-jre</guava.version>
         <selenium.version>4.16.1</selenium.version>
         <jacoco.version>0.8.11</jacoco.version>
@@ -173,8 +168,8 @@
             </dependency>
             <dependency>
                 <!--Justification: JNDI support for jetty application server-->
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-plus</artifactId>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-plus</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -185,26 +180,26 @@
             </dependency>
             <dependency>
                 <!--Justification: Jetty web application support-->
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-webapp</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <!--Justification: Servlet support for jetty application server-->
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-servlet</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <!--Justification: Websocket api for terminal page-->
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jetty-api</artifactId>
+                <artifactId>jetty-websocket-jetty-api</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <!--Justification: Websocket server for terminal page-->
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jetty-server</artifactId>
+                <groupId>org.eclipse.jetty.ee10.websocket</groupId>
+                <artifactId>jetty-ee10-websocket-jetty-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
 
@@ -395,7 +390,7 @@
                 <!--Justification: connector for mysql database-->
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
-                <version>9.7.0</version>
+                <version>26.7.0</version>
             </dependency>
             <dependency>
                 <!--Justification: java client for database-->
@@ -426,7 +421,7 @@
                 <!--Justification: useful utilities classes-->
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.14.0</version>
+                <version>3.20.0</version>
             </dependency>
             <dependency>
                 <!--Justification: wicket dependencies for json-->
@@ -477,19 +472,13 @@
                 <!--Justification: netty packages for work with Suricata-->
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.2.15.Final</version>
+                <version>4.2.18.Final</version>
             </dependency>
             <dependency>
-                <!--Justification: useful classes for work with annotations-->
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>1.3.2</version>
-            </dependency>
-            <dependency>
-                <!--Justification: packages for Suricata test cases-->
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>2.12.2</version>
+                <!--Justification: jakarta annotations (@PostConstruct/@PreDestroy) for Spring 7 lifecycle callbacks-->
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>2.1.1</version>
             </dependency>
             <dependency>
                 <!--Justification: servlet apis for web controllers-->

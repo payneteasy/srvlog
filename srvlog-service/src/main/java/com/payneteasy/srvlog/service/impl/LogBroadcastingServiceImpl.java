@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payneteasy.srvlog.data.LogData;
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.startup.parameters.StartupParametersFactory;
+import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("logBroadcastingService")
@@ -142,7 +144,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                     );
                     String incorrectRequestParametersResponseJson = jsonMapper.writeValueAsString(incorrectRequestParametersResponse);
 
-                    session.getRemote().sendString(incorrectRequestParametersResponseJson);
+                    sendText(session, incorrectRequestParametersResponseJson);
 
                     return;
                 }
@@ -151,7 +153,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
                 LogBroadcastingResponse logBroadcastingResponse = new LogBroadcastingResponse(true, logDataList, null);
                 String logBroadcastingResponseJson = jsonMapper.writeValueAsString(logBroadcastingResponse);
 
-                session.getRemote().sendString(logBroadcastingResponseJson);
+                sendText(session, logBroadcastingResponseJson);
 
                 subscriptionStorage.get(session).set(new Subscription(
                         hosts,
@@ -172,7 +174,7 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
 
             try {
                 String unsuccessfulResponseJson = jsonMapper.writeValueAsString(unsuccessfulResponse);
-                session.getRemote().sendString(unsuccessfulResponseJson);
+                sendText(session, unsuccessfulResponseJson);
             } catch (IOException e2) {
                 logger.error("Error while sending web socket unsuccessful log subscription response", e2);
             }
@@ -225,13 +227,28 @@ public class LogBroadcastingServiceImpl implements ILogBroadcastingService {
             if (subscriptionEntry.getValue().get().isBroadcastCandidateFor(host, program)) {
                 try {
                     synchronized (subscriptionEntry.getKey()) {
-                        subscriptionEntry.getKey().getRemote().sendString(logDataText);
+                        sendText(subscriptionEntry.getKey(), logDataText);
                     }
                 } catch (IOException e) {
                     subscriptionIterator.remove();
                     subscriptionEntry.getKey().close();
                 }
             }
+        }
+    }
+
+    /**
+     * Sends a text message synchronously, translating asynchronous send failures into IOException
+     * to keep the previous blocking semantics of Jetty 11 RemoteEndpoint.sendString().
+     */
+    private static void sendText(Session session, String text) throws IOException {
+        try {
+            Callback.Completable.with(callback -> session.sendText(text, callback)).get();
+        } catch (ExecutionException e) {
+            throw new IOException("Error while sending web socket message", e.getCause());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted while sending web socket message", e);
         }
     }
 

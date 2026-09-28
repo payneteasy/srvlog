@@ -2,15 +2,13 @@ package com.payneteasy.srvlog.websocket.jetty;
 
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import com.payneteasy.srvlog.service.impl.Subscription;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.eclipse.jetty.websocket.api.Session;
-
 import java.util.concurrent.CountDownLatch;
 
-public class WebSocketLogEndpoint extends WebSocketAdapter {
+public class WebSocketLogEndpoint extends Session.Listener.AbstractAutoDemanding {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketLogEndpoint.class);
 
@@ -23,27 +21,24 @@ public class WebSocketLogEndpoint extends WebSocketAdapter {
     }
 
     @Override
-    public void onWebSocketConnect(Session session) {
-        super.onWebSocketConnect(session);
+    public void onWebSocketOpen(Session session) {
+        super.onWebSocketOpen(session);
         logBroadcastingService.saveBroadcastingSession(session, Subscription.initialState());
     }
 
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
-        super.onWebSocketClose(statusCode, reason);
         logBroadcastingService.removeBroadcastingSession(getSession());
         closureLatch.countDown();
     }
 
     @Override
     public void onWebSocketText(String message) {
-        super.onWebSocketText(message);
         logBroadcastingService.handleLogBroadcastingRequest(getSession(), message);
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
-        super.onWebSocketError(cause);
         logBroadcastingService.removeBroadcastingSession(getSession());
         logger.error("Error during web socket log communication", cause);
     }

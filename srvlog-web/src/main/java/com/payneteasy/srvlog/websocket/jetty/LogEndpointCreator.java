@@ -2,10 +2,9 @@ package com.payneteasy.srvlog.websocket.jetty;
 
 import com.payneteasy.srvlog.service.ILogBroadcastingService;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
-import org.eclipse.jetty.websocket.server.JettyServerUpgradeRequest;
-import org.eclipse.jetty.websocket.server.JettyServerUpgradeResponse;
-import org.eclipse.jetty.websocket.server.JettyWebSocketCreator;
+import org.eclipse.jetty.ee10.websocket.server.JettyServerUpgradeRequest;
+import org.eclipse.jetty.ee10.websocket.server.JettyServerUpgradeResponse;
+import org.eclipse.jetty.ee10.websocket.server.JettyWebSocketCreator;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class LogEndpointCreator implements JettyWebSocketCreator {
@@ -14,7 +13,7 @@ public class LogEndpointCreator implements JettyWebSocketCreator {
     public Object createWebSocket(JettyServerUpgradeRequest request,
                                   JettyServerUpgradeResponse response) {
 
-        ServletContext sc = ((HttpSession) request.getSession()).getServletContext();
+        ServletContext sc = request.getHttpServletRequest().getServletContext();
 
         ILogBroadcastingService logBroadcastingService = WebApplicationContextUtils
                 .getWebApplicationContext(sc).getBean(ILogBroadcastingService.class);
