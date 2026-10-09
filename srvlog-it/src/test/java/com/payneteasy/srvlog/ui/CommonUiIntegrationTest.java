@@ -2,10 +2,11 @@ package com.payneteasy.srvlog.ui;
 
 import com.payneteasy.srvlog.CommonIntegrationTest;
 import com.payneteasy.srvlog.util.WebContainerUtils;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+
+import java.util.List;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public abstract class CommonUiIntegrationTest extends CommonIntegrationTest{
         WebAppContext webAppContext = WebContainerUtils.createWebApp( "", "../srvlog-web/src/test/resources/jetty/override-ui-web.xml", server, "../srvlog-web", "../srvlog-web/src/test/resources/jetty/jetty-env-ui.xml");
 
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
-        contextHandlerCollection.setHandlers(new Handler[]{webAppContext});
+        contextHandlerCollection.setHandlers(List.of(webAppContext));
 
         server.setHandler(contextHandlerCollection);
 

@@ -1,21 +1,22 @@
 package com.payneteasy;
 
 import com.payneteasy.srvlog.websocket.jetty.LogEndpointCreator;
-import org.eclipse.jetty.plus.webapp.EnvConfiguration;
-import org.eclipse.jetty.plus.webapp.PlusConfiguration;
+import org.eclipse.jetty.ee10.plus.webapp.EnvConfiguration;
+import org.eclipse.jetty.ee10.plus.webapp.PlusConfiguration;
+import org.eclipse.jetty.ee10.webapp.*;
+import org.eclipse.jetty.ee10.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.webapp.*;
-import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.time.Duration;
+import java.util.List;
 
 
 /**
@@ -56,14 +57,15 @@ public class StartUI {
         srvlog.getSessionHandler().setSecureRequestOnly(false);
         srvlog.getSessionHandler().setUsingCookies(true);
 
-        EnvConfiguration envConfiguration = new EnvConfiguration();
-        envConfiguration.setJettyEnvXml(new File("src/test/resources/jetty/jetty-env-ui.xml").toURI().toURL());
+        // Jetty 12: jetty-env.xml location is passed as a context attribute instead of EnvConfiguration.setJettyEnvXml()
+        srvlog.setAttribute(EnvConfiguration.JETTY_ENV_XML,
+                ResourceFactory.of(srvlog).newResource(new File("src/test/resources/jetty/jetty-env-ui.xml").toURI().toURL()));
         Configuration[] configurations = new Configuration[]{
                 new WebInfConfiguration(),
                 new WebXmlConfiguration(),
                 new MetaInfConfiguration(),
                 new FragmentConfiguration(),
-                envConfiguration,
+                new EnvConfiguration(),
                 new PlusConfiguration(),
                 new JettyWebXmlConfiguration()
         };
@@ -77,7 +79,7 @@ public class StartUI {
         });
 
         ContextHandlerCollection webapps = new ContextHandlerCollection();
-        webapps.setHandlers(new Handler[]{srvlog});
+        webapps.setHandlers(List.of(srvlog));
         server.setHandler(webapps);
 
         try {

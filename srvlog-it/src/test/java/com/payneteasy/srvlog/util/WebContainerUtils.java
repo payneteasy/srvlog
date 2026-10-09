@@ -1,11 +1,12 @@
 package com.payneteasy.srvlog.util;
 
-import org.eclipse.jetty.plus.webapp.EnvConfiguration;
-import org.eclipse.jetty.plus.webapp.PlusConfiguration;
+import org.eclipse.jetty.ee10.plus.webapp.EnvConfiguration;
+import org.eclipse.jetty.ee10.plus.webapp.PlusConfiguration;
+import org.eclipse.jetty.ee10.webapp.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.webapp.*;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +59,9 @@ public class WebContainerUtils {
         webAppContext.setWar(webProjectPath + "/src/main/webapp");
         webAppContext.setDefaultsDescriptor("src/main/webapp/WEB-INF/web.xml");
 
+        webAppContext.setAttribute(EnvConfiguration.JETTY_ENV_XML,
+                ResourceFactory.of(webAppContext).newResource(new File(jettyEnvFile).toURI().toURL()));
         EnvConfiguration envConfiguration = new EnvConfiguration();
-        envConfiguration.setJettyEnvXml(new File(jettyEnvFile).toURI().toURL());
 
         Configuration[] configurations = new Configuration[]{
                 new WebInfConfiguration(),

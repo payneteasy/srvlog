@@ -91,6 +91,8 @@ public class BasePage extends WebPage {
     @Override
     public void renderHead(IHeaderResponse response) {
         response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), "css/main.css")));
+        // bootstrap.js requires jQuery; pages without Ajax components would not get it from Wicket otherwise
+        response.render(JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference()));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), "js/bootstrap.min.js")));
     }
 
